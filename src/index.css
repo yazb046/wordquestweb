@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css?family=Vidaloka:regular');
+@import url('https://fonts.googleapis.com/css?family=Fredoka:300,regular,500,600,700');
+
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  font-family: sans-serif;
+}
+
+@keyframes sideScrollAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+
+.siderStyle {
+  font-family: 'Vidaloka', sans-serif;
+  text-align: center;
+  color: #000000;
+  background-color: rgba(243, 215, 77, 0.5) !important;
+  
+}
+
+.sliderStyleList{
+  max-width: 26.1vw;
+  max-height: 61vw;
+  overflow:scroll;
+  margin: 0 auto;
+  /* scroll-behavior: smooth; */
+} 
+
+.sliderStyleList::-webkit-scrollbar{
+  width: 12px;
+}
+
+.sliderStyleList:hover::-webkit-slider-thumb{
+  background-color: red;
+  border-radius: 6px;
+  animation: sideScrollAnimation 3s infinite;
+}
+
+.sliderStyleHeader{
+  font-weight: 400;
+  font-size: 1.9vw;
+  margin-bottom: 2.3vw;
+  
+}
+
+.sliderStyleText{
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 400;
+  font-size: 1.4vw;
+  line-height: 2.3vw;
+  
+}
