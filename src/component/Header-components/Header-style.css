@@ -1,0 +1,222 @@
+.headerStyle{
+    display: flex;
+    align-items: center;
+    color: #fff;
+    height: calc(10% - 8px);
+    padding-inline: 5vw;
+    line-height: 4vw;
+    background-color: rgb(247, 216, 64);
+
+
+}
+
+.Applogo{
+    margin-right: auto;
+}
+
+
+.logIn{
+    background-color: #ffd600;
+    border: 1px solid #000000;
+    color: #000000;
+    font-weight: 400;
+    font-size: 1.5vw;
+    padding: 5px 10px;
+    margin-right: 3vw;
+    border-radius: 4px;
+    cursor: pointer; 
+}
+
+
+.logIn:hover{
+    background-color: green;
+}
+
+
+
+.logIn:active{
+    background-color: red;
+}
+
+
+.avatar{
+    margin-right: 3vw;
+}
+
+
+
+
+
+
+
+
+ /* Burger-menu */
+  
+  .menu__icon{
+    z-index: 5;
+    display: block;
+    position: relative;
+    width: 50px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.menu__icon span,
+.meni__icon::before,
+.menu__icon::after{
+    left: 0;
+    position: absolute;
+    height: 10%;
+    width: 100%;
+    transition: all 0.3s ease 0s;
+    background-color: #fff;
+}
+
+.menu__icon::before,
+.menu__icon::after{
+    content:"";
+}
+
+.meni__icon::before{
+    top: 0;
+}
+.menu__icon::after{
+    bottom: 0;
+}
+
+.menu__icon span{
+    top: 50%;
+    transform:  scale(1) translate(0px, -50%);
+}
+
+.menu__icon._active span{
+    transform: scale(0) translate(0px, -50%);
+}
+
+.menu__icon._active::before{
+    top: 50%;
+    transform: rotate(-45deg) translate(0px, -50%);
+}
+
+.menu__icon._active::after{
+    bottom: 50%;
+    transform: rotate(45deg) translate(0px, 50%);
+}
+
+
+.menu__list{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    list-style: none;
+}
+
+.menu__list > li{
+    padding: 1vw 0;
+}
+
+.menu__sub-list {
+    transform: translate(0, 10%);
+    opacity: 0;
+    visibility: hidden; 
+     pointer-events:none; 
+    transition: all 0.3s ease 0s;
+}
+
+.menu__icon{
+    z-index: 5;
+    display: block;
+    position: relative;
+    width: 30px;
+    height: 18px;
+    cursor: pointer;
+   
+}
+
+.menu__icon span,
+.menu__icon::before,
+.menu__icon::after{
+    left: 0;
+    position: absolute;
+    height: 10%;
+    width: 100%;
+    transition: all 0.3s ease 0s;
+    background-color: black;
+}
+
+.menu__icon::before,
+.menu__icon::after{
+    content:"";
+}
+
+.menu__icon::before{
+    top: 0;
+}
+
+.menu__icon:after{
+    bottom:0;
+}
+
+.menu__icon span{
+    top: 50%;
+    transform:  scale(1) translate(0px, -50%);
+}
+
+.menu__icon._active span{
+    transform: scale(0) translate(0px, -50%);
+}
+
+.menu__icon._active::before{
+    top: 50%;
+    transform: rotate(-45deg) translate(0px, -50%);
+}
+
+.menu__icon._active::after{
+    bottom: 50%;
+    transform: rotate(45deg) translate(0px, 50%);
+}
+.menu__body{
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.534);
+    padding: 100px 30px 30px 30px;
+    transition: left 0.3s ease 0s;
+    overflow: auto;
+}
+.menu__body._active{
+   left:0;
+}
+.menu__body::before{
+content:"";
+position: fixed;
+width: 100%;
+top: 0;
+left: 0;
+height: 70px;
+z-index: 2;
+}
+
+
+.menu__list > li {
+    flex-wrap: wrap;
+    margin: 0 0 2vw 0;
+}
+
+.menu__list > li:last-child{
+    margin-bottom: 0;
+}
+
+
+.menu__list > li._active .menu__sub-list{
+ display: block;
+}
+
+.menu__link{
+    font-size: 2vw;
+    color: black;
+}
+
