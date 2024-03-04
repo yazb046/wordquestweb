@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import axios from 'axios';
 
 import {Layout} from 'antd';
+import { fetchWords } from './fetchComponent/wordService';
 
 interface Word{
     id: number;
@@ -12,37 +12,30 @@ interface Word{
 
 
 
-
-
 const AppWordList: React.FC = () => {
-    const [words, setWords] = useState<Word[]>([]);
-    const [Loading, setLoading] = useState(true);
+  const [words, setWords] = useState<Word[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchWords = async () => {
-            try{
-                const response = await axios.get<Word[]>('http://localhost:8080/api/words');
-                setWords(response.data);
-            }catch (error){
-                if (axios.isAxiosError(error)){
-                    // Обработка ошибок Axios
-                    console.error('Ошибка Axios:', error.message)
-                }else{
-                    // Обработка общих ошибок
-                    console.error('Ошибка при получении данных:', error.message)
-                }
-            } finally{
-                setLoading(false);
-            }
-        };
-        if (words.length === 0){
-            fetchWords()
-        };
-    }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedWords = await fetchWords();
+        setWords(fetchedWords); 
+      } catch (error: any) {
+        console.error('Ошибка при загрузке слов:', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+    
     return(
         <Layout.Sider className='siderStyle'>
            <h2 className='sliderStyleHeader'>my words</h2>
-           {words.length === 0 ? (
+           {loading ? (
                <p >Loading...</p>
            ): (
                <ul className='sliderStyleList'>

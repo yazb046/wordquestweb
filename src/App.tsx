@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout } from 'antd';
 
-
+import './index.css';
 
 
 import AppHeader from './component/Header-components/AppHeader';
