@@ -1,61 +1,35 @@
-import React, {useEffect, useState} from 'react'
-import axios from 'axios';
 
-import {Layout} from 'antd';
+import React, { useState } from 'react';
+import { Layout } from 'antd';
+import AddWordButton from '../elements/AddWordButton';
 
-interface Word{
-    id: number;
-    word: string;
-    checked: null,
-    langLevel: null
+interface Word {
+  id: number;
+  word: string;
+  checked: null;
+  langLevel: null;
 }
-
-
-
-
 
 const AppWordList: React.FC = () => {
-    const [words, setWords] = useState<Word[]>([]);
-    const [Loading, setLoading] = useState(true);
+  const [selectedWords, setSelectedWords] = useState<string[]>([]);
 
-    useEffect(() => {
-        const fetchWords = async () => {
-            try{
-                const response = await axios.get<Word[]>('http://localhost:8080/api/words');
-                setWords(response.data);
-            }catch (error){
-                if (axios.isAxiosError(error)){
-                    // Обработка ошибок Axios
-                    console.error('Ошибка Axios:', error.message)
-                }else{
-                    // Обработка общих ошибок
-                    console.error('Ошибка при получении данных:', error.message)
-                }
-            } finally{
-                setLoading(false);
-            }
-        };
-        if (words.length === 0){
-            fetchWords()
-        };
-    }, []);
-    return(
-        <Layout.Sider className='siderStyle'>
-           <h2 className='sliderStyleHeader'>my words</h2>
-           {words.length === 0 ? (
-               <p >Loading...</p>
-           ): (
-               <ul className='sliderStyleList'>
-                   {words.map(({id, word}) => (
-                       <li className='sliderStyleText' key={id}>
-                           {word}
-                       </li>
-                   ))}
-               </ul>
-           )}
-        </Layout.Sider>
+  const handleAddWords = (newWords: string[]) => {
+    setSelectedWords(newWords);
+  };
 
-    )
-}
+  return (
+    <Layout.Sider className='siderStyle'>
+      <h2 className='sliderStyleHeader'>my words</h2>
+     <p style={{marginBottom: '10px'}}> <b>Выберите слово</b></p>
+      <AddWordButton onAddWord={handleAddWords} />
+      <div className='slected-words'>
+        {selectedWords.map((word, index) => (
+          <p key={index}>{word}</p>
+        ))}
+        </div>
+      
+    </Layout.Sider>
+  );
+};
 
-export default AppWordList
+export default AppWordList;
