@@ -78,12 +78,13 @@ const AppWordList: React.FC = () => {
         </div>
         <div onClick={handleSort} style={styles.smallButton}>
           {ascending ? "desc[↓]" : "asc[↑]"}
-        </div>
-      </Flex>}
+        </div></Flex>}
         footer={<div onClick={handleAddWord} style={styles.addButton}>
         [add]
       </div>}
+        //TODO 
         dataSource={["text1", "text2", "text3"]}
+      
         renderItem={(item: string) => (
           <List.Item
             style={{
