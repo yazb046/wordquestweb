@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Divider, List, Typography, Button, Flex } from "antd";
+import { fetchWords } from '../service/wordService'; 
+
+
+
 
 interface Word {
   id: number;
@@ -9,6 +13,14 @@ interface Word {
 }
 
 const AppWordList: React.FC = () => {
+  const [words, setWords] = useState<Word[]>([]);
+  
+  const handleUserList = async () => {
+      setWords(await fetchWords());
+  };
+  useEffect(() => {
+    handleUserList();
+  }, []);
   
   const [clickedItem, setClickedItem] = useState<string>('');
   const handleClick = (item: string) => {
@@ -83,7 +95,7 @@ const AppWordList: React.FC = () => {
         [add]
       </div>}
         //TODO 
-        dataSource={["text1", "text2", "text3"]}
+        dataSource={words.map(word => word.word)}
       
         renderItem={(item: string) => (
           <List.Item
