@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Divider, List, Typography, Button, Flex } from "antd";
-import { fetchWords } from '../service/wordService'; 
-
-
-
+import {
+  Layout,
+  Divider,
+  List,
+  Typography,
+  Button,
+  Flex,
+  Skeleton,
+} from "antd";
+import { fetchWords, fetchWordsByUserId } from "../service/wordService";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 interface Word {
   id: number;
@@ -14,18 +20,29 @@ interface Word {
 
 const AppWordList: React.FC = () => {
   const [words, setWords] = useState<Word[]>([]);
-  
-  const handleUserList = async () => {
-      setWords(await fetchWords());
+  const [page, setPage] = useState(0);
+  const [doesHaveMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const loadWords = async () => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    let response = await fetchWordsByUserId(1, page, 50);
+    setWords([...words, ...response.content]);
+    setHasMore(!response.last);
+    setPage(page + 1);
+    setLoading(false);
   };
   useEffect(() => {
-    handleUserList();
+    loadWords();
   }, []);
-  
-  const [clickedItem, setClickedItem] = useState<string>('');
-  const handleClick = (item: string) => {
-    console.log(`Clicked on ${item}`);
-    setClickedItem(item);
+
+  const [clickedItemId, setClickedItemId] = useState<number>();
+  const handleClick = (id: number) => {
+    console.log(`Clicked on ${id}`);
+    setClickedItemId(id);
   };
 
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -56,17 +73,13 @@ const AppWordList: React.FC = () => {
   };
 
   const handleAddWord = () => {
-   //call server to send dictioner list
+    //call server to send dictioner list
   };
 
-  return (  
+  return (
     <div>
       <div style={styles.boxTitle}>my list</div>
-      <List
-        style={{ borderRadius: "4px" }}
-        size="small"
-        bordered
-        header={<Flex >
+      <Flex>
         <div onClick={handleShowNew} style={styles.smallButton}>
           {showNew ? (
             <p style={{ fontWeight: "bold", color: "green" }}>new</p>
@@ -90,29 +103,46 @@ const AppWordList: React.FC = () => {
         </div>
         <div onClick={handleSort} style={styles.smallButton}>
           {ascending ? "desc[↓]" : "asc[↑]"}
-        </div></Flex>}
-        footer={<div onClick={handleAddWord} style={styles.addButton}>
-        [add]
-      </div>}
-        //TODO 
-        dataSource={words.map(word => word.word)}
-      
-        renderItem={(item: string) => (
-          <List.Item
-            style={{
-              borderRadius: "1px",
-              height: "25px",
-              fontSize: "12px",
-              paddingLeft:'7px',
-              fontFamily:'Merriweather',
-              background: clickedItem === item ? "#D2CB9B" : "white",
-            }}
-            onClick={() => handleClick(item)}
-          >
-            {item}
-          </List.Item>
-        )}
-      />
+        </div>
+      </Flex>
+      <div
+        id="scrollableDiv"
+        style={{
+          height: 500,
+          overflow: "auto",
+        }}
+      >
+        <InfiniteScroll
+          dataLength={words.length}
+          next={loadWords}
+          hasMore={doesHaveMore}
+          scrollableTarget="scrollableDiv"
+          loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+        >
+          <List
+            dataSource={words}
+            renderItem={(item: Word) => (
+              <List.Item
+                key={item.id}
+                style={{
+                  borderRadius: "1px",
+                  height: "25px",
+                  fontSize: "12px",
+                  paddingLeft: "7px",
+                  fontFamily: "Merriweather",
+                  background: clickedItemId === item.id ? "#D2CB9B" : "white",
+                }}
+                onClick={() => handleClick(item.id)}
+              >
+                {item.word}
+              </List.Item>
+            )}
+          />
+        </InfiniteScroll>
+      </div>
+      <div onClick={handleAddWord} style={styles.addButton}>
+          [add]
+        </div>
     </div>
   );
 };
@@ -123,9 +153,9 @@ const styles = {
     cursor: "pointer",
     fontSize: "12px",
     padding: "3px",
-    marginLeft:'0px',
+    marginLeft: "0px",
     margin: "3px",
-    color:'red',
+    color: "red",
   },
   smallButton: {
     fontFamily: "Ropa Sans",
@@ -135,14 +165,14 @@ const styles = {
     marginTop: "0px",
     marginBottom: "10px",
     marginRight: "5px",
-    color:'blue',
+    color: "blue",
   },
   boxTitle: {
     fontSize: "14px",
     color: "#867373",
     fontWeight: "bold",
     fontFamily: "Roboto Mono",
-    paddingBottom:'10px',
+    paddingBottom: "10px",
   },
 };
 
