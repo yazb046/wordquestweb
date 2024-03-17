@@ -1,9 +1,11 @@
-interface WordType {
+import Iterable from "./Iterable";
+interface WordType extends Iterable {
   id: number;
   word: string;
   checked: boolean;
   langLevel: string;
   status: string;
+  getContent:()=> string;
 }
 
 class WordTypeClass implements WordType {
@@ -19,6 +21,13 @@ class WordTypeClass implements WordType {
     this.checked = checked;
     this.langLevel = langLevel;
     this.status = status;
+  }
+  getContent(): string {
+    return this.word;
+  }
+
+  getId(): number {
+    return this.id;
   }
 }
 

@@ -1,5 +1,4 @@
 import Word from "../types/WordType";
-import React, { useEffect, useState } from "react";
 import ListScrollable from "../elements/ListScrollable";
 import { textBuilder } from "../types/TextType";
 import { fetchUserWordRelatedContext } from "../service/textService";
@@ -9,8 +8,7 @@ interface AppContextProps {
 }
 
 const AppContext: React.FC<AppContextProps> = ({ word }) => {
-
-  const fetchDataFunction = async (word:Word, pageNo: number) => {
+  const fetchDataFunction = async (pageNo: number, word: Word) => {
     return await fetchUserWordRelatedContext(1, word, pageNo);
   };
 
@@ -19,13 +17,23 @@ const AppContext: React.FC<AppContextProps> = ({ word }) => {
       {word && word.id > 0 && (
         <>
           <ListScrollable
+            clickedItemHendler={console.log()}
             listClearTriggerObject={word}
-            callbackFunction={fetchDataFunction}
-            listItemType={textBuilder(0, "")}
+            loadListDataHandler={fetchDataFunction}
             listItemDefaultInstance={textBuilder(0, "")}
             scrollListBoxStyle={{
               height: 75,
               overflow: "auto",
+            }}
+            listItemStyle={{
+              borderRadius: "1px",
+              height: "auto",
+              fontSize: "14px",
+              padding: "3px",
+              margin: "0px",
+              fontFamily: "Merriweather",
+              textAlign: "left",
+              verticalAlign: "top",
             }}
           />
         </>

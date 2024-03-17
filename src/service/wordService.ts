@@ -1,5 +1,6 @@
 import axios from "axios";
 import Word from "../types/WordType";
+import { wordBuilder } from "../types/WordType";
 
 export const fetchWords = async (): Promise<Word[]> => {
   try {
@@ -21,7 +22,16 @@ export const fetchWordsByUserId = async (
   pageNo: number,
   pageSize: number
 ): Promise<any> => {
-  return fetchWordsBy(userId, "", pageNo, pageSize, "word", "asc");
+  return fetchWordsBy(userId, "", pageNo, pageSize, "word", "asc").then(
+    (response) => {
+      let mappedContent: Word[] = [];
+      response.content.forEach((e: Word) => {
+        mappedContent.push(wordBuilder(e.id, e.word));
+      });
+      response.content = mappedContent;
+      return response;
+    }
+  );
 };
 
 export const fetchWordsBy = async (
@@ -36,9 +46,7 @@ export const fetchWordsBy = async (
   try {
     const response = await axios.get<any>(url);
     if (response.status === 200) {
-      
       return response.data;
-
     } else {
       console.error("Response error status:", response.status);
       return [] as unknown as Word[];

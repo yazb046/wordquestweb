@@ -1,50 +1,53 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useState, useEffect } from "react";
-import { List, Skeleton } from "antd";
-import { fetchUserWordRelatedContext } from "../service/textService";
+import { List } from "antd";
+import Iterable from "../types/Iterable";
 
-declare type Fn = (a:any,b:any) => any;
+declare type Fn = (a: any, b: any) => any;
 
 interface Props {
-  callbackFunction: Fn;
-  listItemType: any;
-  listItemDefaultInstance: any;
-  scrollListBoxStyle: {height?: number|string, overflow: string,};
-  listClearTriggerObject:any,
+  loadListDataHandler: Fn;
+  listItemDefaultInstance: Iterable;
+  scrollListBoxStyle: { height?: number | string; overflow: string };
+  listClearTriggerObject: Iterable | undefined;
+  listItemStyle: any;
+  clickedItemHendler: any;
 }
 
 const ListScrollable: React.FC<Props> = ({
-  callbackFunction,
-  listItemType,
+  loadListDataHandler,
   listItemDefaultInstance,
   scrollListBoxStyle,
   listClearTriggerObject,
+  listItemStyle,
+  clickedItemHendler,
 }) => {
-  const [list, setList] = useState<(typeof listItemType)[]>([]);
+  const [list, setList] = useState<(Iterable)[]>([]);
   const [page, setPage] = useState(0);
   const [hasMoreItems, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [clickedItem, setClickedItem] = useState<typeof listItemType>(listItemDefaultInstance);
+  const [clickedItem, setClickedItem] = useState<Iterable>(
+    listItemDefaultInstance
+  );
   const [resultSize, setResultSize] = useState(0);
 
-
   const loadContent = async () => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
     try {
-        const response = await callbackFunction(listClearTriggerObject, page);
-        setList((prevList) => [...prevList, ...response.content]);
-        setResultSize(response.totalElements)
-        setHasMore(!response.last); // Update hasMore based on response.last
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setPage((prevPage) => prevPage + 1); // Always increment page
-        setLoading(false);
+      if (loading) {
+        return;
       }
+      setLoading(true);
+      const response = await loadListDataHandler(page, listClearTriggerObject);
+      setList((prevList) => [...prevList, ...response.content]);
+      setResultSize(response.totalElements);
+      setHasMore(!response.last);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setPage((prevPage) => prevPage + 1);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -53,64 +56,42 @@ const ListScrollable: React.FC<Props> = ({
     loadContent();
   }, [listClearTriggerObject]);
 
-
-  const handleItemClick = (item: typeof listItemType) => {
+  const handleItemClick = (item: Iterable) => {
     setClickedItem(item);
+    clickedItemHendler(item);
   };
 
   return (
     <>
-    <div style={styles.boxTitle}>pick one from [{resultSize}] items</div>
-    <div
-      id="scrollableDiv"
-      style={scrollListBoxStyle}
-    >
-      <InfiniteScroll
-        height={scrollListBoxStyle.height}
-        dataLength={list.length}
-        next={loadContent}
-        hasMore={hasMoreItems}
-        scrollableTarget="scrollableDiv"
-        loader={<div>loading...</div>}
-        endMessage={<div>---</div>}
-      >
-        <List
-          dataSource={list}
-          renderItem={(item: typeof listItemType) => (
-            <List.Item
-              key={item.id}
-              style={{
-                borderRadius: "1px",
-                height: "auto",
-                fontSize: "14px",
-                padding: "3px",
-                margin:"0px",
-                fontFamily: "Merriweather",
-                background: clickedItem.id === item.id ? "#D2CB9B" : "white",
-                textAlign: 'left', 
-                verticalAlign: 'top',
-              }}
-              onClick={() => handleItemClick(item)}
-            >
-              {item.text}
-            </List.Item>
-          )}
-        />
-      </InfiniteScroll>
-    </div>
+      <div id="scrollableDiv" style={scrollListBoxStyle}>
+        <InfiniteScroll
+          height={scrollListBoxStyle.height}
+          dataLength={list.length}
+          next={loadContent}
+          hasMore={hasMoreItems}
+          scrollableTarget="scrollableDiv"
+          loader={<div>loading...</div>}
+          endMessage={<div>---</div>}
+        >
+          <List
+            dataSource={list}
+            renderItem={(item: Iterable) => (
+              <List.Item
+                key={item.getId()}
+                style={{
+                  ...listItemStyle,
+                  background: clickedItem.getId() === item.getId() ? "#D2CB9B" : "white",
+                }}
+                onClick={() => handleItemClick(item)}
+              >
+                {item.getContent()}
+              </List.Item>
+            )}
+          />
+        </InfiniteScroll>
+      </div>
     </>
   );
 };
-
-const styles ={
-    boxTitle: {
-      fontSize: "14px",
-      color: "#867373",
-      fontWeight: "bold",
-      fontFamily: "Roboto Mono",
-      marginTop:'0px',
-      marginBottom:'10px'
-    },
-  }
 
 export default ListScrollable;
