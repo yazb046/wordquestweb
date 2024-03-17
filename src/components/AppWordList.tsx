@@ -1,28 +1,35 @@
 import React, { useState, useEffect } from "react";
 import {
-  Layout,
-  Divider,
   List,
-  Typography,
-  Button,
   Flex,
   Skeleton,
 } from "antd";
-import { fetchWords, fetchWordsByUserId } from "../service/wordService";
+import { fetchWordsByUserId } from "../service/wordService";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Word from "../types/WordType";
+import { wordBuilder } from "../types/WordType";
 
-interface Word {
-  id: number;
-  word: string;
-  checked: null;
-  langLevel: null;
+interface CallbackFunction {
+  onActiveWordChange: (item: Word) => void,
 }
 
-const AppWordList: React.FC = () => {
+
+const AppWordList: React.FC <CallbackFunction>= ({ onActiveWordChange }) => {
   const [words, setWords] = useState<Word[]>([]);
   const [page, setPage] = useState(0);
   const [doesHaveMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [clickedWord, setClickedWord] = useState<Word>(wordBuilder(-1,'default'));
+  const [ascending, setAscending] = useState(true);
+  const [showNew, setShowNew] = useState<boolean>(false);
+  const [showWip, setShowWip] = useState<boolean>(false);
+  const [showDone, setShowDone] = useState<boolean>(false);
+  
+
+  const handleWordClicked = (item: Word) => {
+    setClickedWord(item);
+    onActiveWordChange(item);
+  };
 
   const loadWords = async () => {
     if (loading) {
@@ -35,38 +42,23 @@ const AppWordList: React.FC = () => {
     setPage(page + 1);
     setLoading(false);
   };
-  useEffect(() => {
-    loadWords();
-  }, []);
+  useEffect(() => { loadWords(); }, []);
 
-  const [clickedItemId, setClickedItemId] = useState<number>();
-  const handleClick = (id: number) => {
-    console.log(`Clicked on ${id}`);
-    setClickedItemId(id);
-  };
-
-  const [selectedWords, setSelectedWords] = useState<string[]>([]);
-  const handleAddWords = (newWords: string[]) => {
-    setSelectedWords(newWords);
-  };
-
-  const [ascending, setAscending] = useState(true);
   const handleSort = () => {
     //call server for sorted list
     setAscending(!ascending);
   };
 
-  const [showNew, setShowNew] = useState<boolean>(false);
   const handleShowNew = () => {
     //call server for newly added words with sorting
     setShowNew(!showNew);
   };
-  const [showWip, setShowWip] = useState<boolean>(false);
+
   const handleShowWip = () => {
     //call server for WIP words with sorting
     setShowWip(!showWip);
   };
-  const [showDone, setShowDone] = useState<boolean>(false);
+
   const handleShowDone = () => {
     //call server for DONE words with sorting with useEffect
     setShowDone(!showDone);
@@ -130,9 +122,9 @@ const AppWordList: React.FC = () => {
                   fontSize: "12px",
                   paddingLeft: "7px",
                   fontFamily: "Merriweather",
-                  background: clickedItemId === item.id ? "#D2CB9B" : "white",
+                  background: clickedWord.id === item.id ? "#D2CB9B" : "white",
                 }}
-                onClick={() => handleClick(item.id)}
+                onClick={() => handleWordClicked(item)}
               >
                 {item.word}
               </List.Item>
