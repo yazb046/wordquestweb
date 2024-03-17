@@ -40,7 +40,7 @@ const AppWordList: React.FC<CallbackFunction> = ({ onActiveWordChange }) => {
   };
 
   const fetchDataFunction = async (page: number) => {
-    return await fetchWordsByUserId(1, page, 50)
+    return await fetchWordsByUserId(1, page, 50);
   };
 
   return (

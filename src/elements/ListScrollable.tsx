@@ -31,8 +31,18 @@ const ListScrollable: React.FC<Props> = ({
     listItemDefaultInstance
   );
   const [resultSize, setResultSize] = useState(0);
+  const [currentTriggerId, setCurrentTriggerId] = useState<number|undefined>(0);
 
   const loadContent = async () => {
+    if(listClearTriggerObject?.getId() !== currentTriggerId){
+      setPage(0);
+      setList([]);
+      let id = listClearTriggerObject?.getId();
+      setCurrentTriggerId(id);
+    } else {
+      setPage((page)=> (page + 1));
+    }
+
     try {
       if (loading) {
         return;
@@ -45,15 +55,14 @@ const ListScrollable: React.FC<Props> = ({
     } catch (error) {
       console.error(error);
     } finally {
-      setPage((prevPage) => prevPage + 1);
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    setPage(0);
-    setList([]);
-    loadContent();
+    
+      loadContent();
+  
   }, [listClearTriggerObject]);
 
   const handleItemClick = (item: Iterable) => {
