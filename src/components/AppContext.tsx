@@ -5,21 +5,21 @@ import Iterable from "../types/Iterable";
 import { textBuilder } from "../types/TextType";
 
 interface AppContextProps {
-  word: Word;
-  clickedItemHandler:(item:Iterable)=>void;
+  word: Iterable;
+  setter:(item:Iterable)=>void;
 }
 
-const AppContext: React.FC<AppContextProps> = ({ word, clickedItemHandler }) => {
+const AppContext: React.FC<AppContextProps> = ({ word, setter }) => {
   const fetchDataFunction = async (pageNo: number, word: Word) => {
     return await fetchUserWordRelatedContext(1, word, pageNo);
   };
 
   return (
     <>
-      {word && word.id > 0 && (
+      {word && word.getId() > 0 && (
         <>
           <ListScrollable
-            clickedItemHandler={clickedItemHandler}
+            clickedItemHandler={setter}
             listClearTriggerObject={word}
             loadListDataHandler={fetchDataFunction}
             listItemDefaultInstance={textBuilder(0, "")}

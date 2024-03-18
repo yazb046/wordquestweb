@@ -4,7 +4,7 @@ import CardContent from "../elements/CardContent";
 import Iterable from "../types/Iterable";
 
 interface AppContentProps {
-  word: WordType;
+  word: Iterable;
   context: Iterable;
 }
 
@@ -12,9 +12,9 @@ const AppContent: React.FC<AppContentProps> = ({ word, context }) => {
   return (
     <>
       {" "}
-      {word.id > 0 && (
+      {word.getId() > 0 && (
         <>
-          <div style={styles.boxTitle}>{word.word}</div>
+          <div style={styles.boxTitle}>{word.getContent()}</div>
           <Card
             bordered={false}
             style={{

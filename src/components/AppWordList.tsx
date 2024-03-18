@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Flex } from "antd";
 import { fetchWordsByUserId } from "../service/wordService";
-import WordType from "../types/WordType";
+import Iterable from "../types/Iterable";
 import { wordBuilder } from "../types/WordType";
 import ListScrollable from "../elements/ListScrollable";
 
 interface CallbackFunction {
-  onActiveWordChange: (item: WordType) => void;
+  setter: (item: Iterable) => void;
 }
 
-const AppWordList: React.FC<CallbackFunction> = ({ onActiveWordChange }) => {
+const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
   const [ascending, setAscending] = useState(true);
   const [showNew, setShowNew] = useState<boolean>(false);
   const [showWip, setShowWip] = useState<boolean>(false);
@@ -76,7 +76,7 @@ const AppWordList: React.FC<CallbackFunction> = ({ onActiveWordChange }) => {
         listClearTriggerObject={undefined}
         loadListDataHandler={fetchDataFunction}
         listItemDefaultInstance={wordBuilder(0, "")}
-        clickedItemHendler={onActiveWordChange}
+        clickedItemHandler={setter}
         scrollListBoxStyle={{
           height: 500,
           overflow: "auto",

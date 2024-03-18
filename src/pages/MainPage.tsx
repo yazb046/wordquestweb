@@ -11,10 +11,10 @@ import { textBuilder } from "../types/TextType";
 import Iterable from "../types/Iterable";
 
 const MainPage: React.FC = () => {
-  const [activeWord, setActiveWord] = useState<WordType>(wordBuilder(0, ""));
+  const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, ""));
   const [activeContext, setActiveContext] = useState<Iterable>(textBuilder(0,""));
 
-  const handleChildValueChange = (word: WordType) => {
+  const handleChildValueChange = (word: Iterable) => {
     setActiveWord(word);
   };
 
@@ -29,14 +29,14 @@ const MainPage: React.FC = () => {
           <Header style={styles.header}>WORD JUNGLE</Header>
           <Layout style={{ backgroundColor: "#A5D7D4" }}>
             <Sider style={styles.sider}>
-              <AppWordList onActiveWordChange={handleChildValueChange} />
+              <AppWordList setter={handleChildValueChange} />
             </Sider>
             <Layout style={{ alignItems: "flex", backgroundColor: "#A5D7D4" }}>
               <Content style={styles.content1}>
                 <AppContent word={activeWord} context={activeContext} />
               </Content>
               <Content style={styles.content2}>
-                <AppContext word={activeWord} clickedItemHandler={handleActiveContextChange} />
+                <AppContext word={activeWord} setter={handleActiveContextChange} />
               </Content>
             </Layout>
           </Layout>
