@@ -12,7 +12,7 @@ interface Props {
   scrollListBoxStyle: { height?: number | string; overflow: string };
   listClearTriggerObject: Iterable | undefined;
   listItemStyle: any;
-  clickedItemHandler: (item:Iterable)=>void;
+  clickedItemHandler: (item: Iterable) => void;
 }
 
 const ListScrollable: React.FC<Props> = ({
@@ -23,7 +23,7 @@ const ListScrollable: React.FC<Props> = ({
   listItemStyle,
   clickedItemHandler,
 }) => {
-  const [list, setList] = useState<(Iterable)[]>([]);
+  const [list, setList] = useState<Iterable[]>([]);
   const [page, setPage] = useState(0);
   const [hasMoreItems, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -31,16 +31,18 @@ const ListScrollable: React.FC<Props> = ({
     listItemDefaultInstance
   );
   const [resultSize, setResultSize] = useState(0);
-  const [currentTriggerId, setCurrentTriggerId] = useState<number|undefined>(0);
+  const [currentTriggerId, setCurrentTriggerId] = useState<number | undefined>(
+    0
+  );
 
   const loadContent = async () => {
-    if(listClearTriggerObject?.getId() !== currentTriggerId){
+    if (listClearTriggerObject?.getId() !== currentTriggerId) {
       setPage(0);
       setList([]);
       let id = listClearTriggerObject?.getId();
       setCurrentTriggerId(id);
     } else {
-      setPage((page)=> (page + 1));
+      setPage((page) => page + 1);
     }
 
     try {
@@ -50,6 +52,13 @@ const ListScrollable: React.FC<Props> = ({
       setLoading(true);
       const response = await loadListDataHandler(page, listClearTriggerObject);
       setList((prevList) => [...prevList, ...response.content]);
+      setList((prevList) => {
+        const uniqueItems = prevList.filter(
+          (obj, index, self) =>
+            index === self.findIndex((t) => t.getId() === obj.getId())
+        );
+        return uniqueItems;
+      });
       setResultSize(response.totalElements);
       setHasMore(!response.last);
     } catch (error) {
@@ -60,7 +69,7 @@ const ListScrollable: React.FC<Props> = ({
   };
 
   useEffect(() => {
-      loadContent();
+    loadContent();
   }, [listClearTriggerObject]);
 
   const handleItemClick = (item: Iterable) => {
@@ -87,7 +96,8 @@ const ListScrollable: React.FC<Props> = ({
                 key={item.getId()}
                 style={{
                   ...listItemStyle,
-                  background: clickedItem.getId() === item.getId() ? "#D2CB9B" : "white",
+                  background:
+                    clickedItem.getId() === item.getId() ? "#D2CB9B" : "white",
                 }}
                 onClick={() => handleItemClick(item)}
               >
