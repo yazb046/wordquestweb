@@ -7,12 +7,19 @@ import { StrictMode, useState } from "react";
 const { Footer, Content, Header, Sider } = Layout;
 import WordType from "../types/WordType";
 import { wordBuilder } from "../types/WordType";
+import { textBuilder } from "../types/TextType";
+import Iterable from "../types/Iterable";
 
 const MainPage: React.FC = () => {
   const [activeWord, setActiveWord] = useState<WordType>(wordBuilder(0, ""));
+  const [activeContext, setActiveContext] = useState<Iterable>(textBuilder(0,""));
 
   const handleChildValueChange = (word: WordType) => {
     setActiveWord(word);
+  };
+
+  const handleActiveContextChange = (text: Iterable) => {
+    setActiveContext(text);
   };
 
   return (
@@ -26,10 +33,10 @@ const MainPage: React.FC = () => {
             </Sider>
             <Layout style={{ alignItems: "flex", backgroundColor: "#A5D7D4" }}>
               <Content style={styles.content1}>
-                <AppContent word={activeWord} />
+                <AppContent word={activeWord} context={activeContext} />
               </Content>
               <Content style={styles.content2}>
-                <AppContext word={activeWord} />
+                <AppContext word={activeWord} clickedItemHandler={handleActiveContextChange} />
               </Content>
             </Layout>
           </Layout>

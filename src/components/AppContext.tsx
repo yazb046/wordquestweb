@@ -1,13 +1,15 @@
 import Word from "../types/WordType";
 import ListScrollable from "../elements/ListScrollable";
-import { textBuilder } from "../types/TextType";
 import { fetchUserWordRelatedContext } from "../service/textService";
+import Iterable from "../types/Iterable";
+import { textBuilder } from "../types/TextType";
 
 interface AppContextProps {
   word: Word;
+  clickedItemHandler:(item:Iterable)=>void;
 }
 
-const AppContext: React.FC<AppContextProps> = ({ word }) => {
+const AppContext: React.FC<AppContextProps> = ({ word, clickedItemHandler }) => {
   const fetchDataFunction = async (pageNo: number, word: Word) => {
     return await fetchUserWordRelatedContext(1, word, pageNo);
   };
@@ -17,7 +19,7 @@ const AppContext: React.FC<AppContextProps> = ({ word }) => {
       {word && word.id > 0 && (
         <>
           <ListScrollable
-            clickedItemHendler={console.log()}
+            clickedItemHandler={clickedItemHandler}
             listClearTriggerObject={word}
             loadListDataHandler={fetchDataFunction}
             listItemDefaultInstance={textBuilder(0, "")}

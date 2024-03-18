@@ -12,7 +12,7 @@ interface Props {
   scrollListBoxStyle: { height?: number | string; overflow: string };
   listClearTriggerObject: Iterable | undefined;
   listItemStyle: any;
-  clickedItemHendler: any;
+  clickedItemHandler: (item:Iterable)=>void;
 }
 
 const ListScrollable: React.FC<Props> = ({
@@ -21,7 +21,7 @@ const ListScrollable: React.FC<Props> = ({
   scrollListBoxStyle,
   listClearTriggerObject,
   listItemStyle,
-  clickedItemHendler,
+  clickedItemHandler,
 }) => {
   const [list, setList] = useState<(Iterable)[]>([]);
   const [page, setPage] = useState(0);
@@ -60,14 +60,12 @@ const ListScrollable: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    
       loadContent();
-  
   }, [listClearTriggerObject]);
 
   const handleItemClick = (item: Iterable) => {
     setClickedItem(item);
-    clickedItemHendler(item);
+    clickedItemHandler(item);
   };
 
   return (
