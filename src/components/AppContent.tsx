@@ -1,5 +1,4 @@
-import { Card, Pagination, Col, Row, Image, Space, Input } from "antd";
-import WordType from "../types/WordType";
+import { Card, Space, Button } from "antd"
 import CardContent from "../elements/CardContent";
 import Iterable from "../types/Iterable";
 
@@ -9,9 +8,9 @@ interface AppContentProps {
 }
 
 const AppContent: React.FC<AppContentProps> = ({ word, context }) => {
+
   return (
     <>
-      {" "}
       {word.getId() > 0 && (
         <>
           <div style={styles.boxTitle}>{word.getContent()}</div>
@@ -27,20 +26,11 @@ const AppContent: React.FC<AppContentProps> = ({ word, context }) => {
               fontFamily: "Merriweather",
             }}
           >
-            <CardContent context={context}/>
+            <CardContent context={context} />
           </Card>
-          <Pagination
-            style={{
-              padding: "5px",
-              margin: "7px",
-              justifyContent: "center",
-              display: "flex",
-            }}
-            simple
-            size="small"
-            defaultCurrent={1}
-            total={50}
-          />
+          <Space direction="horizontal" align="center">
+            <Button onClick={console.log}>View cards</Button>
+          </Space>
         </>
       )}
     </>

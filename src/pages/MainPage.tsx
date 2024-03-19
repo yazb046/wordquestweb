@@ -5,7 +5,6 @@ import AppContext from "../components/AppContext";
 import AppWordList from "../components/AppWordList";
 import { StrictMode, useState } from "react";
 const { Footer, Content, Header, Sider } = Layout;
-import WordType from "../types/WordType";
 import { wordBuilder } from "../types/WordType";
 import { textBuilder } from "../types/TextType";
 import Iterable from "../types/Iterable";
@@ -72,7 +71,7 @@ const styles = {
   content1: {
     padding: "10px 10px",
     background: "#FBF3C5",
-    height: "80%",
+    height: "70%",
     marginTop: "7px",
     marginRight: "14px",
     boxShadow: "-0 0 5px rgba(0, 0, 0, 0.5)",
@@ -81,7 +80,7 @@ const styles = {
   content2: {
     padding: "10px 10px",
     background: "#FBF3C5",
-    height: "20%",
+    height: "30%",
     marginTop: "7px",
     marginRight: "14px",
     marginBottom: "7px",

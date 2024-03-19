@@ -29,6 +29,10 @@ class WordTypeClass implements WordType {
   getId(): number {
     return this.id;
   }
+
+  setContent(content:string): void{
+    this.word = content;
+  }
 }
 
 export const wordBuilder = (id: number, name: string) => {

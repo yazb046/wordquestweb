@@ -18,13 +18,14 @@ const AppContext: React.FC<AppContextProps> = ({ word, setter }) => {
     <>
       {word && word.getId() > 0 && (
         <>
+         <div style={styles.boxTitle}>pick a context</div>
           <ListScrollable
             clickedItemHandler={setter}
             listClearTriggerObject={word}
             loadListDataHandler={fetchDataFunction}
             listItemDefaultInstance={textBuilder(0, "")}
             scrollListBoxStyle={{
-              height: 75,
+              height: 120,
               overflow: "auto",
             }}
             listItemStyle={{
@@ -42,6 +43,16 @@ const AppContext: React.FC<AppContextProps> = ({ word, setter }) => {
       )}
     </>
   );
+};
+
+const styles = {
+  boxTitle: {
+    fontSize: "13px",
+    color: "#867373",
+    fontWeight: "bold",
+    fontFamily: "Roboto Mono",
+    paddingBottom: "10px",
+  },
 };
 
 export default AppContext;

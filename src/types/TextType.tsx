@@ -13,6 +13,10 @@ interface TextType extends Iterable {
     getId(): number {
       return this.id;
     }
+
+    setContent(content:string){
+      this.text = content;
+    }
   }
 
   export const textBuilder = (id:number, text:string) => {
