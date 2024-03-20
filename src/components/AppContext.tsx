@@ -20,6 +20,7 @@ const AppContext: React.FC<AppContextProps> = ({ word, setter }) => {
         <>
          <div style={styles.boxTitle}>pick a context</div>
           <ListScrollable
+            addToolTipMessage="create card"
             clickedItemHandler={setter}
             listClearTriggerObject={word}
             loadListDataHandler={fetchDataFunction}

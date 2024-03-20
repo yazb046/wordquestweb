@@ -11,13 +11,17 @@ import Iterable from "../types/Iterable";
 
 const MainPage: React.FC = () => {
   const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, ""));
-  const [activeContext, setActiveContext] = useState<Iterable>(textBuilder(0,""));
+  const [contextWord, setContextWord] = useState<Iterable>(wordBuilder(0, ""));
+  const [activeContext, setActiveContext] = useState<Iterable>(
+    textBuilder(0, "")
+  );
 
   const handleChildValueChange = (word: Iterable) => {
     setActiveWord(word);
   };
 
   const handleActiveContextChange = (text: Iterable) => {
+    setContextWord(activeWord);
     setActiveContext(text);
   };
 
@@ -31,11 +35,14 @@ const MainPage: React.FC = () => {
               <AppWordList setter={handleChildValueChange} />
             </Sider>
             <Layout style={{ alignItems: "flex", backgroundColor: "#A5D7D4" }}>
-              <Content style={styles.content1}>
-                <AppContent word={activeWord} context={activeContext} />
-              </Content>
               <Content style={styles.content2}>
-                <AppContext word={activeWord} setter={handleActiveContextChange} />
+                <AppContext
+                  word={activeWord}
+                  setter={handleActiveContextChange}
+                />
+              </Content>
+              <Content style={styles.content1}>
+                <AppContent word={contextWord} context={activeContext} />
               </Content>
             </Layout>
           </Layout>
@@ -74,6 +81,7 @@ const styles = {
     height: "70%",
     marginTop: "7px",
     marginRight: "14px",
+    marginBottom: "7px",
     boxShadow: "-0 0 5px rgba(0, 0, 0, 0.5)",
     borderRadius: 3,
   },
@@ -83,7 +91,6 @@ const styles = {
     height: "30%",
     marginTop: "7px",
     marginRight: "14px",
-    marginBottom: "7px",
     boxShadow: "-0 0 5px rgba(0, 0, 0, 0.5)",
     borderRadius: 3,
   },

@@ -1,8 +1,10 @@
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useState, useEffect } from "react";
-import { List } from "antd";
+import { List, Space, Row, Col, Tooltip } from "antd";
+import { PlusCircleFilled } from "@ant-design/icons";
 import Iterable from "../types/Iterable";
+import { Button } from "antd/es/radio";
 
 declare type Fn = (a: any, b: any) => any;
 
@@ -12,7 +14,8 @@ interface Props {
   scrollListBoxStyle: { height?: number | string; overflow: string };
   listClearTriggerObject: Iterable | undefined;
   listItemStyle: any;
-  clickedItemHandler: (item: Iterable) => void;
+  clickedItemHandler: (item: Iterable) => void; 
+  addToolTipMessage:string;
 }
 
 const ListScrollable: React.FC<Props> = ({
@@ -22,6 +25,7 @@ const ListScrollable: React.FC<Props> = ({
   listClearTriggerObject,
   listItemStyle,
   clickedItemHandler,
+  addToolTipMessage,
 }) => {
   const [list, setList] = useState<Iterable[]>([]);
   const [page, setPage] = useState(0);
@@ -34,11 +38,13 @@ const ListScrollable: React.FC<Props> = ({
   const [currentTriggerId, setCurrentTriggerId] = useState<number | undefined>(
     0
   );
+  const [tooltipVisible, setTooltipVisible] = useState(false);
 
   const loadContent = async () => {
     if (listClearTriggerObject?.getId() !== currentTriggerId) {
       setPage(0);
       setList([]);
+      console.log("listScrollable is set to Empty");
       let id = listClearTriggerObject?.getId();
       setCurrentTriggerId(id);
     } else {
@@ -74,7 +80,19 @@ const ListScrollable: React.FC<Props> = ({
 
   const handleItemClick = (item: Iterable) => {
     setClickedItem(item);
-    clickedItemHandler(item);
+    
+  };
+
+  const handleAddClick = () => {
+    handleIconClick();
+    clickedItemHandler(clickedItem);
+  }
+
+  const handleIconClick = () => {
+    setTooltipVisible(true);
+    setTimeout(() => {
+      setTooltipVisible(false);
+    }, 2000); // Hide tooltip after 2 seconds
   };
 
   return (
@@ -101,7 +119,18 @@ const ListScrollable: React.FC<Props> = ({
                 }}
                 onClick={() => handleItemClick(item)}
               >
-                {item.getContent()}
+                <Row justify="end" align="middle" style={{ columnGap: "5px" }}>
+                  {clickedItem.getId() === item.getId() ? (
+                    <Col>
+                    <Tooltip title={addToolTipMessage} trigger='hover'>
+                      <PlusCircleFilled onClick={handleAddClick}/>{" "}
+                    </Tooltip>
+                    </Col>
+                  ) : (
+                    <></>
+                  )}
+                  <Col>{item.getContent()}</Col>
+                </Row>
               </List.Item>
             )}
           />

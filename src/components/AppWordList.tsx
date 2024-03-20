@@ -73,6 +73,7 @@ const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
         </div>
       </Flex>
       <ListScrollable
+       addToolTipMessage="pick context"
         listClearTriggerObject={undefined}
         loadListDataHandler={fetchDataFunction}
         listItemDefaultInstance={wordBuilder(0, "")}
