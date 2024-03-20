@@ -2,7 +2,6 @@ import { Row, Col, Image, Button, Space, Typography } from "antd";
 const { Paragraph } = Typography;
 import { useEffect, useState } from "react";
 import Iterable from "../types/Iterable";
-import "../assets/css/basic.css";
 import { textBuilder } from "../types/TextType";
 import { saveNewCard } from "../service/textService";
 interface Props {
