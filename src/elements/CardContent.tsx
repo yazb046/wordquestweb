@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Iterable from "../types/Iterable";
 import "../assets/css/basic.css";
 import { textBuilder } from "../types/TextType";
+import { saveNewCard } from "../service/textService";
 interface Props {
   context: Iterable;
 }
@@ -27,12 +28,10 @@ const CardContent: React.FC<Props> = ({ context }) => {
   };
 
   const handleSave = () => {
-    if(editableContext.getId()===0){
-      console.log(textBuilder(0,editableText));
-    } else {
+    if(editableContext.getId()!==0){
       editableContext.setContent(editableText);
-      console.log(editableContext);
     }
+    saveNewCard(1, editableContext)
     handleDelete();
   }
 
