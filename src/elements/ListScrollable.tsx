@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { List, Space, Row, Col, Tooltip } from "antd";
 import { PlusCircleFilled } from "@ant-design/icons";
 import Iterable from "../types/Iterable";
-import { Button } from "antd/es/radio";
 
 declare type Fn = (a: any, b: any) => any;
 
@@ -119,17 +118,21 @@ const ListScrollable: React.FC<Props> = ({
                 }}
                 onClick={() => handleItemClick(item)}
               >
-                <Row justify="end" align="middle" style={{ columnGap: "5px" }}>
-                  {clickedItem.getId() === item.getId() ? (
-                    <Col>
+                <Space direction="horizontal">
+                {clickedItem.getId() === item.getId() ? (
+                    <Space>
                     <Tooltip title={addToolTipMessage} trigger='hover'>
                       <PlusCircleFilled onClick={handleAddClick}/>{" "}
                     </Tooltip>
-                    </Col>
+                    </Space>
                   ) : (
                     <></>
                   )}
-                  <Col>{item.getContent()}</Col>
+                  <Space>{item.getContent()}</Space>
+                </Space>
+                <Row justify="end" align="middle" style={{ columnGap: "5px" }}>
+                  
+                  <Col></Col>
                 </Row>
               </List.Item>
             )}

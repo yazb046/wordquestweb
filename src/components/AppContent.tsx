@@ -1,19 +1,45 @@
-import { Card, Space, Button } from "antd"
+import { Card, Space, Button, Row, Col } from "antd";
 import CardContent from "../elements/CardContent";
 import Iterable from "../types/Iterable";
+import { CloseOutlined } from "@ant-design/icons";
+import { wordBuilder } from "../types/WordType";
+import { useEffect, useState } from "react";
 
 interface AppContentProps {
   word: Iterable;
   context: Iterable;
+  cardCloseListener:() => any;
 }
 
-const AppContent: React.FC<AppContentProps> = ({ word, context }) => {
+
+
+const AppContent: React.FC<AppContentProps> = ({ word, context, cardCloseListener }) => {
+
+  const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0,""));
+
+  const closeCard = () => {
+    setActiveWord(wordBuilder(0,""));
+    cardCloseListener();
+  }
+
+  useEffect(()=>{
+    setActiveWord(word);
+  },[word])
 
   return (
     <>
-      {word.getId() > 0 && (
+      {activeWord.getId() > 0 && (
         <>
-          <div style={styles.boxTitle}>{word.getContent()}</div>
+          <Row>
+            <Col span={12} style={{ textAlign: "left" }}>
+              <div style={styles.boxTitle}>card/{activeWord.getContent()}</div>
+              <div style={{ backgroundColor: "#f2836f" }}></div>
+            </Col>
+            <Col span={12} style={{ textAlign: "right" }}>
+              <CloseOutlined onClick={closeCard} />
+            </Col>
+          </Row>
+
           <Card
             bordered={false}
             style={{
@@ -39,9 +65,8 @@ const AppContent: React.FC<AppContentProps> = ({ word, context }) => {
 
 const styles = {
   boxTitle: {
-    fontSize: "14px",
-    color: "#867373",
-    fontWeight: "bold",
+    fontSize: "13px",
+    color: "#3c9691",
     fontFamily: "Roboto Mono",
     marginTop: "0px",
     marginBottom: "10px",

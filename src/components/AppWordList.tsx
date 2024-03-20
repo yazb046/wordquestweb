@@ -118,9 +118,8 @@ const styles = {
     color: "blue",
   },
   boxTitle: {
-    fontSize: "14px",
-    color: "#867373",
-    fontWeight: "bold",
+    fontSize: "13px",
+    color: "#3c9691",
     fontFamily: "Roboto Mono",
     paddingBottom: "10px",
   },

@@ -1,29 +1,22 @@
 import React from "react";
 import { Layout } from "antd";
-import AppContent from "../components/AppContent";
 import AppContext from "../components/AppContext";
 import AppWordList from "../components/AppWordList";
 import { StrictMode, useState } from "react";
 const { Footer, Content, Header, Sider } = Layout;
 import { wordBuilder } from "../types/WordType";
-import { textBuilder } from "../types/TextType";
 import Iterable from "../types/Iterable";
 
 const MainPage: React.FC = () => {
   const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, ""));
-  const [contextWord, setContextWord] = useState<Iterable>(wordBuilder(0, ""));
-  const [activeContext, setActiveContext] = useState<Iterable>(
-    textBuilder(0, "")
-  );
 
-  const handleChildValueChange = (word: Iterable) => {
+  const activeWordChangeListener = (word: Iterable) => {
     setActiveWord(word);
   };
 
-  const handleActiveContextChange = (text: Iterable) => {
-    setContextWord(activeWord);
-    setActiveContext(text);
-  };
+  const cleanActiveWord = () => {
+    setActiveWord(wordBuilder(0,""));
+  }
 
   return (
     <StrictMode>
@@ -32,18 +25,10 @@ const MainPage: React.FC = () => {
           <Header style={styles.header}>WORD JUNGLE</Header>
           <Layout style={{ backgroundColor: "#A5D7D4" }}>
             <Sider style={styles.sider}>
-              <AppWordList setter={handleChildValueChange} />
+              <AppWordList setter={activeWordChangeListener} />
             </Sider>
             <Layout style={{ alignItems: "flex", backgroundColor: "#A5D7D4" }}>
-              <Content style={styles.content2}>
-                <AppContext
-                  word={activeWord}
-                  setter={handleActiveContextChange}
-                />
-              </Content>
-              <Content style={styles.content1}>
-                <AppContent word={contextWord} context={activeContext} />
-              </Content>
+              <AppContext word={activeWord} contextCleanlistener={cleanActiveWord}/>
             </Layout>
           </Layout>
           <Footer style={styles.footer}> FOOTER </Footer>
