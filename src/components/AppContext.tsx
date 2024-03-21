@@ -104,7 +104,7 @@ const styles = {
   },
   content1: {
     padding: "10px 10px",
-    background: "#FBF3C5",
+    background: "#e8f6fa",
     height: "70%",
     marginTop: "7px",
     marginRight: "14px",
@@ -114,7 +114,7 @@ const styles = {
   },
   content2: {
     padding: "10px 10px",
-    background: "#FBF3C5",
+    background: "#e8f6fa",
     height: "30%",
     marginTop: "7px",
     marginRight: "14px",

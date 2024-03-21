@@ -114,7 +114,7 @@ const ListScrollable: React.FC<Props> = ({
                 style={{
                   ...listItemStyle,
                   background:
-                    clickedItem.getId() === item.getId() ? "#D2CB9B" : "white",
+                    clickedItem.getId() === item.getId() ? "#FBF3C5" : "white",
                 }}
                 onClick={() => handleItemClick(item)}
               >
