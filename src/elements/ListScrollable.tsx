@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { List, Space, Row, Col, Tooltip } from "antd";
 import { PlusCircleFilled } from "@ant-design/icons";
 import Iterable from "../types/Iterable";
+import { wordBuilder } from "../types/WordType";
 
-declare type Fn = (a: any, b: any) => any;
 
 interface Props {
-  loadListDataHandler: Fn;
+  loadListDataHandler: any;
   listItemDefaultInstance: Iterable;
   scrollListBoxStyle: { height?: number | string; overflow: string };
   listClearTriggerObject: Iterable | undefined;
@@ -39,7 +39,7 @@ const ListScrollable: React.FC<Props> = ({
   );
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
-  const loadContent = async () => {
+  const loadContent = async() => {
     if (listClearTriggerObject?.getId() !== currentTriggerId) {
       setPage(0);
       setList([]);
@@ -55,8 +55,8 @@ const ListScrollable: React.FC<Props> = ({
         return;
       }
       setLoading(true);
-      const response = await loadListDataHandler(page, listClearTriggerObject);
-      setList((prevList) => [...prevList, ...response.content]);
+      const response = loadListDataHandler(page, listClearTriggerObject);
+      setList((prevList) => [...prevList, ...response]);
       setList((prevList) => {
         const uniqueItems = prevList.filter(
           (obj, index, self) =>

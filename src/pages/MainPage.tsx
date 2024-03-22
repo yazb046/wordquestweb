@@ -6,6 +6,7 @@ import { StrictMode, useState } from "react";
 const { Footer, Content, Header, Sider } = Layout;
 import { wordBuilder } from "../types/WordType";
 import Iterable from "../types/Iterable";
+import ModalWithList from "../elements/ModalWithList";
 
 const MainPage: React.FC = () => {
   const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, ""));
@@ -19,21 +20,26 @@ const MainPage: React.FC = () => {
   }
 
   const[siderClicked, setSiderClicked] = useState(false);
+ 
 
   const handleSiderClick = ()=> {
     setSiderClicked(true);
   }
 
+
+
+
+
   return (
     <StrictMode>
-      <Layout style={{ backgroundColor: "#f2f7fa", height: "100vh" }}>
+      <Layout style={{ backgroundColor: "#f9fff9", height: "100vh" }}>
         <Layout style={{ height: "100vh", width: "70%", alignSelf: "center", border:"1px solid #dce0e3",}}>
           <Header style={styles.header}>WORD JUNGLE</Header>
-          <Layout style={{ backgroundColor: "#f2f7fa", boxShadow: "1 1 20px rgba(0, 0, 0, 0.5)"}}>
+          <Layout style={{ backgroundColor: "#FFFFFF", boxShadow: "1 1 20px rgba(0, 0, 0, 0.5)"}}>
             <Sider style={styles.sider} onClick={handleSiderClick}>
               <AppWordList setter={activeWordChangeListener} />
             </Sider>
-            <Layout style={{ alignItems: "flex", backgroundColor: "#f2f7fa", boxShadow: "1 1 20px rgba(0, 0, 0, 0.5)"}}>
+            <Layout style={{ alignItems: "flex", backgroundColor: "#FFFFFF", boxShadow: "1 1 20px rgba(0, 0, 0, 0.5)"}}>
               <AppContext word={activeWord} contextCleanlistener={cleanActiveWord}/>
             </Layout>
           </Layout>
@@ -46,7 +52,7 @@ const MainPage: React.FC = () => {
 
 const styles = {
   header: {
-    background: "#558bab",
+    background: "#8ebed1",
     fontFamily: "Keania One",
     fontSize: "24px",
     boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
@@ -54,7 +60,7 @@ const styles = {
     borderRadius: 3,
   },
   footer: {
-    background: "#558bab",
+    background: "#8ebed1",
     boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
     height:'10px',
     borderRadius: 3,

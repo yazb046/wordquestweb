@@ -32,8 +32,10 @@ const AppContent: React.FC<AppContentProps> = ({ word, context, cardCloseListene
         <>
           <Row>
             <Col span={12} style={{ textAlign: "left" }}>
-              <div style={styles.boxTitle}>card/{activeWord.getContent()}</div>
-              <div style={{ backgroundColor: "#f2836f" }}></div>
+              <Space style={styles.header} direction="horizontal">
+              <div >card:</div>
+              <div style={{color: "#c25c40",}}>{activeWord.getContent()}</div>
+              </Space>
             </Col>
             <Col span={12} style={{ textAlign: "right" }}>
               <CloseOutlined onClick={closeCard} />
@@ -64,12 +66,15 @@ const AppContent: React.FC<AppContentProps> = ({ word, context, cardCloseListene
 };
 
 const styles = {
-  boxTitle: {
+  header: {
+    fontWeight: 'bold',
     fontSize: "13px",
-    color: "#3c9691",
+    color: "#665f5d",
     fontFamily: "Roboto Mono",
-    marginTop: "0px",
-    marginBottom: "10px",
+    paddingBottom: "10px",
+    paddingTop:'0px',
+    paddingLeft:'0px',
+    margin:'0px',
   },
 };
 

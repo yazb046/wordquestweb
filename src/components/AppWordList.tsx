@@ -1,9 +1,13 @@
-import React, { useState } from "react";
-import { Flex } from "antd";
+import React, { useState, useEffect } from "react";
+import { Flex, Row, Col, Tooltip } from "antd";
 import { fetchWordsByUserId } from "../service/wordService";
 import Iterable from "../types/Iterable";
 import { wordBuilder } from "../types/WordType";
 import ListScrollable from "../elements/ListScrollable";
+import { DownloadOutlined } from "@ant-design/icons";
+import { Modal } from "antd";
+import DisctionaryModal from "../pages/DictionaryModal";
+
 
 interface CallbackFunction {
   setter: (item: Iterable) => void;
@@ -39,13 +43,45 @@ const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
     //call server to send dictioner list
   };
 
-  const fetchDataFunction = async (page: number) => {
-    return await fetchWordsByUserId(1, page, 50);
+  const fetchDataFunction = (page: number) => {
+    return fetchWordsByUserId(1, page, 50);
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   return (
     <div>
-      <div style={styles.boxTitle}>my list</div>
+      <Row style={{ paddingBottom: "5px" }}>
+        <Col span={12} style={{ textAlign: "left" }}>
+          <div style={styles.boxTitle}>my list</div>
+        </Col>
+        <Col span={12} style={{ textAlign: "right" }}>
+          <Tooltip title="add a new word" trigger="hover">
+            <DownloadOutlined onClick={openModal} />
+          </Tooltip>
+        </Col>
+      </Row>
+      <Modal
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        title='dictionary'
+      >
+        <DisctionaryModal cardCloseListener={setter}/>
+      </Modal>
+
       <Flex>
         <div onClick={handleShowNew} style={styles.smallButton}>
           {showNew ? (
@@ -73,13 +109,13 @@ const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
         </div>
       </Flex>
       <ListScrollable
-       addToolTipMessage="pick context"
+        addToolTipMessage="pick a context"
         listClearTriggerObject={undefined}
         loadListDataHandler={fetchDataFunction}
         listItemDefaultInstance={wordBuilder(0, "")}
         clickedItemHandler={setter}
         scrollListBoxStyle={{
-          height: 500,
+          height: 550,
           overflow: "auto",
         }}
         listItemStyle={{
@@ -91,8 +127,6 @@ const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
           fontWeight: "bold",
         }}
       />
-
-      <div onClick={handleAddWord} style={styles.addButton}> [add] </div>
     </div>
   );
 };

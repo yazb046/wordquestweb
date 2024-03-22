@@ -8,6 +8,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { Row, Col } from "antd";
 import { useEffect, useState } from "react";
 import AppContent from "./AppContent";
+import { Space } from "antd";
 
 interface AppContextProps {
   word: Iterable;
@@ -48,7 +49,10 @@ const AppContext: React.FC<AppContextProps> = ({
           <Content style={styles.content2}>
             <Row>
               <Col span={12} style={{ textAlign: "left" }}>
-                <div style={styles.boxTitle}>context/{word.getContent()}</div>
+                <Space style={styles.header} direction="horizontal">
+                  <div>context:</div>
+                  <div style={{ color: "#c25c40" }}>{word.getContent()}</div>
+                </Space>
                 <div style={{ backgroundColor: "#f2836f" }}></div>
               </Col>
               <Col span={12} style={{ textAlign: "right" }}>
@@ -96,11 +100,15 @@ const AppContext: React.FC<AppContextProps> = ({
 };
 
 const styles = {
-  boxTitle: {
+  header: {
+    fontWeight: 'bold',
     fontSize: "13px",
-    color: "#3c9691",
+    color: "#665f5d",
     fontFamily: "Roboto Mono",
     paddingBottom: "10px",
+    paddingTop: "0px",
+    paddingLeft: "0px",
+    margin: "0px",
   },
   content1: {
     padding: "10px 10px",
