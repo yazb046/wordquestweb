@@ -28,5 +28,6 @@ export const fetchAndMapToWords = async (path: string): Promise<any> => {
   response.data.content.forEach((e: Word) => {
     mappedContent.push(wordBuilder(e.id, e.word)); //TODO use builder
   });
-  return mappedContent;
+  response.data.content = mappedContent;
+  return response.data;
 };

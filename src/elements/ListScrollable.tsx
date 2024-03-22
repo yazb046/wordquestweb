@@ -55,17 +55,20 @@ const ListScrollable: React.FC<Props> = ({
         return;
       }
       setLoading(true);
-      const response = await loadListDataHandler(page, listClearTriggerObject);
-      setList((prevList) => [...prevList, ...response]);
-      setList((prevList) => {
-        const uniqueItems = prevList.filter(
-          (obj, index, self) =>
-            index === self.findIndex((t) => t.getId() === obj.getId())
-        );
-        return uniqueItems;
-      });
-      setResultSize(response.totalElements);
-      setHasMore(!response.last);
+      loadListDataHandler(page, listClearTriggerObject).then(
+        (response:any) => {
+          setList((prevList) => [...prevList, ...response.content]);
+          setList((prevList) => {
+            const uniqueItems = prevList.filter(
+              (obj, index, self) =>
+                index === self.findIndex((t) => t.getId() === obj.getId())
+            );
+            return uniqueItems;
+          });
+          setResultSize(response.totalElements);
+          setHasMore(!response.last);
+        }
+      )
     } catch (error) {
       console.error(error);
     } finally {

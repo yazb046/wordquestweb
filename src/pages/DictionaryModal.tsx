@@ -23,18 +23,22 @@ const footerStyle: React.CSSProperties = {
 const DisctionaryModal: React.FC <Props>= ({clickedItemHandler}) => {
 
   const loadListDataHandler = async () => {
-    return await fetchWords(0,15,'word','asc');
+    
+  };
+
+  const fetchData = (page: number) => {
+    return fetchWords(page, 20,'word','asc');
   };
 
     return(<>
     <ListScrollable
           addToolTipMessage="pick a word"
           listClearTriggerObject={undefined}
-          loadListDataHandler={loadListDataHandler}
+          loadListDataHandler={fetchData}
           listItemDefaultInstance={wordBuilder(0, "")}
           clickedItemHandler={clickedItemHandler}
           scrollListBoxStyle={{
-            height: 550,
+            height: 200,
             overflow: "auto",
           }}
           listItemStyle={{
