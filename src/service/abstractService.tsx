@@ -1,8 +1,8 @@
 import axios from "axios";
 const SERVER_DOMAIN = 'http://localhost:8080';
 
-export const abstractGet = (path:string): any => {
-  axios.get(SERVER_DOMAIN + path).then(response => {
+export const abstractGet = (path:string): Promise<any> => {
+  return axios.get(SERVER_DOMAIN + path).then(response => {
     return response;
   })
   .catch(error => {

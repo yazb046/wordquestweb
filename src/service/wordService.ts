@@ -23,13 +23,10 @@ export const fetchWordsByUserId = (
 };
 
 export const fetchAndMapToWords = async (path: string): Promise<any> => {
-  
-  return await abstractGet(path)
-  .then((response:any) => {
-    let mappedContent: Word[] = [];
-    response.data.content.forEach((e: Word) => {
-      mappedContent.push(wordBuilder(e.id, e.word)); //TODO use builder
-    });
-    return mappedContent;
+  const response = await abstractGet(path);
+  let mappedContent: Word[] = [];
+  response.data.content.forEach((e: Word) => {
+    mappedContent.push(wordBuilder(e.id, e.word)); //TODO use builder
   });
+  return mappedContent;
 };

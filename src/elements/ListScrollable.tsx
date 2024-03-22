@@ -55,7 +55,7 @@ const ListScrollable: React.FC<Props> = ({
         return;
       }
       setLoading(true);
-      const response = loadListDataHandler(page, listClearTriggerObject);
+      const response = await loadListDataHandler(page, listClearTriggerObject);
       setList((prevList) => [...prevList, ...response]);
       setList((prevList) => {
         const uniqueItems = prevList.filter(
