@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Flex, Row, Col, Tooltip } from "antd";
 import { fetchWordsByUserId } from "../service/wordService";
 import Iterable from "../types/Iterable";
@@ -7,7 +7,6 @@ import ListScrollable from "../elements/ListScrollable";
 import { DownloadOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
 import DisctionaryModal from "../pages/DictionaryModal";
-
 
 interface CallbackFunction {
   setter: (item: Iterable) => void;
@@ -74,12 +73,13 @@ const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
         </Col>
       </Row>
       <Modal
+        width={"300px"}
+        style={{ top: "50%", transform: "translateY(-50%)" }}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        title='dictionary'
-      >
-        <DisctionaryModal cardCloseListener={setter}/>
+        title="pick a word to learn">
+        <DisctionaryModal />
       </Modal>
 
       <Flex>
