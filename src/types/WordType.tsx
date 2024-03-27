@@ -35,7 +35,7 @@ class WordTypeClass implements WordType {
   }
 }
 
-export const wordBuilder = (id: number, name: string) => {
+export const wordBuilder = (id: number, name: string) : WordTypeClass => {
   return new WordTypeClass(id, name, false, "", "");
 };
 
