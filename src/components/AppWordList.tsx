@@ -1,64 +1,34 @@
 import React, { useState } from "react";
-import { Flex, Row, Col, Tooltip } from "antd";
+import { Row, Col, Tooltip } from "antd";
 import { fetchWordsByUserId } from "../service/wordService";
 import Iterable from "../types/Iterable";
 import { wordBuilder } from "../types/WordType";
 import ListScrollable from "../elements/ListScrollable";
-import { DownloadOutlined } from "@ant-design/icons";
-import { Modal } from "antd";
-import DisctionaryModal from "../pages/DictionaryModal";
+import { PlusSquareFilled } from "@ant-design/icons";
+import DictionaryModal from "./DictionaryModal";
 
 interface CallbackFunction {
   setter: (item: Iterable) => void;
 }
 
 const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
-  const [ascending, setAscending] = useState(true);
-  const [showNew, setShowNew] = useState<boolean>(false);
-  const [showWip, setShowWip] = useState<boolean>(false);
-  const [showDone, setShowDone] = useState<boolean>(false);
-
-  const handleSort = () => {
-    //call server for sorted list
-    setAscending(!ascending);
-  };
-
-  const handleShowNew = () => {
-    //call server for newly added words with sorting
-    setShowNew(!showNew);
-  };
-
-  const handleShowWip = () => {
-    //call server for WIP words with sorting
-    setShowWip(!showWip);
-  };
-
-  const handleShowDone = () => {
-    //call server for DONE words with sorting with useEffect
-    setShowDone(!showDone);
-  };
-
-  const handleAddWord = () => {
-    //call server to send dictioner list
-  };
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [doReload, setDoReload] = useState(false);
 
   const fetchDataFunction = (page: number) => {
     return fetchWordsByUserId(1, page, 50);
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const openModal = () => {
     setIsModalOpen(true);
+    setDoReload(false);
   };
 
-  const handleOk = () => {
+  const closeModal =() =>{
+    setDoReload(true);
     setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  }
 
   return (
     <div>
@@ -68,47 +38,13 @@ const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
         </Col>
         <Col span={12} style={{ textAlign: "right" }}>
           <Tooltip title="add a new word" trigger="hover">
-            <DownloadOutlined onClick={openModal} />
+            <PlusSquareFilled onClick={openModal} />
           </Tooltip>
         </Col>
       </Row>
-      <Modal
-        width={"300px"}
-        style={{ top: "50%", transform: "translateY(-50%)" }}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        title="pick a word to learn">
-        <DisctionaryModal />
-      </Modal>
-
-      <Flex>
-        <div onClick={handleShowNew} style={styles.smallButton}>
-          {showNew ? (
-            <p style={{ fontWeight: "bold", color: "green" }}>new</p>
-          ) : (
-            "new"
-          )}
-        </div>
-        <div onClick={handleShowWip} style={styles.smallButton}>
-          {showWip ? (
-            <p style={{ fontWeight: "bold", color: "green" }}>learning</p>
-          ) : (
-            "learning"
-          )}
-        </div>
-        <div onClick={handleShowDone} style={styles.smallButton}>
-          {showDone ? (
-            <p style={{ fontWeight: "bold", color: "green" }}>archived</p>
-          ) : (
-            "archived"
-          )}
-        </div>
-        <div onClick={handleSort} style={styles.smallButton}>
-          {ascending ? "desc[↓]" : "asc[↑]"}
-        </div>
-      </Flex>
+      <DictionaryModal openModal={isModalOpen} callback={closeModal}/>
       <ListScrollable
+        doReload={doReload}
         addToolTipMessage="pick a context"
         listClearTriggerObject={undefined}
         loadListDataHandler={fetchDataFunction}

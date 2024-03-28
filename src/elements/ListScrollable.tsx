@@ -2,9 +2,8 @@ import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useState, useEffect } from "react";
 import { List, Space, Row, Col, Tooltip } from "antd";
-import { PlusCircleFilled } from "@ant-design/icons";
+import { LoadingOutlined, PlusCircleFilled } from "@ant-design/icons";
 import Iterable from "../types/Iterable";
-import { wordBuilder } from "../types/WordType";
 
 interface Props {
   loadListDataHandler: any;
@@ -14,6 +13,7 @@ interface Props {
   listItemStyle: any;
   clickedItemHandler: (item: Iterable) => void;
   addToolTipMessage: string;
+  doReload: boolean
 }
 
 const ListScrollable: React.FC<Props> = ({
@@ -24,6 +24,7 @@ const ListScrollable: React.FC<Props> = ({
   listItemStyle,
   clickedItemHandler,
   addToolTipMessage,
+  doReload,
 }) => {
   const [list, setList] = useState<Iterable[]>([]);
   const [page, setPage] = useState(0);
@@ -37,6 +38,7 @@ const ListScrollable: React.FC<Props> = ({
     0
   );
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [reload, setReload] = useState(false);
 
   const loadContent = async () => {
     try {
@@ -75,9 +77,9 @@ const ListScrollable: React.FC<Props> = ({
     }
   };
 
-  useEffect(() => {
+  useEffect(() => {  
     loadContent();
-  }, [listClearTriggerObject]);
+  }, [listClearTriggerObject, doReload]);
 
   const handleItemClick = (item: Iterable) => {
     setClickedItem(item);
@@ -104,8 +106,7 @@ const ListScrollable: React.FC<Props> = ({
           next={loadContent}
           hasMore={hasMoreItems}
           scrollableTarget="scrollableDiv"
-          loader={<div>loading...</div>}
-          endMessage={<div>---</div>}
+          loader={<LoadingOutlined />}
         >
           <List
             dataSource={list}

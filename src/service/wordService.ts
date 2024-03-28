@@ -1,16 +1,23 @@
 import Word from "../types/WordType";
 import { wordBuilder } from "../types/WordType";
-import { abstractGet } from "./abstractService";
+import { abstractGetWithRequestParams, abstractPost } from "./abstractService";
+import Iterable from "../types/Iterable";
 
-export const fetchWords = (
+
+export const fetchWordsByLangLevel = (
   pageNo: number,
   pageSize: number,
   sortBy: string,
-  direction: string
+  direction: string,
+  langLevel:string,
 ): any => {
-  return fetchAndMapToWords(
-    `/api/words?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&direction=${direction}`
-  );
+  return fetchWordsWithParams("/api/words/searchBy", pageNo,pageSize,sortBy,direction,undefined,langLevel, undefined);
+};
+
+export const fetchWordsByLetters = (
+  wordLetters:string,
+): any => {
+  return fetchAndMapSecond("/api/words/find", {params:{wordLetters}});
 };
 
 export const fetchWordsByUserId = (
@@ -18,12 +25,28 @@ export const fetchWordsByUserId = (
   pageNo: number,
   pageSize: number
 ): any => {
-  let path = `/api/words/searchBy?userId=${userId}&filter=&pageNo=${pageNo}&pageSize=${pageSize}&sortBy=word&direction=asc`;
-  return fetchAndMapToWords(path);
+  let path = "/api/words/searchBy";
+  return fetchWordsWithParams(path,pageNo,pageSize,'word','asc',"","",userId);
 };
 
-export const fetchAndMapToWords = async (path: string): Promise<any> => {
-  const response = await abstractGet(path);
+
+export const fetchWordsWithParams = (
+  path:string,
+  pageNo: number,
+  pageSize: number,
+  sortBy: string,
+  direction: string,
+  status:string|undefined,
+  langLevel:string|undefined,
+  userId:number|undefined,
+): any => {
+  return fetchAndMap(
+    path,{params:{pageNo, pageSize, sortBy,direction, status, langLevel,userId}}
+  );
+};
+
+export const fetchAndMap = async (path: string, params:any): Promise<any> => {
+  const response = await abstractGetWithRequestParams(path,params);
   let mappedContent: Word[] = [];
   response.data.content.forEach((e: Word) => {
     mappedContent.push(wordBuilder(e.id, e.word)); //TODO use builder
@@ -31,3 +54,17 @@ export const fetchAndMapToWords = async (path: string): Promise<any> => {
   response.data.content = mappedContent;
   return response.data;
 };
+
+export const fetchAndMapSecond = async (path: string, params:any): Promise<any> => {
+  const response = await abstractGetWithRequestParams(path,params);
+  let mappedContent: Word[] = [];
+  response.data.forEach((e: Word) => {
+    mappedContent.push(wordBuilder(e.id, e.word)); //TODO use builder
+  });
+  response.data = mappedContent;
+  return response.data;
+};
+
+export const saveWords = (userId:number, selectedItems:Iterable[]) => {
+    abstractPost(`/api/words?userId=${userId}`,selectedItems);
+}
