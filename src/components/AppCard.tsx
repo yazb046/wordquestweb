@@ -8,57 +8,59 @@ import { useEffect, useState } from "react";
 interface Props {
   word: Iterable;
   context: Iterable;
-  cardCloseListener:() => any;
+  cardCloseListener: () => any;
 }
 
-
-
 const AppCard: React.FC<Props> = ({ word, context, cardCloseListener }) => {
-
-  const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0,""));
+  const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, ""));
 
   const closeCard = () => {
-    setActiveWord(wordBuilder(0,""));
+    setActiveWord(wordBuilder(0, ""));
     cardCloseListener();
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     setActiveWord(word);
-  },[word])
+  }, [word]);
 
   return (
     <>
       {activeWord.getId() > 0 && (
-        
-
-          <Card
-            bordered={false}
-            style={{
-              alignSelf:"end",
-              justifyContent:"end",
-              width: "100%",
-              height: "60%",
-              padding: "5px",
-              marginTop: "15px",
-              marginLeft: "0px",
-              marginRight: "5px",
-              fontFamily: "Merriweather",
-              boxShadow: "-0 0 5px rgba(0, 0, 0, 1)",
-            }}
-          >
-            <Row>
+        <Card
+          bordered={false}
+          style={{
+            alignSelf: "end",
+            justifyContent: "end",
+            width: "100%",
+            height: "60%",
+            padding: "5px",
+            marginTop: "10px",
+            marginLeft: "0px",
+            marginRight: "5px",
+            fontFamily: "Merriweather",
+            boxShadow: "-0 0 5px rgba(0, 0, 0, 1)",
+          }}
+        >
+          <Row style={{ paddingTop: "0px",}}>
             <Col span={12} style={{ textAlign: "left" }}>
               <Space style={styles.header} direction="horizontal">
-              <div >card:</div>
-              <div style={{color: "#c25c40",}}>{activeWord.getContent()}</div>
+                <div
+                  style={{
+                    fontSize: "20px",
+                    fontFamily: "Merriweather",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {activeWord.getContent()}
+                </div>
               </Space>
             </Col>
             <Col span={12} style={{ textAlign: "right" }}>
               <CloseOutlined onClick={closeCard} />
             </Col>
           </Row>
-            <CardContent context={context} />
-          </Card>
+          <CardContent context={context} />
+        </Card>
       )}
     </>
   );
@@ -66,14 +68,14 @@ const AppCard: React.FC<Props> = ({ word, context, cardCloseListener }) => {
 
 const styles = {
   header: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: "13px",
     color: "#665f5d",
     fontFamily: "Roboto Mono",
     paddingBottom: "10px",
-    paddingTop:'0px',
-    paddingLeft:'0px',
-    margin:'0px',
+    paddingTop: "0px",
+    paddingLeft: "0px",
+    margin: "0px",
   },
 };
 

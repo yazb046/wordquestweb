@@ -1,9 +1,7 @@
 import { Layout, Tabs } from "antd";
 import { StrictMode } from "react";
 import CreateCard from "./CreateCard";
-const { Footer, Header, Sider } = Layout;
-const { TabPane } = Tabs;
-import '../assets/css/style.css';
+const { Footer, Header, } = Layout;
 
 export default function Container() {
   return (

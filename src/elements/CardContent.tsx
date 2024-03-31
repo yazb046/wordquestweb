@@ -8,7 +8,6 @@ interface Props {
   context: Iterable;
 }
 const CardContent: React.FC<Props> = ({ context }) => {
-
   const [editableContext, setEditableContext] = useState<Iterable>(
     textBuilder(0, "")
   );
@@ -17,30 +16,31 @@ const CardContent: React.FC<Props> = ({ context }) => {
   useEffect(() => {
     if (editableText === "") {
       setEditableContext(context);
-      setEditableText(context.getContent())
+      setEditableText(context.getContent());
     }
   }, [context]);
 
   const handleDelete = () => {
     setEditableText("");
-    setEditableContext(textBuilder(0,""))
+    setEditableContext(textBuilder(0, ""));
   };
 
   const handleSave = () => {
-    if(editableContext.getId()!==0){
+    if (editableContext.getId() !== 0) {
       editableContext.setContent(editableText);
     }
-    saveNewCard(1, editableContext)
+    saveNewCard(1, editableContext);
     handleDelete();
-  }
+  };
 
-  const handleUpdate= (text:string)=>{
-    setEditableText(text)
-  }
+  const handleUpdate = (text: string) => {
+    setEditableText(text);
+  };
 
   return (
     <>
-      <Row gutter={[16, 16]}>
+     <Space direction="vertical">
+      <Row gutter={[16, 8]}>
         <Col span={14}>
           <Space direction="vertical">
             <Paragraph
@@ -55,23 +55,15 @@ const CardContent: React.FC<Props> = ({ context }) => {
             </Paragraph>
             <Space
               direction="horizontal"
-              style={{ paddingBottom: "10px" }}
+              style={{ paddingBottom: "5px" }}
             ></Space>
 
-            <Paragraph>{"comments comments comments"}</Paragraph>
-            <Space direction="horizontal">
-              <Button onClick={console.log} disabled={!context}>
-                Listen
-              </Button>
-              <Button onClick={console.log} disabled={!context}>
-                Help
-              </Button>
-              <Button onClick={handleDelete}>Delete</Button>
-              <Button onClick={handleSave}>Save</Button>
-            </Space>
+            <Paragraph editable style={{ maxHeight: 100, overflow: "auto" }}>
+              {"comments comments comments"}
+            </Paragraph>
           </Space>
         </Col>
-        <Col span={10}>
+        <Col span={10} style={{ display: "flex", justifyContent: "flex-end" }}>
           <Image
             src="https://via.placeholder.com/150"
             alt="placeholder"
@@ -80,6 +72,13 @@ const CardContent: React.FC<Props> = ({ context }) => {
           />
         </Col>
       </Row>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, margin: '10px' }}>
+     
+        <Button style={{marginRight:'5px'}}onClick={handleDelete}>Cancel</Button>
+        <Button onClick={handleSave}>Save</Button>
+      
+      </div>
+      </Space>
     </>
   );
 };
