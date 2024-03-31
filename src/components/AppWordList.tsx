@@ -51,14 +51,14 @@ const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
         listItemDefaultInstance={wordBuilder(0, "")}
         clickedItemHandler={setter}
         scrollListBoxStyle={{
-          height: 550,
+          height: 530,
           overflow: "auto",
         }}
         listItemStyle={{
           borderRadius: "1px",
           height: "25px",
           fontSize: "13px",
-          paddingLeft: "7px",
+          paddingLeft: "10px",
           fontFamily: "Merriweather",
           fontWeight: "bold",
         }}
@@ -68,29 +68,10 @@ const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
 };
 
 const styles = {
-  addButton: {
-    fontFamily: "Ropa Sans",
-    cursor: "pointer",
-    fontSize: "12px",
-    padding: "3px",
-    marginLeft: "0px",
-    margin: "3px",
-    color: "red",
-  },
-  smallButton: {
-    fontFamily: "Ropa Sans",
-    cursor: "pointer",
-    fontSize: "12px",
-    padding: "0px",
-    marginTop: "0px",
-    marginBottom: "10px",
-    marginRight: "5px",
-    color: "blue",
-  },
   boxTitle: {
     fontSize: "13px",
-    color: "#3c9691",
-    fontFamily: "Roboto Mono",
+    color: "#076af5",
+    fontFamily: "Montserrat",
     paddingBottom: "10px",
   },
 };

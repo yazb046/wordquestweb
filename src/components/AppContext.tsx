@@ -7,7 +7,7 @@ import { Content } from "antd/es/layout/layout";
 import { CloseOutlined } from "@ant-design/icons";
 import { Row, Col } from "antd";
 import { useEffect, useState } from "react";
-import AppContent from "./AppContent";
+import AppCard from "./AppCard";
 import { Space } from "antd";
 
 interface AppContextProps {
@@ -46,11 +46,14 @@ const AppContext: React.FC<AppContextProps> = ({
     <>
       {activeWord && activeWord.getId() > 0 && (
         <>
-          <Content style={styles.content2}>
-            <Row>
+          <Content style={styles.context}>
+            <Row style={{ marginBottom: "5px" }}>
               <Col span={12} style={{ textAlign: "left" }}>
-                <Space style={styles.header} direction="horizontal">
-                  <div>context:</div>
+                <Space
+                  style={{ color: "#076af5", fontFamily: "Montserrat" }}
+                  direction="horizontal"
+                >
+                  <div>choose a context for: </div>
                   <div style={{ color: "#c25c40" }}>{word.getContent()}</div>
                 </Space>
                 <div style={{ backgroundColor: "#f2836f" }}></div>
@@ -61,37 +64,36 @@ const AppContext: React.FC<AppContextProps> = ({
             </Row>
 
             <ListScrollable
+              doReload={false}
               addToolTipMessage="create card"
               clickedItemHandler={creatContext}
               listClearTriggerObject={activeWord}
               loadListDataHandler={fetchDataFunction}
               listItemDefaultInstance={textBuilder(0, "")}
               scrollListBoxStyle={{
-                height: 120,
+                height: 180,
                 overflow: "auto",
               }}
               listItemStyle={{
-                borderRadius: "1px",
+                borderRadius: "2px",
                 height: "auto",
-                fontSize: "14px",
-                padding: "3px",
+                fontSize: "13.5px",
+                padding: "5px",
                 margin: "0px",
                 fontFamily: "Merriweather",
                 textAlign: "left",
                 verticalAlign: "top",
               }}
             />
-          </Content>
-          <Content style={styles.content1}>
-            {activeContext && activeContext.getId() > 0 && (
-              <AppContent
-                word={contextWord}
-                context={activeContext}
-                cardCloseListener={() => {
-                  setActiveContext(textBuilder(0, ""));
-                }}
-              />
-            )}
+              {activeContext && activeContext.getId() > 0 && (
+                <AppCard
+                  word={contextWord}
+                  context={activeContext}
+                  cardCloseListener={() => {
+                    setActiveContext(textBuilder(0, ""));
+                  }}
+                />
+              )}
           </Content>
         </>
       )}
@@ -100,32 +102,12 @@ const AppContext: React.FC<AppContextProps> = ({
 };
 
 const styles = {
-  header: {
-    fontWeight: 'bold',
-    fontSize: "13px",
-    color: "#665f5d",
-    fontFamily: "Roboto Mono",
-    paddingBottom: "10px",
-    paddingTop: "0px",
-    paddingLeft: "0px",
-    margin: "0px",
-  },
-  content1: {
+  context: {
     padding: "10px 10px",
     background: "#e8f6fa",
-    height: "70%",
-    marginTop: "7px",
-    marginRight: "14px",
+    height: "25%",
+    marginRight: "7px",
     marginBottom: "7px",
-    boxShadow: "-0 0 5px rgba(0, 0, 0, 0.5)",
-    borderRadius: 3,
-  },
-  content2: {
-    padding: "10px 10px",
-    background: "#e8f6fa",
-    height: "30%",
-    marginTop: "7px",
-    marginRight: "14px",
     boxShadow: "-0 0 5px rgba(0, 0, 0, 0.5)",
     borderRadius: 3,
   },

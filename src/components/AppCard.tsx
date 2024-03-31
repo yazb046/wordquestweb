@@ -1,11 +1,11 @@
-import { Card, Space, Button, Row, Col } from "antd";
+import { Card, Space, Button, Row, Col, Layout } from "antd";
 import CardContent from "../elements/CardContent";
 import Iterable from "../types/Iterable";
 import { CloseOutlined } from "@ant-design/icons";
 import { wordBuilder } from "../types/WordType";
 import { useEffect, useState } from "react";
 
-interface AppContentProps {
+interface Props {
   word: Iterable;
   context: Iterable;
   cardCloseListener:() => any;
@@ -13,7 +13,7 @@ interface AppContentProps {
 
 
 
-const AppContent: React.FC<AppContentProps> = ({ word, context, cardCloseListener }) => {
+const AppCard: React.FC<Props> = ({ word, context, cardCloseListener }) => {
 
   const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0,""));
 
@@ -29,8 +29,24 @@ const AppContent: React.FC<AppContentProps> = ({ word, context, cardCloseListene
   return (
     <>
       {activeWord.getId() > 0 && (
-        <>
-          <Row>
+        
+
+          <Card
+            bordered={false}
+            style={{
+              alignSelf:"end",
+              justifyContent:"end",
+              width: "100%",
+              height: "60%",
+              padding: "5px",
+              marginTop: "15px",
+              marginLeft: "0px",
+              marginRight: "5px",
+              fontFamily: "Merriweather",
+              boxShadow: "-0 0 5px rgba(0, 0, 0, 1)",
+            }}
+          >
+            <Row>
             <Col span={12} style={{ textAlign: "left" }}>
               <Space style={styles.header} direction="horizontal">
               <div >card:</div>
@@ -41,25 +57,8 @@ const AppContent: React.FC<AppContentProps> = ({ word, context, cardCloseListene
               <CloseOutlined onClick={closeCard} />
             </Col>
           </Row>
-
-          <Card
-            bordered={false}
-            style={{
-              width: "100%",
-              height: "80%",
-              padding: "5px",
-              margin: "5px",
-              marginLeft: "0px",
-              marginRight: "0px",
-              fontFamily: "Merriweather",
-            }}
-          >
             <CardContent context={context} />
           </Card>
-          <Space direction="horizontal" align="center">
-            <Button onClick={console.log}>View cards</Button>
-          </Space>
-        </>
       )}
     </>
   );
@@ -78,4 +77,4 @@ const styles = {
   },
 };
 
-export default AppContent;
+export default AppCard;
