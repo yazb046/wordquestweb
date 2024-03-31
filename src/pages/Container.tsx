@@ -23,7 +23,6 @@ export default function Container() {
             alignSelf: "center",
             border: "1px solid #dce0e3",
             boxShadow: "-0 0 5px rgba(0, 0, 0, 0.5)",
-            
           }}
           tabPosition="top"
           tabBarStyle={{
@@ -32,6 +31,7 @@ export default function Container() {
             marginTop: "0px",
             marginLeft: "10px",
             marginRight: "5px",
+            marginBottom:'7px',
             
           }}
           tabBarGutter={20}

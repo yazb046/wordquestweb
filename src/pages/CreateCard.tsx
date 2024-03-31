@@ -34,6 +34,7 @@ const CreateCard: React.FC = () => {
           alignItems: "flex",
           backgroundColor: "rgba(255, 255, 255, 0)",
           marginTop: "0px",
+          marginBottom:'0px',
         }}
       >
         <AppContext word={activeWord} contextCleanlistener={cleanActiveWord} />
@@ -46,10 +47,10 @@ const CreateCard: React.FC = () => {
 const styles = {
   sider: {
     backgroundColor: "#e8f6fa",
-    padding: "10px 10px",
+    padding: "10px 7px",
     marginRight: "7px",
     marginLeft: "7px",
-    marginBottom: "7px",
+    marginBottom: "0px",
     boxShadow: "-0 0 5px rgba(0, 0, 0, 0.5)",
     borderRadius: 2,
   },

@@ -138,9 +138,9 @@ const styles = {
   context: {
     padding: "10px 10px",
     background: "#e8f6fa",
-    height: "25%",
+    height: "30%",
     marginRight: "7px",
-    marginBottom: "7px",
+    marginBottom: "0px",
     boxShadow: "-0 0 5px rgba(0, 0, 0, 0.5)",
     borderRadius: 3,
   },

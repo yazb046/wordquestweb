@@ -38,7 +38,7 @@ const AppCard: React.FC<Props> = ({ word, context, cardCloseListener }) => {
             marginLeft: "0px",
             marginRight: "5px",
             fontFamily: "Merriweather",
-            boxShadow: "-0 0 5px rgba(0, 0, 0, 1)",
+            boxShadow: "-0 0 8px rgba(0, 0, 0, 2)",
           }}
         >
           <Row style={{ paddingTop: "0px",}}>
