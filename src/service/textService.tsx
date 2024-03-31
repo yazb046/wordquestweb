@@ -19,7 +19,7 @@ export const fetchUserWordRelatedContext = (
   });
 };
 
-export const saveNewCard = (userId:number, iterable:Iterable) =>{
+export const saveNewCard = (userId:number, iterable:Iterable, comment:string) =>{
   let path = `/api/cards?userId=${userId}`;
   abstractPost(path, iterable);
 }

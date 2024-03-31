@@ -44,9 +44,9 @@ const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
       </Row>
       <DictionaryModal openModal={isModalOpen} callback={closeModal}/>
       <ListScrollable
-        doReload={doReload}
+        clearList={doReload}
         addToolTipMessage="pick a context"
-        listClearTriggerObject={undefined}
+        contextWord={undefined}
         loadListDataHandler={fetchDataFunction}
         listItemDefaultInstance={wordBuilder(0, "")}
         clickedItemHandler={setter}

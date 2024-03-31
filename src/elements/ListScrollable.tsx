@@ -6,25 +6,25 @@ import { LoadingOutlined, PlusCircleFilled } from "@ant-design/icons";
 import Iterable from "../types/Iterable";
 
 interface Props {
+  contextWord:Iterable|undefined;
   loadListDataHandler: any;
   listItemDefaultInstance: Iterable;
   scrollListBoxStyle: { height?: number | string; overflow: string };
-  listClearTriggerObject: Iterable | undefined;
+  clearList:boolean;
   listItemStyle: any;
   clickedItemHandler: (item: Iterable) => void;
   addToolTipMessage: string;
-  doReload: boolean
 }
 
 const ListScrollable: React.FC<Props> = ({
+  contextWord,
   loadListDataHandler,
   listItemDefaultInstance,
   scrollListBoxStyle,
-  listClearTriggerObject,
+  clearList,
   listItemStyle,
   clickedItemHandler,
   addToolTipMessage,
-  doReload,
 }) => {
   const [list, setList] = useState<Iterable[]>([]);
   const [page, setPage] = useState(0);
@@ -34,20 +34,16 @@ const ListScrollable: React.FC<Props> = ({
     listItemDefaultInstance
   );
   const [resultSize, setResultSize] = useState(0);
-  const [currentTriggerId, setCurrentTriggerId] = useState<number | undefined>(
-    0
-  );
+  const [isListCleared, setIsListCleared] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  const [reload, setReload] = useState(false);
 
   const loadContent = async () => {
     try {
-      if (listClearTriggerObject?.getId() !== currentTriggerId) {
+      if (isListCleared) {
         setPage(0);
         setList([]);
         console.log("listScrollable is set to Empty");
-        let id = listClearTriggerObject?.getId();
-        setCurrentTriggerId(id);
+        setIsListCleared(false);
       } else {
         setPage((page) => page + 1);
       }
@@ -56,7 +52,7 @@ const ListScrollable: React.FC<Props> = ({
         return;
       }
       setLoading(true);
-      loadListDataHandler(page, listClearTriggerObject).then(
+      loadListDataHandler(page, contextWord).then(
         (response: any) => {
           setList((prevList) => [...prevList, ...response.content]);
           setList((prevList) => {
@@ -78,8 +74,11 @@ const ListScrollable: React.FC<Props> = ({
   };
 
   useEffect(() => {  
+    if(clearList){
+      setIsListCleared(clearList);
+    }
     loadContent();
-  }, [listClearTriggerObject, doReload]);
+  }, [contextWord, clearList]);
 
   const handleItemClick = (item: Iterable) => {
     setClickedItem(item);

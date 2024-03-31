@@ -8,7 +8,8 @@ import { CloseOutlined } from "@ant-design/icons";
 import { Row, Col } from "antd";
 import { useEffect, useState } from "react";
 import AppCard from "./AppCard";
-import { Space } from "antd";
+import { Space, Button } from "antd";
+import { Alert } from "antd";
 
 interface AppContextProps {
   word: Iterable;
@@ -19,14 +20,24 @@ const AppContext: React.FC<AppContextProps> = ({
   word,
   contextCleanlistener,
 }) => {
-  const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, ""));
   const [contextWord, setContextWord] = useState<Iterable>(wordBuilder(0, ""));
-  const [activeContext, setActiveContext] = useState<Iterable>(
-    textBuilder(0, "")
-  );
+  const [activeContext, setActiveContext] = useState<Iterable>(textBuilder(0, ""));
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [clearList, setClearList] = useState(false);
 
   useEffect(() => {
-    setActiveWord(word);
+    if (
+      activeContext.getId() !== 0 &&
+      contextWord.getId()!== 0 &&
+      contextWord.getId() !== word.getId() 
+      
+    ) {
+      setAlertVisible(true);
+    } else {
+      setClearList(true);
+      setContextWord(word);
+      setAlertVisible(false);
+    }
   }, [word]);
 
   const fetchDataFunction = async (aPageNo: number, aWord: Word) => {
@@ -34,17 +45,17 @@ const AppContext: React.FC<AppContextProps> = ({
   };
 
   const closeContextScreen = () => {
+    setActiveContext(textBuilder(0, ""));
     contextCleanlistener();
   };
 
-  const creatContext = (text: Iterable) => {
-    setContextWord(activeWord);
+  const chooseContext = (text: Iterable) => {
     setActiveContext(text);
   };
 
   return (
     <>
-      {activeWord && activeWord.getId() > 0 && (
+      {contextWord && contextWord.getId() > 0 && (
         <>
           <Content style={styles.context}>
             <Row style={{ marginBottom: "5px" }}>
@@ -64,10 +75,10 @@ const AppContext: React.FC<AppContextProps> = ({
             </Row>
 
             <ListScrollable
-              doReload={false}
               addToolTipMessage="create card"
-              clickedItemHandler={creatContext}
-              listClearTriggerObject={contextWord}
+              clickedItemHandler={chooseContext}
+              contextWord={contextWord}
+              clearList={clearList}
               loadListDataHandler={fetchDataFunction}
               listItemDefaultInstance={textBuilder(0, "")}
               scrollListBoxStyle={{
@@ -85,16 +96,38 @@ const AppContext: React.FC<AppContextProps> = ({
                 verticalAlign: "top",
               }}
             />
-              {activeContext && activeContext.getId() > 0 && (
-                <AppCard
-                  word={contextWord}
-                  context={activeContext}
-                  cardCloseListener={() => {
-                    setActiveContext(textBuilder(0, ""));
-                  }}
-                />
-              )}
+            {activeContext && activeContext.getId() > 0 && (
+              <AppCard
+                word={contextWord}
+                context={activeContext}
+                cardCloseListener={() => {
+                  setActiveContext(textBuilder(0, ""));
+                  setAlertVisible(false);
+                }}
+              />
+            )}
           </Content>
+          {alertVisible && (
+            <Alert
+              message="Save or cancel card before changing the context!"
+              type="error"
+              description={
+                <Button
+                  onClick={() => setAlertVisible(false)}
+                  className="alert-button"
+                >
+                  OK
+                </Button>
+              }
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                textAlign: "center",
+              }}
+            />
+          )}
         </>
       )}
     </>

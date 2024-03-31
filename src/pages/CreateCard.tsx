@@ -22,7 +22,7 @@ const CreateCard: React.FC = () => {
   return (
     <Layout
       style={{
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "rgba(255, 255, 255, 0)",
       }}
     >
       <Sider style={styles.sider}>
@@ -32,13 +32,14 @@ const CreateCard: React.FC = () => {
       <Layout
         style={{
           alignItems: "flex",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "rgba(255, 255, 255, 0)",
           marginTop: "0px",
         }}
       >
         <AppContext word={activeWord} contextCleanlistener={cleanActiveWord} />
       </Layout>
     </Layout>
+    
   );
 };
 

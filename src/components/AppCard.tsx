@@ -12,8 +12,8 @@ interface Props {
 }
 
 const AppCard: React.FC<Props> = ({ word, context, cardCloseListener }) => {
+  
   const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, ""));
-
   const closeCard = () => {
     setActiveWord(wordBuilder(0, ""));
     cardCloseListener();
@@ -59,7 +59,7 @@ const AppCard: React.FC<Props> = ({ word, context, cardCloseListener }) => {
               <CloseOutlined onClick={closeCard} />
             </Col>
           </Row>
-          <CardContent context={context} />
+          <CardContent context={context} closeEvent={cardCloseListener} />
         </Card>
       )}
     </>
