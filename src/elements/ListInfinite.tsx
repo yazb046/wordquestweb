@@ -3,6 +3,7 @@ import Iterable from "../types/Iterable";
 import { Divider, Tag, Flex, Input, Space, Button} from "antd";
 const { Search } = Input;
 import { fetchWordsByLetters } from "../service/wordService";
+import { LoadingOutlined } from "@ant-design/icons";
 
 interface ListInfiniteProps {
   fetchFunction: (pageNumber: number, langLevel: string) => Promise<any>;
@@ -135,7 +136,6 @@ const ListInfinite: React.FC<ListInfiniteProps> = ({
     </Space.Compact>
       
       <div style={{ height: 200, overflow: "auto" }}>
-        {/* <input type="text" value={query} onChange={handleSearch}></input> */}
         {items.map((item, index) => {
           if (items.length > 0 && index === items.length - 1) {
             return (
@@ -188,7 +188,7 @@ const ListInfinite: React.FC<ListInfiniteProps> = ({
             );
           }
         })}
-        <div>{loading && "Loading..."}</div>
+        <div>{loading && <LoadingOutlined />}</div>
         <div>{error && "Error"}</div>
       </div>
       <Divider />

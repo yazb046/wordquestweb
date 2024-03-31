@@ -12,6 +12,8 @@ interface Props {
   callback:any;
 }
 
+const levels = ['all', 'a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
+
 const DictionaryModal: React.FC <Props> = ({openModal, callback}) => {
 
   const [langLevel, setLangLevel] = useState("all");
@@ -47,6 +49,10 @@ const DictionaryModal: React.FC <Props> = ({openModal, callback}) => {
     setIsModalOpen(false);
   }
 
+  const handleChange = (value:string) => {
+    setLangLevel(value);
+  };
+
 
   return (
     <Modal
@@ -58,29 +64,15 @@ const DictionaryModal: React.FC <Props> = ({openModal, callback}) => {
       title="pick a word to learn"
     >
       <Space direction="vertical">
-        <Radio.Group size="small">
-          <Radio.Button value="all" onClick={() => setLangLevel("all")}>
-            All
+      <Space direction="vertical">
+      <Radio.Group size="small" value={langLevel} onChange={(e) => handleChange(e.target.value)}>
+        {levels.map((level) => (
+          <Radio.Button key={level} value={level}>
+            {level.toUpperCase()}
           </Radio.Button>
-          <Radio.Button value="a1" onClick={() => setLangLevel("a1")}>
-            A1
-          </Radio.Button>
-          <Radio.Button value="a2" onClick={() => setLangLevel("a2")}>
-            A2
-          </Radio.Button>
-          <Radio.Button value="b1" onClick={() => setLangLevel("b1")}>
-            B1
-          </Radio.Button>
-          <Radio.Button value="b2" onClick={() => setLangLevel("b2")}>
-            B2
-          </Radio.Button>
-          <Radio.Button value="c1" onClick={() => setLangLevel("c1")}>
-            C1
-          </Radio.Button>
-          <Radio.Button value="c2" onClick={() => setLangLevel("c2")}>
-            C2
-          </Radio.Button>
-        </Radio.Group>
+        ))}
+      </Radio.Group>
+    </Space>
         <ListInfinite
           fetchFunction={fetchDataFunction}
           aLangLevel={langLevel}
