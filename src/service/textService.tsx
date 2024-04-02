@@ -1,7 +1,6 @@
 import { abstractGet, abstractPost} from "./abstractService";
 import Word from "../types/WordType";
 import TextType, { textBuilder } from "../types/TextType";
-import Iterable from "../types/Iterable";
 
 export const fetchUserWordRelatedContext = (
   userId: number,
@@ -19,7 +18,4 @@ export const fetchUserWordRelatedContext = (
   });
 };
 
-export const saveNewCard = (userId:number, iterable:Iterable, comment:string) =>{
-  let path = `/api/cards?userId=${userId}`;
-  abstractPost(path, iterable);
-}
+

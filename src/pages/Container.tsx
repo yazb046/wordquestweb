@@ -1,6 +1,7 @@
 import { Layout, Tabs } from "antd";
 import { StrictMode } from "react";
 import CreateCard from "./CreateCard";
+import ViewCards from "./ViewCards";
 const { Footer, Header, } = Layout;
 
 export default function Container() {
@@ -37,20 +38,15 @@ export default function Container() {
           tabBarGutter={20}
           items={[
             {
-              label: "create",
+              label: "create card",
               key: "1",
               children: <CreateCard />,
             },
             {
-              label: "view",
+              label: "view cards",
               key: "2",
               children: (
-                <Layout
-                  style={{
-                    width: "70%",
-                    alignSelf: "center",
-                  }}
-                ></Layout>
+                <ViewCards/>
               ),
             },
           ]}

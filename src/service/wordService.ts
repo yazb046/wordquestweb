@@ -41,7 +41,7 @@ export const fetchWordsWithParams = (
   userId:number|undefined,
 ): any => {
   return fetchAndMap(
-    path,{params:{pageNo, pageSize, sortBy,direction, status, langLevel,userId}}
+    path,{params:{pageNo, pageSize, sortBy,direction, status, langLevel, userId}}
   );
 };
 

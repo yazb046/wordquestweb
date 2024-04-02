@@ -6,6 +6,11 @@ interface TextType extends Iterable {
 
   class TextTypeClass implements TextType {
     constructor(public id: number, public text: string) {}
+  
+    getTheme(): string {
+      return "";
+    }
+
     getContent(): string {
       return this.text;
     }

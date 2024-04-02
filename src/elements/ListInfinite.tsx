@@ -183,7 +183,9 @@ const ListInfinite: React.FC<ListInfiniteProps> = ({
                   fontWeight: "bold",
                 }}
               >
+               
                 {item.getContent()}
+                
               </div>
             );
           }

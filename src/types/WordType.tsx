@@ -30,6 +30,10 @@ class WordTypeClass implements WordType {
     return this.id;
   }
 
+  getTheme(): string {
+    return "";
+  }
+
   setContent(content:string): void{
     this.word = content;
   }

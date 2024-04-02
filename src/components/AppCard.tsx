@@ -59,7 +59,7 @@ const AppCard: React.FC<Props> = ({ word, context, cardCloseListener }) => {
               <CloseOutlined onClick={closeCard} />
             </Col>
           </Row>
-          <CardContent context={context} closeEvent={cardCloseListener} />
+          <CardContent word ={activeWord} context={context} closeEvent={cardCloseListener} />
         </Card>
       )}
     </>

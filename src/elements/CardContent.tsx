@@ -3,12 +3,13 @@ const { Paragraph } = Typography;
 import { useEffect, useState } from "react";
 import Iterable from "../types/Iterable";
 import { textBuilder } from "../types/TextType";
-import { saveNewCard } from "../service/textService";
+import { saveNewCard } from "../service/cardService";
 interface Props {
+  word:Iterable,
   context: Iterable;
   closeEvent:any;
 }
-const CardContent: React.FC<Props> = ({ context, closeEvent}) => {
+const CardContent: React.FC<Props> = ({ word, context, closeEvent}) => {
   const [editableContext, setEditableContext] = useState<Iterable>(
     textBuilder(0, "")
   );
@@ -32,7 +33,7 @@ const CardContent: React.FC<Props> = ({ context, closeEvent}) => {
     if (editableContext.getId() !== 0) {
       editableContext.setContent(editableText);
     }
-    saveNewCard(1, editableContext, comment);
+    saveNewCard(1, word.getId(), editableContext, comment);
     handleClose();
   };
 
