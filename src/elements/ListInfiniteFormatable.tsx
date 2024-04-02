@@ -19,20 +19,10 @@ const ListInfiniteFormatable: React.FC<Props> = ({
   const observer = useRef<IntersectionObserver>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [items, setItems] = useState<Iterable[]>([textBuilder(0, "empty")]);
+  const [items, setItems] = useState<Iterable[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Iterable[]>([]);
-  const [searchText, setSearchText] = useState("");
-
-  const handleClick = (item: Iterable) => {
-    if (
-      !selectedItems.some(
-        (selectedItem) => selectedItem.getId() === item.getId()
-      )
-    ) {
-      setSelectedItems([...selectedItems, item]);
-    }
-  };
+  const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -44,7 +34,7 @@ const ListInfiniteFormatable: React.FC<Props> = ({
           const uniqueItems = prevList.filter(
             (obj, index, self) =>
               index === self.findIndex((t) => t.getId() === obj.getId()) &&
-              obj.getId()!==0
+              obj.getId() !== 0
           );
           return uniqueItems;
         });
@@ -70,6 +60,51 @@ const ListInfiniteFormatable: React.FC<Props> = ({
     [loading, hasMore]
   );
 
+  const handleDoubleClick = (item: Iterable) => {
+    if (
+      !selectedItems.some(
+        (selectedItem) => selectedItem.getId() === item.getId()
+      )
+    ) {
+      setSelectedItems([...selectedItems, item]);
+    }
+  };
+  const handleClick = (item: Iterable) => {
+    if (selectedItems.some((selectedItem) => selectedItem.getId() === item.getId())) {
+      setSelectedItems(selectedItems.filter((selectedItem) => selectedItem.getId() !== item.getId()));
+    } 
+  };
+
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    itemId: number
+  ) => {
+    e.dataTransfer.setData("text/plain", itemId.toString());
+    setDraggedItemId(itemId);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItemId(null);
+  };
+
+  const handleDragOver = (
+    e: React.DragEvent<HTMLDivElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    if (draggedItemId !== null) {
+      const targetIndex = index;
+      const itemsCopy = [...items];
+      const draggedItemIndex = itemsCopy.findIndex(
+        (item) => item.getId() === draggedItemId
+      );
+      const draggedItem = itemsCopy[draggedItemIndex];
+      itemsCopy.splice(draggedItemIndex, 1);
+      itemsCopy.splice(targetIndex, 0, draggedItem);
+      setItems(itemsCopy);
+    }
+  };
+  const [searchText, setSearchText] = useState("");
   const onSearch = (value: string) => {
     setPageNumber(0);
     setSearchText(value);
@@ -82,12 +117,6 @@ const ListInfiniteFormatable: React.FC<Props> = ({
   const onClearButtonClick = () => {
     setSearchText("");
     setItems([]);
-  };
-
-  const onSelectListItem = (item: any) => {
-    return selectedItems.some(
-      (selectedItem) => selectedItem.getId() === item.getId()
-    );
   };
 
   return (
@@ -104,8 +133,7 @@ const ListInfiniteFormatable: React.FC<Props> = ({
           Clear
         </Button>
       </Space.Compact>
-
-      <div style={{ height: 537, overflow: "auto", maxWidth: 300 }}>
+      <div style={{ height: "535px", overflow: "auto", maxWidth: 300 }}>
         {items.map((item, index) => {
           const isLastItem = items.length > 0 && index === items.length - 1;
           const isSelected = selectedItems.some(
@@ -113,17 +141,17 @@ const ListInfiniteFormatable: React.FC<Props> = ({
           );
 
           const itemStyle = {
-            cursor: "pointer",
-            background: isSelected ? "#FBF3C5" : "white",
-            borderRadius: "3px",
-            borderBottom: "1px solid #ccc",
-            margin:"5px",
+            cursor: "grab",
+            backgroundColor: selectedItems.some((selectedItem) => selectedItem.getId() === item.getId()) ? "#FBF3C5" : "white",
+            border:
+              draggedItemId === item.getId() ? "1px solid #eb6734" : "none",
+            margin: "5px",
             height: "50px",
             fontSize: "14px",
-            paddingLeft: "7px",
-            paddingRight: "7px",
+            padding: "3px",
+            borderRadius: "5px",
             fontFamily: "Merriweather",
-            boxShadow: "1 1 1px rgba(0, 0, 0, 0.5)",
+            boxShadow: "0 0 3px rgba(0, 0, 0, 1)",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -131,24 +159,30 @@ const ListInfiniteFormatable: React.FC<Props> = ({
 
           return (
             <div
-              draggable
-              
-              ref={isLastItem? lastListElementRef:undefined}
+              ref={isLastItem ? lastListElementRef : undefined}
               key={item.getId()}
               onClick={() => handleClick(item)}
+              onDoubleClick={()=>handleDoubleClick(item)}
+              onDragStart={(e) => handleDragStart(e, item.getId())}
+              onDragEnd={handleDragEnd}
+              onDragOver={(e) => handleDragOver(e, index)}
+              draggable
               style={
                 isLastItem ? { ...itemStyle, cursor: "default" } : itemStyle
               }
             >
-                <p>{item.getTheme()}:</p> 
-                {item.getContent()} 
+              <p>{item.getTheme()}:</p>
+              {item.getContent()}
             </div>
           );
-          
         })}
+        {loading && <LoadingOutlined style={{ fontSize: 24 }} spin />}
+        {error && <div>Error loading items</div>}
+        {!loading && hasMore && (
+          <div ref={lastListElementRef}>Loading more...</div>
+        )}
       </div>
     </>
   );
 };
-
 export default ListInfiniteFormatable;
