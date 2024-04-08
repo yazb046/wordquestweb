@@ -39,6 +39,10 @@ interface CardType  extends Iterable{
         getTheme(): string {
           return this.word !== null? this.word.word:"";
         }
+
+        getThemeId (): number{
+          return this.word !== null? this.word.id:0;
+        }
     
   }
 
@@ -46,24 +50,18 @@ interface CardType  extends Iterable{
     id:number,
     contextTitle:string,
     text:string,
-    helpText:string,
-    isArchived:boolean,
-    textId:number,
-    version:number,
-    userId: number,
-    word:any,
     ) => {
 
     return new CardTypeClass(
         id,
         contextTitle,
         text,
-        helpText,
-        isArchived,
-        textId,
-        version,
-        userId,
-        word,
+        '',
+        false,
+        0,
+        0,
+        0,
+        '',
         );
   }
 

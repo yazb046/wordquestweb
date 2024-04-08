@@ -3,6 +3,7 @@ interface Iterable {
     getContent: () => string;
     setContent: (content:any) => void;
     getTheme: () => string;
+    getThemeId:() => number;
   }
 
 export default Iterable;  

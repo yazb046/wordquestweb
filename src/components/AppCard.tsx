@@ -11,7 +11,7 @@ interface Props {
   cardCloseListener: () => any;
 }
 
-const AppCard: React.FC<Props> = ({ word, context, cardCloseListener }) => {
+const AppCardUpdated: React.FC<Props> = ({ word, context, cardCloseListener }) => {
   
   const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, ""));
   const closeCard = () => {
@@ -79,4 +79,4 @@ const styles = {
   },
 };
 
-export default AppCard;
+export default AppCardUpdated;

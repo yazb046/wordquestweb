@@ -2,7 +2,8 @@ import { Layout, Tabs } from "antd";
 import { StrictMode } from "react";
 import CreateCard from "./CreateCard";
 import ViewCards from "./ViewCards";
-const { Footer, Header, } = Layout;
+import globaleStyles from "../assets/css/globalStyles";
+const { Footer, Header } = Layout;
 
 export default function Container() {
   return (
@@ -15,7 +16,7 @@ export default function Container() {
           flexDirection: "column",
         }}
       >
-        <Header style={styles.header}>WORD JUNGLE</Header>
+        <Header style={globaleStyles.header}>WORD JUNGLE</Header>
 
         <Tabs
           style={{
@@ -32,8 +33,7 @@ export default function Container() {
             marginTop: "0px",
             marginLeft: "10px",
             marginRight: "5px",
-            marginBottom:'7px',
-            
+            marginBottom: "7px",
           }}
           tabBarGutter={20}
           items={[
@@ -45,37 +45,13 @@ export default function Container() {
             {
               label: "view cards",
               key: "2",
-              children: (
-                <ViewCards/>
-              ),
+              children: <ViewCards />,
             },
           ]}
         ></Tabs>
 
-        <Footer style={styles.footer}> FOOTER </Footer>
+        <Footer style={globaleStyles.footer}> FOOTER </Footer>
       </Layout>
     </StrictMode>
   );
 }
-
-const styles = {
-  header: {
-    background: "#8ebed1",
-    fontFamily: "Keania One",
-    fontSize: "24px",
-    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.5)",
-    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
-    borderRadius: 1,
-    width: "70%",
-    alignSelf: "center",
-    zIndex: 1,
-  },
-  footer: {
-    background: "#8ebed1",
-    boxShadow: "0 -2px 5px rgba(0, 0, 0, 0.5)",
-    height: "10px",
-    borderRadius: 1,
-    width: "70%",
-    alignSelf: "center",
-  },
-};

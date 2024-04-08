@@ -6,6 +6,7 @@ import { useState } from "react";
 const { Sider } = Layout;
 import { wordBuilder } from "../types/WordType";
 import Iterable from "../types/Iterable";
+import globaleStyles from "../assets/css/globalStyles";
 
 const CreateCard: React.FC = () => {
   const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, ""));
@@ -25,7 +26,7 @@ const CreateCard: React.FC = () => {
         backgroundColor: "rgba(255, 255, 255, 0)",
       }}
     >
-      <Sider style={styles.sider}>
+      <Sider style={globaleStyles.siderLeft}>
         <AppWordList setter={activeWordChangeListener} />
       </Sider>
 
@@ -42,18 +43,6 @@ const CreateCard: React.FC = () => {
     </Layout>
     
   );
-};
-
-const styles = {
-  sider: {
-    backgroundColor: "#e8f6fa",
-    padding: "10px 7px",
-    marginRight: "7px",
-    marginLeft: "7px",
-    marginBottom: "0px",
-    boxShadow: "-0 0 5px rgba(0, 0, 0, 0.5)",
-    borderRadius: 2,
-  },
 };
 
 export default CreateCard;

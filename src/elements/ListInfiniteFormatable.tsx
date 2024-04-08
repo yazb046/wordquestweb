@@ -5,6 +5,10 @@ const { Search } = Input;
 import { fetchWordsByLetters } from "../service/wordService";
 import { LoadingOutlined } from "@ant-design/icons";
 import { textBuilder } from "../types/TextType";
+import { wordBuilder } from "../types/WordType";
+import { Content } from "antd/es/layout/layout";
+import AppCardUpdated from "../elements/AppCardUpdated";
+import SearchInputBox from "./SearchInputBox";
 
 interface Props {
   dataFetchFunction: any;
@@ -22,7 +26,9 @@ const ListInfiniteFormatable: React.FC<Props> = ({
   const [items, setItems] = useState<Iterable[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Iterable[]>([]);
+  const [selectedItem, setSelectedItem] = useState<Iterable>();
   const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -69,10 +75,10 @@ const ListInfiniteFormatable: React.FC<Props> = ({
       setSelectedItems([...selectedItems, item]);
     }
   };
+  
   const handleClick = (item: Iterable) => {
-    if (selectedItems.some((selectedItem) => selectedItem.getId() === item.getId())) {
-      setSelectedItems(selectedItems.filter((selectedItem) => selectedItem.getId() !== item.getId()));
-    } 
+    setSelectedItem(item);
+    onSelect(item);
   };
 
   const handleDragStart = (
@@ -104,7 +110,7 @@ const ListInfiniteFormatable: React.FC<Props> = ({
       setItems(itemsCopy);
     }
   };
-  const [searchText, setSearchText] = useState("");
+
   const onSearch = (value: string) => {
     setPageNumber(0);
     setSearchText(value);
@@ -121,67 +127,62 @@ const ListInfiniteFormatable: React.FC<Props> = ({
 
   return (
     <>
-      <Space.Compact style={{ width: "100%" }}>
-        <Search
-          placeholder="input search text"
+      <Space direction="vertical">
+        <SearchInputBox
           onSearch={onSearch}
-          style={{ width: 235, paddingBottom: "5px" }}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          searchText={searchText}
+          setSearchText={(e: any) => setSearchText(e.target.value)}
+          onClearButtonClick={onClearButtonClick}
         />
-        <Button type="primary" onClick={onClearButtonClick}>
-          Clear
-        </Button>
-      </Space.Compact>
-      <div style={{ height: "535px", overflow: "auto", maxWidth: 300 }}>
-        {items.map((item, index) => {
-          const isLastItem = items.length > 0 && index === items.length - 1;
-          const isSelected = selectedItems.some(
-            (selectedItem) => selectedItem.getId() === item.getId()
-          );
 
-          const itemStyle = {
-            cursor: "grab",
-            backgroundColor: selectedItems.some((selectedItem) => selectedItem.getId() === item.getId()) ? "#FBF3C5" : "white",
-            border:
-              draggedItemId === item.getId() ? "1px solid #eb6734" : "none",
-            margin: "5px",
-            height: "50px",
-            fontSize: "14px",
-            padding: "3px",
-            borderRadius: "5px",
-            fontFamily: "Merriweather",
-            boxShadow: "0 0 3px rgba(0, 0, 0, 1)",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          };
+        <div style={{ overflow: "auto", maxWidth: 300 }}>
+          {items.map((item, index) => {
+            const isLastItem = items.length > 0 && index === items.length - 1;
+            const isSelected = selectedItem?.getId() === item.getId();
 
-          return (
-            <div
-              ref={isLastItem ? lastListElementRef : undefined}
-              key={item.getId()}
-              onClick={() => handleClick(item)}
-              onDoubleClick={()=>handleDoubleClick(item)}
-              onDragStart={(e) => handleDragStart(e, item.getId())}
-              onDragEnd={handleDragEnd}
-              onDragOver={(e) => handleDragOver(e, index)}
-              draggable
-              style={
-                isLastItem ? { ...itemStyle, cursor: "default" } : itemStyle
-              }
-            >
-              <p>{item.getTheme()}:</p>
-              {item.getContent()}
-            </div>
-          );
-        })}
-        {loading && <LoadingOutlined style={{ fontSize: 24 }} spin />}
-        {error && <div>Error loading items</div>}
-        {!loading && hasMore && (
-          <div ref={lastListElementRef}>Loading more...</div>
-        )}
-      </div>
+            const itemStyle = {
+              cursor: "grab",
+              backgroundColor: isSelected ? "#FBF3C5": "white",
+              border:
+                draggedItemId === item.getId() ? "1px solid #eb6734" : "none",
+              margin: "5px",
+              height: "40px",
+              fontSize: "14px",
+              padding: "3px",
+              paddingLeft: "7px",
+              borderRadius: "5px",
+              fontFamily: "Merriweather",
+              boxShadow: "0 0 3px rgba(0, 0, 0, 1)",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            };
+
+            return (
+              <div
+                ref={isLastItem ? lastListElementRef : undefined}
+                key={item.getId()}
+                onClick={() => handleClick(item)}
+                // onDoubleClick={() => handleDoubleClick(item)}
+                onDragStart={(e) => handleDragStart(e, item.getId())}
+                onDragEnd={handleDragEnd}
+                onDragOver={(e) => handleDragOver(e, index)}
+                draggable
+                style={
+                  isLastItem ? { ...itemStyle, cursor: "default" } : itemStyle
+                }
+              >
+                {item.getTheme()}: {item.getContent()}
+              </div>
+            );
+          })}
+          {loading && <LoadingOutlined style={{ fontSize: 24 }} spin />}
+          {error && <div>Error loading items</div>}
+          {!loading && hasMore && (
+            <div ref={lastListElementRef}>Loading more...</div>
+          )}
+        </div>
+      </Space>
     </>
   );
 };

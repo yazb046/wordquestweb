@@ -22,6 +22,10 @@ class WordTypeClass implements WordType {
     this.langLevel = langLevel;
     this.status = status;
   }
+  getThemeId(): number{
+    return this.id;
+  }
+
   getContent(): string {
     return this.word;
   }
