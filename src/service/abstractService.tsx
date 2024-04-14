@@ -23,9 +23,9 @@ export const abstractGetWithRequestParams = (path: string, params: any): Promise
     });
 };
 
-export const abstractPut = (url: string, data: any) => {
+export const abstractPut = (path: string, data: any) => {
   axios
-    .put(url, data)
+    .put(SERVER_DOMAIN + path, data)
     .then((response) => {
       console.log("PUT request successful");
       console.log("Response:", response.data);
@@ -46,3 +46,4 @@ export const abstractPost = (path: string, data: any) => {
       console.error("Error:", error);
     });
 };
+

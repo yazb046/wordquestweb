@@ -17,7 +17,7 @@ export const fetchWordsByLangLevel = (
 export const fetchWordsByLetters = (
   wordLetters:string,
 ): any => {
-  return fetchAndMapSecond("/api/words/find", {params:{wordLetters}});
+  return fetchAndMap("/api/words/find", {params:{wordLetters}});
 };
 
 export const fetchWordsByUserId = (
@@ -48,20 +48,10 @@ export const fetchWordsWithParams = (
 export const fetchAndMap = async (path: string, params:any): Promise<any> => {
   const response = await abstractGetWithRequestParams(path,params);
   let mappedContent: Word[] = [];
-  response.data.content.forEach((e: Word) => {
-    mappedContent.push(wordBuilder(e.id, e.word)); //TODO use builder
+  response.data.content.forEach((e: any) => {
+    mappedContent.push(wordBuilder(e.id, e.word, e.word)); 
   });
   response.data.content = mappedContent;
-  return response.data;
-};
-
-export const fetchAndMapSecond = async (path: string, params:any): Promise<any> => {
-  const response = await abstractGetWithRequestParams(path,params);
-  let mappedContent: Word[] = [];
-  response.data.forEach((e: Word) => {
-    mappedContent.push(wordBuilder(e.id, e.word)); //TODO use builder
-  });
-  response.data = mappedContent;
   return response.data;
 };
 

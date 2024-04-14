@@ -11,46 +11,28 @@ import AppCardUpdated from "../elements/AppCardUpdated";
 import SearchInputBox from "./SearchInputBox";
 
 interface Props {
-  dataFetchFunction: any;
-  onSelect: any;
+  items: Iterable[];
+  loading: boolean;
+  hasMore: boolean;
+  page: number;
+  onItemSelect: any;
+  onPageChange: any;
 }
 
 const ListInfiniteFormatable: React.FC<Props> = ({
-  dataFetchFunction,
-  onSelect,
+  items,
+  loading,
+  hasMore,
+  page,
+  onItemSelect,
+  onPageChange,
 }) => {
-  const [pageNumber, setPageNumber] = useState(0);
   const observer = useRef<IntersectionObserver>();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [items, setItems] = useState<Iterable[]>([]);
-  const [hasMore, setHasMore] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Iterable[]>([]);
   const [selectedItem, setSelectedItem] = useState<Iterable>();
   const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
   const [searchText, setSearchText] = useState("");
-
-  useEffect(() => {
-    setLoading(true);
-    setError(false);
-    dataFetchFunction(pageNumber)
-      .then((response: any) => {
-        setItems((prevList) => [...prevList, ...response.content]);
-        setItems((prevList) => {
-          const uniqueItems = prevList.filter(
-            (obj, index, self) =>
-              index === self.findIndex((t) => t.getId() === obj.getId()) &&
-              obj.getId() !== 0
-          );
-          return uniqueItems;
-        });
-        setHasMore(!response.last);
-      })
-      .catch((error: any) => {
-        setError(true);
-      })
-      .finally(() => setLoading(false));
-  }, [pageNumber]);
 
   const lastListElementRef = useCallback(
     (node: any) => {
@@ -58,7 +40,7 @@ const ListInfiniteFormatable: React.FC<Props> = ({
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setPageNumber((prevPageNumber: number) => prevPageNumber + 1);
+          onPageChange(page + 1);
         }
       });
       if (node) observer.current.observe(node);
@@ -75,10 +57,10 @@ const ListInfiniteFormatable: React.FC<Props> = ({
       setSelectedItems([...selectedItems, item]);
     }
   };
-  
+
   const handleClick = (item: Iterable) => {
     setSelectedItem(item);
-    onSelect(item);
+    onItemSelect(item);
   };
 
   const handleDragStart = (
@@ -142,7 +124,7 @@ const ListInfiniteFormatable: React.FC<Props> = ({
 
             const itemStyle = {
               cursor: "grab",
-              backgroundColor: isSelected ? "#FBF3C5": "white",
+              backgroundColor: isSelected ? "#FBF3C5" : "white",
               border:
                 draggedItemId === item.getId() ? "1px solid #eb6734" : "none",
               margin: "5px",
@@ -172,7 +154,7 @@ const ListInfiniteFormatable: React.FC<Props> = ({
                   isLastItem ? { ...itemStyle, cursor: "default" } : itemStyle
                 }
               >
-                {item.getTheme()}: {item.getContent()}
+                {item.getTitle()}
               </div>
             );
           })}

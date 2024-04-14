@@ -1,50 +1,55 @@
 import Iterable from "./Iterable";
 interface WordType extends Iterable {
   id: number;
-  word: string;
+  title: string;
+  content: string;
   checked: boolean;
   langLevel: string;
   status: string;
-  getContent:()=> string;
+  getContent: () => string;
 }
 
 class WordTypeClass implements WordType {
   constructor(
     public id: number,
-    public word: string,
+    public title: string,
+    public content: string,
     public checked: boolean,
     public langLevel: string,
     public status: string
   ) {
     this.id = id;
-    this.word = word;
+    this.title = title;
+    this.content = content;
     this.checked = checked;
     this.langLevel = langLevel;
     this.status = status;
   }
-  getThemeId(): number{
-    return this.id;
+  setId(id: number): void {
+    this.id = id;
+  }
+  getTitle(): string {
+    return this.title;
+  }
+  setTitle(title: string): void {
+    this.title = title;
   }
 
   getContent(): string {
-    return this.word;
+    return this.content;
   }
 
   getId(): number {
     return this.id;
   }
 
-  getTheme(): string {
-    return "";
-  }
-
-  setContent(content:string): void{
-    this.word = content;
+  setContent(content: string): void {
+    this.content = content;
   }
 }
 
-export const wordBuilder = (id: number, name: string) => {
-  return new WordTypeClass(id, name, false, "", "");
+export const wordBuilder = (id: number, title: string, content:string) => {
+  return new WordTypeClass(id, title, content,false, "", "");
 };
 
 export default WordType;

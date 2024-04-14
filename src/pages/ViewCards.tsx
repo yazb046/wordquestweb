@@ -5,7 +5,7 @@ import Sider from "antd/es/layout/Sider";
 import "../assets/css/styles.css";
 import globaleStyles from "../assets/css/globalStyles";
 import { useEffect, useState } from "react";
-import { fetchAllCardsByUserId } from "../service/cardService";
+import { fetchAllCardsByUserId, save } from "../service/cardService";
 import { Divider } from "antd";
 import SplitPane from "react-split-pane";
 import AppCardUpdated from "../elements/AppCardUpdated";
@@ -14,11 +14,30 @@ import { textBuilder } from "../types/TextType";
 import Iterable from "../types/Iterable";
 import CardType, { cardBuilder } from "../types/CardType";
 import Column from "antd/es/table/Column";
+import { useLoad } from "../hooks/useLoad";
+import CardMarkDown from "../elements/CardMarkDown";
+
+const fetchItems = function (pageNo: number) {
+  return fetchAllCardsByUserId(1, pageNo, 10, "id", "asc");
+};
 
 export default function ViewCards() {
   const [selectedCard, setSelectedCard] = useState<CardType>(
     cardBuilder(0, "", "")
   );
+  const [page, setPage] = useState(0);
+  const [reload, setReload] = useState(false);
+  const [list, setList] = useState<any[]>([]);
+  const [hasMoreItems, setHasMoreItems] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { items, hasMore, loading } = useLoad(fetchItems, page, reload);
+
+  useEffect(() => {
+    setList(items);
+    setHasMoreItems(hasMore);
+    setIsLoading(loading);
+  }, [items, hasMore, loading]);
 
   return (
     <Layout
@@ -31,27 +50,24 @@ export default function ViewCards() {
         style={{ ...globaleStyles.siderLeft, height: "590px" }}
       >
         <ListInfiniteFormatable
-          dataFetchFunction={(pageNo: number) => {
-            return fetchAllCardsByUserId(1, pageNo, 10, "id", "asc");
+          items={list}
+          page={page}
+          hasMore={hasMoreItems}
+          loading={isLoading}
+          onPageChange={(pageNo: number) => {
+            setPage(pageNo);
           }}
-          onSelect={(item: any) => setSelectedCard(item)}
+          onItemSelect={(item: any) => setSelectedCard(item)}
         />
       </Sider>
-      {/* <Layout
-        style={{
-          alignItems: "flex",
-          backgroundColor: "rgba(255, 255, 255, 0)",
-          marginTop: "0px",
-          marginBottom: "0px",
+      <CardMarkDown
+        card={selectedCard}
+        cardCloseListener={() => {
+          setReload(true);
+          setSelectedCard(cardBuilder(0, "", ""));
         }}
-      > */}
-        <AppCardUpdated
-          word={wordBuilder(selectedCard.getId(), selectedCard.getTheme())}
-          context={textBuilder(selectedCard.getId(), selectedCard.getContent())}
-          cardCloseListener={() => {
-            console.log();
-          }}
-        />
+        handleSave={(card:Iterable) => {save(1,card)}}
+      />
       {/* </Layout> */}
     </Layout>
   );

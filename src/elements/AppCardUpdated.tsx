@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 import { textBuilder } from "../types/TextType";
 import { saveNewCard } from "../service/cardService";
 import { Image, Typography } from "antd";
-import Meta from "antd/es/card/Meta";
 import globalStyles from "../assets/css/globalStyles";
 import { Content } from "antd/es/layout/layout";
 const { Paragraph } = Typography;
+import ReactMarkdown from 'react-markdown';
 
 interface Props {
   word: Iterable;
@@ -62,9 +62,12 @@ const AppCardUpdated: React.FC<Props> = ({
     setComment(text);
   };
 
+
   return (
     <>
-      <Card
+    {editableContext.getId()!== 0 && 
+    
+    <Card
         style={{
           ...globalStyles.card,
           margin: "auto",
@@ -74,10 +77,6 @@ const AppCardUpdated: React.FC<Props> = ({
         title={activeWord.getContent()}
         extra={<CloseOutlined onClick={closeCard} />}
       >
-        {/* 
-       
-       
-         */}
         <Space direction="horizontal">
           <Content style={{ height: "300px" }}>
             <Paragraph
@@ -133,7 +132,7 @@ const AppCardUpdated: React.FC<Props> = ({
             style={{ alignSelf: "flex-end" }}
           />
         </Space>
-      </Card>
+      </Card>} 
     </>
   );
 };

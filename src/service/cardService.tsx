@@ -1,30 +1,17 @@
+import CardType, { cardBuilder, cardBuilderExtended } from "../types/CardType";
 import Iterable from "../types/Iterable";
-import CardType, { cardBuilder } from "../types/CardType";
 import {
-  abstractGet,
   abstractGetWithRequestParams,
   abstractPost,
+  abstractPut,
 } from "./abstractService";
-import { wordBuilder } from "../types/WordType";
 
 export const saveNewCard = (
-  userId: number,
-  wordId: number,
-  iterable: Iterable,
-  comment: string
+  userId: number|undefined,
+  wordId: number|undefined,
+  card: CardType,
 ) => {
-  let card = cardBuilder(
-    0,
-    "",
-    iterable.getContent(),
-    comment,
-    false,
-    iterable.getId(),
-    1,
-    userId,
-    wordId
-  );
-  saveNew(userId, wordId, card);
+  create(userId, wordId, card);
 };
 
 
@@ -58,16 +45,14 @@ export const fetchAndMap = async (
   let mappedContent: CardType[] = [];
   response.data.content.forEach((e: CardType) => {
     mappedContent.push(
-      cardBuilder(
+      cardBuilderExtended(
         e.id,
-        e.contextTitle,
-        e.text,
-        e.helpText,
+        e.title,
+        e.content,
         e.isArchived,
-        e.textId,
-        e.version,
         e.userId,
         e.word,
+        e.version
       )
     );
   });
@@ -75,7 +60,12 @@ export const fetchAndMap = async (
   return response.data;
 };
 
-export const saveNew = (userId: number, wordId: number, card: CardType) => {
+export const create = (userId: number|undefined, wordId: number|undefined, card: CardType) => {
   let path = `/api/cards?userId=${userId}&wordId=${wordId}`;
+  abstractPost(path, card);
+};
+
+export const save = (userId: number|undefined, card: Iterable) => {
+  let path = "/api/cards/update";
   abstractPost(path, card);
 };

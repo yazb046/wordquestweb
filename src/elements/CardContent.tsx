@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Iterable from "../types/Iterable";
 import { textBuilder } from "../types/TextType";
 import { saveNewCard } from "../service/cardService";
+import { cardBuilder } from "../types/CardType";
 interface Props {
   word:Iterable,
   context: Iterable;
@@ -33,7 +34,8 @@ const CardContent: React.FC<Props> = ({ word, context, closeEvent}) => {
     if (editableContext.getId() !== 0) {
       editableContext.setContent(editableText);
     }
-    saveNewCard(1, word.getId(), editableContext, comment);
+    let card = cardBuilder(undefined,  word.getTitle() +": "+ editableContext.getContent().slice(0, 15)+"...", editableContext.getContent());
+    saveNewCard(1, word.getId(), card);
     handleClose();
   };
 

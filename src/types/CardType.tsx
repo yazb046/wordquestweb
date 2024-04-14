@@ -1,68 +1,68 @@
 import Iterable from "./Iterable";
-import WordType, { wordBuilder } from "./WordType";
-interface CardType  extends Iterable{
-    id:number;
-    contextTitle:string;
-    text:string;
-    helpText:string;
-    isArchived:boolean;
-    textId:number;
-    version:number;
-    userId: number,
-    word:any,
+interface CardType extends Iterable {
+  id: number | undefined;
+  title: string;
+  content: string;
+  isArchived: boolean;
+  userId: number;
+  word: Iterable|undefined;
+  version: number;
+}
+
+class CardTypeClass implements CardType {
+  constructor(
+    public id: number | undefined,
+    public title: string,
+    public content: string,
+    public isArchived: boolean,
+    public userId: number,
+    public word: Iterable|undefined,
+    public version: number
+  ) {}
+
+  getId(): number | undefined {
+    return this.id;
   }
 
-  class CardTypeClass implements CardType {
-    constructor( public id:number,
-        public contextTitle:string,
-        public text:string,
-        public helpText:string,
-        public isArchived:boolean,
-        public textId:number,
-        public version:number,
-        public userId: number,
-        public word:any,
-        ) {}
-        
-        getContent(): string {
-          return this.text;
-        }
-      
-        getId(): number {
-          return this.id;
-        }
-    
-        setContent(content:string){
-          this.text = content;8
-        }
-
-        getTheme(): string {
-          return this.word !== null? this.word.word:"";
-        }
-
-        getThemeId (): number{
-          return this.word !== null? this.word.id:0;
-        }
-    
+  setId(id: number): void {
+    this.id = id;
   }
 
-  export const cardBuilder = (
-    id:number,
-    contextTitle:string,
-    text:string,
-    ) => {
-
-    return new CardTypeClass(
-        id,
-        contextTitle,
-        text,
-        '',
-        false,
-        0,
-        0,
-        0,
-        '',
-        );
+  setContent(content: string) {
+    this.content = content;
   }
 
-  export default CardType;
+  getContent(): string {
+    return this.content;
+  }
+
+  setTitle(title: string) {
+    this.title = title;
+  }
+
+  getTitle(): string {
+    return this.title;
+  }
+}
+
+export const cardBuilder = (
+  id: number | undefined,
+  title: string,
+  content: string,
+) => {
+  return new CardTypeClass(id, title, content, false, 0, undefined, 0);
+};
+
+export const cardBuilderExtended = (
+  id: number | undefined,
+  title: string,
+  content: string,
+  isArchived: boolean,
+  userId: number,
+  word: Iterable|undefined,
+  version: number,
+) => {
+  return new CardTypeClass(id, title, content, isArchived, userId, word, 0);
+};
+
+export default CardType;
