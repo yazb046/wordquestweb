@@ -1,85 +1,115 @@
-import { Row, Col, Image, Button, Space, Typography } from "antd";
+import { Row, Col, Image, Button, Space, Typography, Layout } from "antd";
 const { Paragraph } = Typography;
 import { useEffect, useState } from "react";
 import Iterable from "../types/Iterable";
 import { textBuilder } from "../types/TextType";
-import { saveNewCard } from "../service/textService";
+import { saveNewCard } from "../service/cardService";
+import { cardBuilder } from "../types/CardType";
 interface Props {
+  word:Iterable,
   context: Iterable;
+  closeEvent:any;
 }
-const CardContent: React.FC<Props> = ({ context }) => {
-
+const CardContent: React.FC<Props> = ({ word, context, closeEvent}) => {
   const [editableContext, setEditableContext] = useState<Iterable>(
     textBuilder(0, "")
   );
+  const [comment, setComment] = useState("add comment");
   const [editableText, setEditableText] = useState("");
 
   useEffect(() => {
     if (editableText === "") {
       setEditableContext(context);
-      setEditableText(context.getContent())
+      setEditableText(context.getContent());
     }
   }, [context]);
 
-  const handleDelete = () => {
+  const handleClose = () => {
     setEditableText("");
-    setEditableContext(textBuilder(0,""))
+    setEditableContext(textBuilder(0, ""));
+    closeEvent();
   };
 
   const handleSave = () => {
-    if(editableContext.getId()!==0){
+    if (editableContext.getId() !== 0) {
       editableContext.setContent(editableText);
     }
-    saveNewCard(1, editableContext)
-    handleDelete();
-  }
+    let card = cardBuilder(undefined,  word.getTitle() +": "+ editableContext.getContent().slice(0, 15)+"...", editableContext.getContent());
+    saveNewCard(1, word.getId(), card);
+    handleClose();
+  };
 
-  const handleUpdate= (text:string)=>{
-    setEditableText(text)
-  }
+  const handleUpdate = (text: string) => {
+    setEditableText(text);
+  };
+
+  const handleUpdateComment = (text: string) => {
+    setComment(text);
+  };
 
   return (
     <>
-      <Row gutter={[16, 16]}>
-        <Col span={14}>
-          <Space direction="vertical">
-            <Paragraph
-              editable={{
-                tooltip: "Compose/Edit",
-                onChange: handleUpdate,
-                text: editableText,
-              }}
-              copyable
-            >
-              {editableText}
-            </Paragraph>
-            <Space
-              direction="horizontal"
-              style={{ paddingBottom: "10px" }}
-            ></Space>
+      <Space direction="horizontal">
+        <Space style={{ height: "250px", width: "470px" }} direction="vertical">
+          <Paragraph
+            style={{
+              display: "inline",
+              marginTop: "10px",
+              textAlign: "left", // Align text to the left
+              verticalAlign: "top", // Align text to the top
+              maxHeight: "110px",
+              overflow: "auto",
+            }}
+            editable={{
+              tooltip: "Compose/Edit",
+              maxLength: 250,
+              onChange: handleUpdate,
+              text: editableText,
+            }}
+            copyable
+          >
+            {editableText}
+          </Paragraph>
+          <Paragraph
+            defaultValue={"add comment"}
+            editable={{
+              tooltip: "comment",
+              maxLength: 500,
+              onChange: handleUpdateComment,
+            }}
+            style={{
+              margin: "10px",
+              textAlign: "left", // Align text to the left
+              verticalAlign: "top", // Align text to the top
+              maxHeight: 100,
+              overflow: "auto",
+            }}
+          >
+            {comment}
+          </Paragraph>
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              margin: "10px",
+            }}
+          >
+            <Button style={{ marginRight: "5px" }} onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button onClick={handleSave}>Save</Button>
+          </div>
+        </Space>
 
-            <Paragraph>{"comments comments comments"}</Paragraph>
-            <Space direction="horizontal">
-              <Button onClick={console.log} disabled={!context}>
-                Listen
-              </Button>
-              <Button onClick={console.log} disabled={!context}>
-                Help
-              </Button>
-              <Button onClick={handleDelete}>Delete</Button>
-              <Button onClick={handleSave}>Save</Button>
-            </Space>
-          </Space>
-        </Col>
-        <Col span={10}>
-          <Image
-            src="https://via.placeholder.com/150"
-            alt="placeholder"
-            width={250}
-            height={250}
-          />
-        </Col>
-      </Row>
+        <Image
+          src="https://via.placeholder.com/150"
+          alt="placeholder"
+          width={250}
+          height={250}
+          style={{ alignSelf: "flex-end" }}
+        />
+      </Space>
     </>
   );
 };

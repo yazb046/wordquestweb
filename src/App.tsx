@@ -1,10 +1,10 @@
 import React from "react";
-import MainPage from "./pages/MainPage";
+import Container from "./pages/Container";
 
 const App: React.FC = () => {
 
   return (
-    <MainPage/>
+    <Container/>
     );
   };
 

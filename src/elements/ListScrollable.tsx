@@ -2,26 +2,26 @@ import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useState, useEffect } from "react";
 import { List, Space, Row, Col, Tooltip } from "antd";
-import { PlusCircleFilled } from "@ant-design/icons";
+import { LoadingOutlined, PlusCircleFilled } from "@ant-design/icons";
 import Iterable from "../types/Iterable";
-import { wordBuilder } from "../types/WordType";
-
 
 interface Props {
+  contextWord:Iterable|undefined;
   loadListDataHandler: any;
   listItemDefaultInstance: Iterable;
   scrollListBoxStyle: { height?: number | string; overflow: string };
-  listClearTriggerObject: Iterable | undefined;
+  clearList:boolean;
   listItemStyle: any;
-  clickedItemHandler: (item: Iterable) => void; 
-  addToolTipMessage:string;
+  clickedItemHandler: (item: Iterable) => void;
+  addToolTipMessage: string;
 }
 
 const ListScrollable: React.FC<Props> = ({
+  contextWord,
   loadListDataHandler,
   listItemDefaultInstance,
   scrollListBoxStyle,
-  listClearTriggerObject,
+  clearList,
   listItemStyle,
   clickedItemHandler,
   addToolTipMessage,
@@ -34,29 +34,26 @@ const ListScrollable: React.FC<Props> = ({
     listItemDefaultInstance
   );
   const [resultSize, setResultSize] = useState(0);
-  const [currentTriggerId, setCurrentTriggerId] = useState<number | undefined>(
-    0
-  );
+  const [isListCleared, setIsListCleared] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
-  const loadContent = async() => {
-    if (listClearTriggerObject?.getId() !== currentTriggerId) {
-      setPage(0);
-      setList([]);
-      console.log("listScrollable is set to Empty");
-      let id = listClearTriggerObject?.getId();
-      setCurrentTriggerId(id);
-    } else {
-      setPage((page) => page + 1);
-    }
-
+  const loadContent = async () => {
     try {
+      if (isListCleared) {
+        setPage(0);
+        setList([]);
+        console.log("listScrollable is set to Empty");
+        setIsListCleared(false);
+      } else {
+        setPage((page) => page + 1);
+      }
+
       if (loading) {
         return;
       }
       setLoading(true);
-      loadListDataHandler(page, listClearTriggerObject).then(
-        (response:any) => {
+      loadListDataHandler(page, contextWord).then(
+        (response: any) => {
           setList((prevList) => [...prevList, ...response.content]);
           setList((prevList) => {
             const uniqueItems = prevList.filter(
@@ -68,7 +65,7 @@ const ListScrollable: React.FC<Props> = ({
           setResultSize(response.totalElements);
           setHasMore(!response.last);
         }
-      )
+      );
     } catch (error) {
       console.error(error);
     } finally {
@@ -76,19 +73,21 @@ const ListScrollable: React.FC<Props> = ({
     }
   };
 
-  useEffect(() => {
+  useEffect(() => {  
+    if(clearList){
+      setIsListCleared(clearList);
+    }
     loadContent();
-  }, [listClearTriggerObject]);
+  }, [contextWord, clearList]);
 
   const handleItemClick = (item: Iterable) => {
     setClickedItem(item);
-    
   };
 
   const handleAddClick = () => {
     handleIconClick();
     clickedItemHandler(clickedItem);
-  }
+  };
 
   const handleIconClick = () => {
     setTooltipVisible(true);
@@ -106,8 +105,7 @@ const ListScrollable: React.FC<Props> = ({
           next={loadContent}
           hasMore={hasMoreItems}
           scrollableTarget="scrollableDiv"
-          loader={<div>loading...</div>}
-          endMessage={<div>---</div>}
+          loader={<LoadingOutlined />}
         >
           <List
             dataSource={list}
@@ -122,11 +120,11 @@ const ListScrollable: React.FC<Props> = ({
                 onClick={() => handleItemClick(item)}
               >
                 <Space direction="horizontal">
-                {clickedItem.getId() === item.getId() ? (
+                  {clickedItem.getId() === item.getId() ? (
                     <Space>
-                    <Tooltip title={addToolTipMessage} trigger='hover'>
-                      <PlusCircleFilled onClick={handleAddClick}/>{" "}
-                    </Tooltip>
+                      <Tooltip title={addToolTipMessage} trigger="hover">
+                        <PlusCircleFilled onClick={handleAddClick} />{" "}
+                      </Tooltip>
                     </Space>
                   ) : (
                     <></>
@@ -134,7 +132,6 @@ const ListScrollable: React.FC<Props> = ({
                   <Space>{item.getContent()}</Space>
                 </Space>
                 <Row justify="end" align="middle" style={{ columnGap: "5px" }}>
-                  
                   <Col></Col>
                 </Row>
               </List.Item>

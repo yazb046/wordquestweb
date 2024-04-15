@@ -1,7 +1,10 @@
 interface Iterable {
-    getId:() => number;
+    getId:() => number|undefined;
+    setId:(id:number) => void;
+    getTitle: () => string;
+    setTitle: (content:string) => void;
     getContent: () => string;
-    setContent: (content:any) => void;
+    setContent: (content:string) => void;
   }
 
 export default Iterable;  
