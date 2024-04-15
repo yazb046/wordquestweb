@@ -1,3 +1,0 @@
-pg_restore -U postgres -h localhost -p 5432 -d postgres C:\Users\Lenovo\Downloads\psdb_dump.sql
-
-psql.exe -U postgres -d Dpostgres -f  C:\Users\Lenovo\Downloads\psdb_dump.sql

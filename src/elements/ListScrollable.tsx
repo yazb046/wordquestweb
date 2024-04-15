@@ -57,15 +57,12 @@ const ListScrollable: React.FC<Props> = ({
       setLoading(true);
       loadListDataHandler(page, listClearTriggerObject).then(
         (response:any) => {
-          if (Array.isArray(response.content)) {
-            setList(prevList => [...prevList, ...response.content]);
-          } else {
-            console.error("Invalid response from server:", response);
-          }
-          
+          setList((prevList) => [...prevList, ...response.content]);
           setList((prevList) => {
-            const uniqueItems = prevList.filter((obj, index, self) =>index === self.findIndex((t) => t.getId() === obj.getId())
-);
+            const uniqueItems = prevList.filter(
+              (obj, index, self) =>
+                index === self.findIndex((t) => t.getId() === obj.getId())
+            );
             return uniqueItems;
           });
           setResultSize(response.totalElements);
@@ -101,48 +98,52 @@ const ListScrollable: React.FC<Props> = ({
   };
 
   return (
-		<>
-			<div id='scrollableDiv' style={scrollListBoxStyle}>
-				<InfiniteScroll
-					height={scrollListBoxStyle.height}
-					dataLength={list.length}
-					next={loadContent}
-					hasMore={hasMoreItems}
-					scrollableTarget='scrollableDiv'
-					loader={<div>loading...</div>}
-					endMessage={<div>---</div>}>
-					<List
-						dataSource={list}
-						renderItem={(item: Iterable) => (
-							<List.Item
-								key={item.getId()}
-								style={{
-									...listItemStyle,
-									background: clickedItem.getId() === item.getId() ? '#FBF3C5' : 'white',
-								}}
-								onClick={() => handleItemClick(item)}>
-								<Space direction='horizontal'>
-									{clickedItem.getId() === item.getId() ? (
-										<Space>
-											<Tooltip title={addToolTipMessage} trigger='hover'>
-													<PlusCircleFilled onClick={handleAddClick}/>
-											</Tooltip>
-										</Space>
-									) : (
-										<></>
-									)}
-									<Space>{item.getContent()}</Space>
-								</Space>
-								<Row justify='end' align='middle' style={{ columnGap: '5px' }}>
-									<Col></Col>
-								</Row>
-							</List.Item>
-						)}
-					/>
-				</InfiniteScroll>
-			</div>
-		</>
-	);
+    <>
+      <div id="scrollableDiv" style={scrollListBoxStyle}>
+        <InfiniteScroll
+          height={scrollListBoxStyle.height}
+          dataLength={list.length}
+          next={loadContent}
+          hasMore={hasMoreItems}
+          scrollableTarget="scrollableDiv"
+          loader={<div>loading...</div>}
+          endMessage={<div>---</div>}
+        >
+          <List
+            dataSource={list}
+            renderItem={(item: Iterable) => (
+              <List.Item
+                key={item.getId()}
+                style={{
+                  ...listItemStyle,
+                  background:
+                    clickedItem.getId() === item.getId() ? "#FBF3C5" : "white",
+                }}
+                onClick={() => handleItemClick(item)}
+              >
+                <Space direction="horizontal">
+                {clickedItem.getId() === item.getId() ? (
+                    <Space>
+                    <Tooltip title={addToolTipMessage} trigger='hover'>
+                      <PlusCircleFilled onClick={handleAddClick}/>{" "}
+                    </Tooltip>
+                    </Space>
+                  ) : (
+                    <></>
+                  )}
+                  <Space>{item.getContent()}</Space>
+                </Space>
+                <Row justify="end" align="middle" style={{ columnGap: "5px" }}>
+                  
+                  <Col></Col>
+                </Row>
+              </List.Item>
+            )}
+          />
+        </InfiniteScroll>
+      </div>
+    </>
+  );
 };
 
 export default ListScrollable;
