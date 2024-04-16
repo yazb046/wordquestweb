@@ -1,28 +1,23 @@
-import { Affix, Card, Col, Layout, List, Row, Space } from "antd";
+import { Layout, Space } from "antd";
 import ListInfiniteFormatable from "../elements/ListInfiniteFormatable";
-import { Content } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import "../assets/css/styles.css";
 import globaleStyles from "../assets/css/globalStyles";
 import { useEffect, useState } from "react";
 import { fetchAllCardsByUserId, save } from "../service/cardService";
-import { Divider } from "antd";
-import SplitPane from "react-split-pane";
-import AppCardUpdated from "../elements/AppCardUpdated";
-import { wordBuilder } from "../types/WordType";
-import { textBuilder } from "../types/TextType";
 import Iterable from "../types/Iterable";
-import CardType, { cardBuilder } from "../types/CardType";
-import Column from "antd/es/table/Column";
+import { cardBuilder } from "../types/CardType";
 import { useLoad } from "../hooks/useLoad";
 import CardMarkDown from "../elements/CardMarkDown";
+import SearchInputBox from "../elements/SearchInputBox";
+import { fetchWordsByLetters } from "../service/wordService";
 
 const fetchItems = function (pageNo: number) {
   return fetchAllCardsByUserId(1, pageNo, 10, "id", "asc");
 };
 
 export default function ViewCards() {
-  const [selectedCard, setSelectedCard] = useState<CardType>(
+  const [selectedCard, setSelectedCard] = useState<Iterable>(
     cardBuilder(0, "", "")
   );
   const [page, setPage] = useState(0);
@@ -30,6 +25,7 @@ export default function ViewCards() {
   const [list, setList] = useState<any[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const { items, hasMore, loading } = useLoad(fetchItems, page, reload);
 
@@ -38,6 +34,20 @@ export default function ViewCards() {
     setHasMoreItems(hasMore);
     setIsLoading(loading);
   }, [items, hasMore, loading]);
+
+  const onSearch = (value: string) => {
+    setPage(0);
+    setSearchText(value);
+    setList([]);
+    fetchWordsByLetters(value).then((items: Iterable[]) => {
+      setList(items);
+    });
+  };
+
+  const onClearButtonClick = () => {
+    setSearchText("");
+    setList([]);
+  };
 
   return (
     <Layout
@@ -49,6 +59,12 @@ export default function ViewCards() {
         width={"315px"}
         style={{ ...globaleStyles.siderLeft, height: "590px" }}
       >
+        <SearchInputBox
+          onSearch={onSearch}
+          searchText={searchText}
+          setSearchText={(e: any) => setSearchText(e.target.value)}
+          onClearButtonClick={onClearButtonClick}
+        />
         <ListInfiniteFormatable
           items={list}
           page={page}
@@ -66,9 +82,10 @@ export default function ViewCards() {
           setReload(true);
           setSelectedCard(cardBuilder(0, "", ""));
         }}
-        handleSave={(card:Iterable) => {save(1,card)}}
+        handleSave={(card: Iterable) => {
+          save(1, card);
+        }}
       />
-      {/* </Layout> */}
     </Layout>
   );
 }

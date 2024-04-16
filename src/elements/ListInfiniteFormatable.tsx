@@ -1,13 +1,8 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Iterable from "../types/Iterable";
-import { Divider, Tag, Flex, Input, Space, Button } from "antd";
-const { Search } = Input;
+import { Input, Space } from "antd";
 import { fetchWordsByLetters } from "../service/wordService";
 import { LoadingOutlined } from "@ant-design/icons";
-import { textBuilder } from "../types/TextType";
-import { wordBuilder } from "../types/WordType";
-import { Content } from "antd/es/layout/layout";
-import AppCardUpdated from "../elements/AppCardUpdated";
 import SearchInputBox from "./SearchInputBox";
 
 interface Props {
@@ -29,10 +24,15 @@ const ListInfiniteFormatable: React.FC<Props> = ({
 }) => {
   const observer = useRef<IntersectionObserver>();
   const [error, setError] = useState(false);
+  const[list, setList] = useState<Iterable[]>([]);
   const [selectedItems, setSelectedItems] = useState<Iterable[]>([]);
   const [selectedItem, setSelectedItem] = useState<Iterable>();
   const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
-  const [searchText, setSearchText] = useState("");
+
+
+  useEffect(()=>{
+    setList(items);
+  },[items])
 
   const lastListElementRef = useCallback(
     (node: any) => {
@@ -48,15 +48,6 @@ const ListInfiniteFormatable: React.FC<Props> = ({
     [loading, hasMore]
   );
 
-  const handleDoubleClick = (item: Iterable) => {
-    if (
-      !selectedItems.some(
-        (selectedItem) => selectedItem.getId() === item.getId()
-      )
-    ) {
-      setSelectedItems([...selectedItems, item]);
-    }
-  };
 
   const handleClick = (item: Iterable) => {
     setSelectedItem(item);
@@ -82,44 +73,24 @@ const ListInfiniteFormatable: React.FC<Props> = ({
     e.preventDefault();
     if (draggedItemId !== null) {
       const targetIndex = index;
-      const itemsCopy = [...items];
+      const itemsCopy = [...list];
       const draggedItemIndex = itemsCopy.findIndex(
         (item) => item.getId() === draggedItemId
       );
       const draggedItem = itemsCopy[draggedItemIndex];
       itemsCopy.splice(draggedItemIndex, 1);
       itemsCopy.splice(targetIndex, 0, draggedItem);
-      setItems(itemsCopy);
+      setList(itemsCopy);
     }
   };
 
-  const onSearch = (value: string) => {
-    setPageNumber(0);
-    setSearchText(value);
-    setItems([]);
-    fetchWordsByLetters(value).then((items: Iterable[]) => {
-      setItems(items);
-    });
-  };
-
-  const onClearButtonClick = () => {
-    setSearchText("");
-    setItems([]);
-  };
+  
 
   return (
     <>
-      <Space direction="vertical">
-        <SearchInputBox
-          onSearch={onSearch}
-          searchText={searchText}
-          setSearchText={(e: any) => setSearchText(e.target.value)}
-          onClearButtonClick={onClearButtonClick}
-        />
-
         <div style={{ overflow: "auto", maxWidth: 300 }}>
-          {items.map((item, index) => {
-            const isLastItem = items.length > 0 && index === items.length - 1;
+          {list.map((item, index) => {
+            const isLastItem = list.length > 0 && index === list.length - 1;
             const isSelected = selectedItem?.getId() === item.getId();
 
             const itemStyle = {
@@ -164,7 +135,7 @@ const ListInfiniteFormatable: React.FC<Props> = ({
             <div ref={lastListElementRef}>Loading more...</div>
           )}
         </div>
-      </Space>
+   
     </>
   );
 };

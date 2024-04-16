@@ -1,26 +1,26 @@
 import Iterable from "./Iterable";
 interface CardType extends Iterable {
-  id: number | undefined;
+  id: number;
   title: string;
   content: string;
   isArchived: boolean;
   userId: number;
-  word: Iterable|undefined;
+  word: Iterable|null;
   version: number;
 }
 
 class CardTypeClass implements CardType {
   constructor(
-    public id: number | undefined,
+    public id: number,
     public title: string,
     public content: string,
     public isArchived: boolean,
     public userId: number,
-    public word: Iterable|undefined,
+    public word: Iterable|null,
     public version: number
   ) {}
 
-  getId(): number | undefined {
+  getId(): number {
     return this.id;
   }
 
@@ -46,20 +46,20 @@ class CardTypeClass implements CardType {
 }
 
 export const cardBuilder = (
-  id: number | undefined,
+  id: number,
   title: string,
   content: string,
 ) => {
-  return new CardTypeClass(id, title, content, false, 0, undefined, 0);
+  return new CardTypeClass(id, title, content, false, 0, null, 0);
 };
 
 export const cardBuilderExtended = (
-  id: number | undefined,
+  id: number,
   title: string,
   content: string,
   isArchived: boolean,
   userId: number,
-  word: Iterable|undefined,
+  word: Iterable|null,
   version: number,
 ) => {
   return new CardTypeClass(id, title, content, isArchived, userId, word, 0);
