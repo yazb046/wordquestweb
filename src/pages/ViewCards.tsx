@@ -55,16 +55,17 @@ export default function ViewCards() {
         backgroundColor: "rgba(255, 255, 255, 0)",
       }}
     >
+      <Space direction="vertical">
       <Sider
-        width={"315px"}
-        style={{ ...globaleStyles.siderLeft, height: "590px" }}
+        width={"400px"}
+        style={{ ...globaleStyles.siderLeft, height: "260px" }}
       >
-        <SearchInputBox
+        {/* <SearchInputBox
           onSearch={onSearch}
           searchText={searchText}
           setSearchText={(e: any) => setSearchText(e.target.value)}
           onClearButtonClick={onClearButtonClick}
-        />
+        /> */}
         <ListInfiniteFormatable
           items={list}
           page={page}
@@ -76,6 +77,29 @@ export default function ViewCards() {
           onItemSelect={(item: any) => setSelectedCard(item)}
         />
       </Sider>
+      <Sider
+        width={"400px"}
+        style={{ ...globaleStyles.siderLeft, height: "320px" }}
+      >
+        {/* <SearchInputBox
+          onSearch={onSearch}
+          searchText={searchText}
+          setSearchText={(e: any) => setSearchText(e.target.value)}
+          onClearButtonClick={onClearButtonClick}
+        /> */}
+        <ListInfiniteFormatable
+          items={list}
+          page={page}
+          hasMore={hasMoreItems}
+          loading={isLoading}
+          onPageChange={(pageNo: number) => {
+            setPage(pageNo);
+          }}
+          onItemSelect={(item: any) => setSelectedCard(item)}
+        />
+      </Sider>
+      </Space>
+
       <CardMarkDown
         card={selectedCard}
         cardCloseListener={() => {

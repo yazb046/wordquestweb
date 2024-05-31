@@ -53,11 +53,11 @@ export default function Container() {
           }}
           tabBarGutter={20}
           items={[
-            {
-              label: "create card",
-              key: "1",
-              children: <CreateCard />,
-            },
+            // {
+            //   label: "create card",
+            //   key: "1",
+            //   children: <CreateCard />,
+            // },
             {
               label: "view cards",
               key: "2",
