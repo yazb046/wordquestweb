@@ -1,7 +1,7 @@
 import { Layout, Tabs } from "antd";
 import { StrictMode } from "react";
 import CreateCard from "./CreateCard";
-import ViewCards from "./ViewCards";
+import ViewCards from "./viewcards/ViewCards";
 import globaleStyles from "../assets/css/globalStyles";
 import { useUser } from "../hooks/useUser";
 const { Footer, Header } = Layout;

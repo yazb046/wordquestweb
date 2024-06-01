@@ -1,5 +1,5 @@
 import React from "react";
-import Container from "./pages/Container";
+import Container from "./pages/Main";
 import AppRoutes from "./AppRoutes";
 
 const App: React.FC = () => {

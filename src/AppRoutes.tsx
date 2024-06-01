@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import Container from "./pages/Container";
+import Container from "./pages/Main";
 import SignUpPage from "./pages/SignUpPage";
 import PrivateRoute from "./auth/PrivateRoute";
 
