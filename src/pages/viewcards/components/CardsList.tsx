@@ -10,6 +10,7 @@ import { useToken } from "../../../hooks/useToken";
 import { iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
 import AddCardModel from "./AddCardModel";
+import {useLoadUpdated} from "../../../hooks/useLoadUpdated";
 
 interface CardsListProps {
   theme:Iterable;
@@ -127,7 +128,3 @@ const CardsList: React.FC<CardsListProps> = ({
 
 
 export default CardsList;
-
-function useLoadUpdated(fetchItemsFunction: (pageNo: number) => Promise<any>, page: number, reload: boolean): { items: any; hasMore: any; loading: any; } {
-  throw new Error("Function not implemented.");
-}

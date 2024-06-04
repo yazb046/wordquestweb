@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const useLoad = ( dataFetchFunction: (pageNumber: number) => Promise<any>, pageNo:number, reload:boolean) => {
+export const useLoadUpdated = ( dataFetchFunction: (pageNumber: number) => Promise<any>, pageNo:number, reload:boolean) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [hasMore, setHasMore] = useState(false);

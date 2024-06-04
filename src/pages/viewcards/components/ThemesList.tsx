@@ -11,6 +11,7 @@ import AddThemeModel from "./AddThemeModel";
 import { useToken } from "../../../hooks/useToken";
 import { iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
+import {useLoadUpdated} from "../../../hooks/useLoadUpdated";
 
 interface ThemesListProps {
   callbackSetTheme: any;
@@ -118,8 +119,4 @@ const ThemesList: React.FC<ThemesListProps> = ({ callbackSetTheme }) => {
   );
 };
 
-export default ThemesList;
-function useLoadUpdated(fetchItemsFunction: (pageNo: number) => Promise<any>, page: number, reload: boolean): { items: any; hasMore: any; loading: any; } {
-  throw new Error("Function not implemented.");
-}
 
