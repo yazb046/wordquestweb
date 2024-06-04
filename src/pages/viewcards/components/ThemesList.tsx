@@ -113,10 +113,10 @@ const ThemesList: React.FC<ThemesListProps> = ({ callbackSetTheme }) => {
           border: "1px solid #D3D3D3",
         }}
         listSize={{ maxWidth: "400px", maxHeight: "210px" }}
-        callbackSetSelectedItemAsGlobal={callbackSetTheme}
       />
     </Sider>
   );
 };
 
 
+export default ThemesList;

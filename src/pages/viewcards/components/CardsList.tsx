@@ -120,7 +120,6 @@ const CardsList: React.FC<CardsListProps> = ({
           }
         }
         listSize={{maxWidth: "400px", maxHeight:"210px"}}
-        callbackSetSelectedItemAsGlobal={console.log}
       />
     </Sider>
   );

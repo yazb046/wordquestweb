@@ -11,7 +11,6 @@ interface Props {
   onPageChange: any;
   listItemStyles:any|null;
   listSize:{maxWidth: string, maxHeight:string};
-  callbackSetSelectedItemAsGlobal:any;
 }
 
 const ListInfiniteFormatableUpdated: React.FC<Props> = ({
@@ -23,7 +22,6 @@ const ListInfiniteFormatableUpdated: React.FC<Props> = ({
   onPageChange,
   listItemStyles,
   listSize,
-  callbackSetSelectedItemAsGlobal,
 }) => {
   const observer = useRef<IntersectionObserver>();
   const [error, setError] = useState(false);
@@ -53,12 +51,6 @@ const ListInfiniteFormatableUpdated: React.FC<Props> = ({
   const handleDoubleClick = (item: Iterable) => {
     setSelectedItem(item);
     onItemSelect(item);
-    setGlobaleSelectedItem();
-  };
-
-  const setGlobaleSelectedItem = () => {
-   console.log("Open cards - " + selectedItem?.getId());
-   callbackSetSelectedItemAsGlobal(selectedItem?.getId())
   };
 
   const handleClick = (item: Iterable) => {
