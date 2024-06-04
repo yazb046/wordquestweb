@@ -34,7 +34,8 @@ const AddThemeModel: React.FC<AddThemeModelProps> = ({
       headers: {
         Authorization: token ? `${token}` : null,
       },
-    });
+    }
+  );
   };
 
   const handleOk = () => {

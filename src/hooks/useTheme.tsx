@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react"
+import {useState } from "react"
 
 export const useTheme = () => {
     const [themeId, setThemeIdInternal] = useState(()=>{
