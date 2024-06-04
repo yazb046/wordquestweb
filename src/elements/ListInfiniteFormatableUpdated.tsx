@@ -1,9 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Iterable from "../types/Iterable";
-import { Input, Space } from "antd";
-import { fetchWordsByLetters } from "../service/wordService";
 import { LoadingOutlined } from "@ant-design/icons";
-import SearchInputBox from "./SearchInputBox";
 
 interface Props {
   items: Iterable[];
@@ -12,20 +9,23 @@ interface Props {
   page: number;
   onItemSelect: any;
   onPageChange: any;
+  listItemStyles:any|null;
+  listSize:{maxWidth: string, maxHeight:string};
 }
 
-const ListInfiniteFormatable: React.FC<Props> = ({
+const ListInfiniteFormatableUpdated: React.FC<Props> = ({
   items,
   loading,
   hasMore,
   page,
   onItemSelect,
   onPageChange,
+  listItemStyles,
+  listSize,
 }) => {
   const observer = useRef<IntersectionObserver>();
   const [error, setError] = useState(false);
   const[list, setList] = useState<Iterable[]>([]);
-  const [selectedItems, setSelectedItems] = useState<Iterable[]>([]);
   const [selectedItem, setSelectedItem] = useState<Iterable>();
   const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
 
@@ -48,6 +48,10 @@ const ListInfiniteFormatable: React.FC<Props> = ({
     [loading, hasMore]
   );
 
+  const handleDoubleClick = (item: Iterable) => {
+    setSelectedItem(item);
+    onItemSelect(item);
+  };
 
   const handleClick = (item: Iterable) => {
     setSelectedItem(item);
@@ -84,28 +88,17 @@ const ListInfiniteFormatable: React.FC<Props> = ({
     }
   };
 
-  
-
   return (
     <>
-        <div style={{ overflow: "auto", maxWidth: 300 }}>
+        <div style={{ overflow: "auto", ...listSize }}>
           {list.map((item, index) => {
             const isLastItem = list.length > 0 && index === list.length - 1;
             const isSelected = selectedItem?.getId() === item.getId();
 
-            const itemStyle = {
+            const itemDefaultStyle = {
               cursor: "grab",
               backgroundColor: isSelected ? "#FBF3C5" : "white",
-              border:
-                draggedItemId === item.getId() ? "1px solid #eb6734" : "none",
-              margin: "5px",
-              height: "40px",
-              fontSize: "14px",
-              padding: "3px",
-              paddingLeft: "7px",
-              borderRadius: "5px",
-              fontFamily: "Merriweather",
-              boxShadow: "0 0 3px rgba(0, 0, 0, 1)",
+              border:"1px solid #000001",
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -116,13 +109,14 @@ const ListInfiniteFormatable: React.FC<Props> = ({
                 ref={isLastItem ? lastListElementRef : undefined}
                 key={item.getId()}
                 onClick={() => handleClick(item)}
-                // onDoubleClick={() => handleDoubleClick(item)}
+                onDoubleClick={() => handleDoubleClick(item)}
                 onDragStart={(e) => handleDragStart(e, item.getId())}
                 onDragEnd={handleDragEnd}
                 onDragOver={(e) => handleDragOver(e, index)}
                 draggable
                 style={
-                  isLastItem ? { ...itemStyle, cursor: "default" } : itemStyle
+                  isLastItem ? { ...itemDefaultStyle, ...listItemStyles, cursor: "default" } 
+                  : {...itemDefaultStyle, ...listItemStyles}
                 }
               >
                 {item.getTitle()}
@@ -139,4 +133,4 @@ const ListInfiniteFormatable: React.FC<Props> = ({
     </>
   );
 };
-export default ListInfiniteFormatable;
+export default ListInfiniteFormatableUpdated;

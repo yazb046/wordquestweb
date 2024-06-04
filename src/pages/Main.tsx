@@ -1,11 +1,23 @@
 import { Layout, Tabs } from "antd";
 import { StrictMode } from "react";
 import CreateCard from "./CreateCard";
-import ViewCards from "./ViewCards";
+import ViewCards from "./viewcards/ViewCards";
 import globaleStyles from "../assets/css/globalStyles";
+import { useUser } from "../hooks/useUser";
 const { Footer, Header } = Layout;
+import { useNavigate } from "react-router-dom";
+import { useToken } from "../hooks/useToken";
 
 export default function Container() {
+  const user = useUser();
+  const [token, setToken] = useToken();
+  const navigate = useNavigate();
+
+  const onLogOutClicked = async () => {
+    setToken(false);
+    navigate("/login");
+  };
+
   return (
     <StrictMode>
       <Layout
@@ -16,7 +28,11 @@ export default function Container() {
           flexDirection: "column",
         }}
       >
-        <Header style={globaleStyles.header}>WORD JUNGLE</Header>
+        <Header style={globaleStyles.header}>
+          WORD JUNGLE
+          {user && <button onClick={onLogOutClicked}>Log Out</button>}
+          {user && <div>{user.username}</div>}
+        </Header>
 
         <Tabs
           style={{
@@ -37,11 +53,11 @@ export default function Container() {
           }}
           tabBarGutter={20}
           items={[
-            {
-              label: "create card",
-              key: "1",
-              children: <CreateCard />,
-            },
+            // {
+            //   label: "create card",
+            //   key: "1",
+            //   children: <CreateCard />,
+            // },
             {
               label: "view cards",
               key: "2",
