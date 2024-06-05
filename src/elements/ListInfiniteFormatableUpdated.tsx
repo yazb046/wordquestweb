@@ -49,13 +49,17 @@ const ListInfiniteFormatableUpdated: React.FC<Props> = ({
   );
 
   const handleDoubleClick = (item: Iterable) => {
-    setSelectedItem(item);
-    onItemSelect(item);
+    console.log();
   };
+
+  useEffect(() => {
+    onItemSelect(selectedItem);
+  }, [selectedItem]);
+
 
   const handleClick = (item: Iterable) => {
     setSelectedItem(item);
-    onItemSelect(item);
+    // onItemSelect(item);
   };
 
   const handleDragStart = (

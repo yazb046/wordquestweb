@@ -10,26 +10,27 @@ import { useToken } from "../../../hooks/useToken";
 import { iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
 import AddCardModel from "./AddCardModel";
-import {useLoadUpdated} from "../../../hooks/useLoadUpdated";
+import { useLoadUpdated } from "../../../hooks/useLoadUpdated";
 
 interface CardsListProps {
-  theme:Iterable;
+  onItemSelected: any;
+  theme: Iterable;
 }
 
-const CardsList: React.FC<CardsListProps> = ({
-  theme,
-}) => {
-
+const CardsList: React.FC<CardsListProps> = ({ theme, onItemSelected }) => {
   const [page, setPage] = useState(0);
   const [reload, setReload] = useState(true);
   const [list, setList] = useState<any[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedItem, setSelectedItem] = useState();
+  const [selectedItem, setSelectedItem] = useState(iterableBuilder(0, "", ""));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [themeId, setThemeId] = useState(0);
-
   const [token] = useToken();
+
+  useEffect(() => {
+    onItemSelected(selectedItem);
+  }, [selectedItem]);
 
   const fetchItemsFunction = function (pageNo: number) {
     let path = `api/cards/${themeId}`;
@@ -37,27 +38,28 @@ const CardsList: React.FC<CardsListProps> = ({
       pageNo: pageNo,
       pageSize: 10,
       sortBy: "id",
-      direction: "asc",
+      direction: "desc",
     };
 
     return axios
-      .get(
-        CONFIG.BACK_SERVER_DOMAIN + path,
-        {
-          headers: {Authorization: token ? `${token}` : null,},
-          params:params,
-        }
-      )
+      .get(CONFIG.BACK_SERVER_DOMAIN + path, {
+        headers: { Authorization: token ? `${token}` : null },
+        params: params,
+      })
       .then((response) => {
         let mappedContent: Iterable[] = [];
         response.data.content.forEach((e: any) => {
-          mappedContent.push(iterableBuilder(e.id, e.title, e.description)); 
+          mappedContent.push(iterableBuilder(e.id, e.title, e.description));
         });
         response.data.content = mappedContent;
         return response.data;
       });
   };
-  const { items, hasMore, loading } = useLoadUpdated(fetchItemsFunction, page, reload);
+  const { items, hasMore, loading } = useLoadUpdated(
+    fetchItemsFunction,
+    page,
+    reload
+  );
 
   useEffect(() => {
     setList(items);
@@ -66,16 +68,22 @@ const CardsList: React.FC<CardsListProps> = ({
     setReload(false);
   }, [items, hasMore, loading]);
 
-
   useEffect(() => {
-    if(theme !== undefined && theme.getId() !==0 && themeId!==theme.getId()){
-      setList([]);
-      setThemeId(theme.getId())
+    if (
+      theme !== undefined &&
+      theme.getId() !== 0 &&
+      themeId !== theme.getId()
+    ) {
+      setThemeId(theme.getId());
       setPage(0);
       setReload(true);
     }
   }, [theme]);
 
+  useEffect(() => {
+    setPage(0);
+    setReload(true);
+  }, [selectedItem]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -87,43 +95,49 @@ const CardsList: React.FC<CardsListProps> = ({
   };
 
   return (
-    <Sider
-      width={"400px"}
-      style={{ ...globaleStyles.siderLeft, height: "260px" }}
-    >
+    <>
       <Space direction="horizontal">
-      <AddCardModel openModal={isModalOpen} closeModalCallback={closeModal} theme={theme}/>
-      <h3>Cards</h3>
-      <Tooltip title="add a new card" trigger="hover">
-        <PlusSquareFilled onClick={openModal} />
-      </Tooltip>
-      </Space>
-
-      <ListInfiniteFormatableUpdated
-        items={list}
-        page={page}
-        hasMore={hasMoreItems}
-        loading={isLoading}
-        onPageChange={(pageNo: number) => {
-          setPage(pageNo);
-        }}
-        onItemSelect={(item: any) => setSelectedItem(item)}
-        listItemStyles={{
-            height: "30px",
-            width:"385px",
-            fontSize: "14px",
-            padding: "3px",
-            paddingLeft: "7px",
-            borderRadius: "2px",
-            fontFamily: "Merriweather",
-            border:"1px solid #D3D3D3",
-          }
+        {themeId === 0 ? <p>set a goal first</p>: 
+        <>
+                <ListInfiniteFormatableUpdated
+                items={list}
+                page={page}
+                hasMore={hasMoreItems}
+                loading={isLoading}
+                onPageChange={(pageNo: number) => {
+                  setPage(pageNo);
+                }}
+                onItemSelect={(item: any) => {
+                  setSelectedItem(item);
+                }}
+                listItemStyles={{
+                  height: "30px",
+                  width: "385px",
+                  fontSize: "14px",
+                  padding: "3px",
+                  paddingLeft: "7px",
+                  borderRadius: "2px",
+                  fontFamily: "Merriweather",
+                  border: "1px solid #D3D3D3",
+                }}
+                listSize={{ maxWidth: "400px", maxHeight: "210px" }}
+              />
+              <Space direction="vertical">
+                <Tooltip title="add a new card" trigger="hover">
+                  <PlusSquareFilled onClick={openModal} />
+                </Tooltip>
+                <AddCardModel
+                  openModal={isModalOpen}
+                  closeModalCallback={closeModal}
+                  theme={theme}
+                  card={selectedItem}
+                />
+              </Space>
+              </>
         }
-        listSize={{maxWidth: "400px", maxHeight:"210px"}}
-      />
-    </Sider>
+      </Space>
+    </>
   );
-}
-
+};
 
 export default CardsList;

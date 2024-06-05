@@ -48,7 +48,7 @@ const AppWordList: React.FC<CallbackFunction> = ({ setter }) => {
         addToolTipMessage="pick a context"
         contextWord={undefined}
         loadListDataHandler={fetchDataFunction}
-        listItemDefaultInstance={wordBuilder(0, "")}
+        listItemDefaultInstance={wordBuilder(0, "","")}
         clickedItemHandler={setter}
         scrollListBoxStyle={{
           height: 530,

@@ -9,14 +9,14 @@ import Iterable from "../types/Iterable";
 import globaleStyles from "../assets/css/globalStyles";
 
 const CreateCard: React.FC = () => {
-  const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, ""));
+  const [activeWord, setActiveWord] = useState<Iterable>(wordBuilder(0, "",""));
 
   const activeWordChangeListener = (word: Iterable) => {
     setActiveWord(word);
   };
 
   const cleanActiveWord = () => {
-    setActiveWord(wordBuilder(0, ""));
+    setActiveWord(wordBuilder(0, "",""));
   };
 
 
