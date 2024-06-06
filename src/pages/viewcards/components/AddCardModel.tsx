@@ -5,18 +5,26 @@ import Iterable from "../../../types/Iterable";
 
 interface AddCardModelProps {
   openModal: boolean;
-  closeModalCallback: () => void;
+  onCloseModal: () => void;
   theme: Iterable;
   card: Iterable;
 }
 
 const AddCardModel: React.FC<AddCardModelProps> = ({
   openModal,
-  closeModalCallback,
+  onCloseModal,
   theme,
   card,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [internalTheme, setInternalTheme] = useState(theme);
+
+  useEffect(() => {
+    if(theme !== undefined && theme.getId() !== internalTheme.getId()){
+      setInternalTheme(theme);
+    }
+  }, [theme]);
+
 
   useEffect(() => {
     setIsModalOpen(openModal);
@@ -31,8 +39,8 @@ const AddCardModel: React.FC<AddCardModelProps> = ({
       closable={false}
     >
       <CardMarkDownUpdated
-        closeModalCallback={closeModalCallback}
-        theme={theme}
+        onCloseCard={onCloseModal}
+        theme={internalTheme}
         card={card}
         size={undefined}
       />

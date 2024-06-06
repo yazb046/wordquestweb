@@ -13,16 +13,17 @@ import globaleStyles from "../../../assets/css/globalStyles";
 interface ModalProps {
   theme: Iterable;
   card: Iterable;
-  closeModalCallback: () => void;
   size: any;
+  onCloseCard:() => void;
 }
 
 const CardMarkDownUpdated: React.FC<ModalProps> = ({
   theme,
   card,
-  closeModalCallback,
   size,
+  onCloseCard,
 }) => {
+  
   const [internalTheme, setInternalTheme] = useState<Iterable>(
     iterableBuilder(0, "", "")
   );
@@ -88,11 +89,10 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
   };
 
   const close = () => {
-    closeModalCallback();
+    onCloseCard();
     setEditableTitle("");
     setEditableContent("");
     setInternalCardId(0);
-    setInternalTheme(iterableBuilder(0, "", ""));
   };
 
   return (
