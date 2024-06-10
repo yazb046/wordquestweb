@@ -9,27 +9,28 @@ import axios from "axios";
 import Config from "../../../Config";
 import { useToken } from "../../../hooks/useToken";
 import globaleStyles from "../../../assets/css/globalStyles";
+import ImageUploadForm from "./ImageUploadForm";
 
 interface ModalProps {
   theme: Iterable;
   card: Iterable;
-  size: any;
-  onCloseCard:() => void;
+  outerStyle: any;
+  onCloseCard: () => void;
 }
 
 const CardMarkDownUpdated: React.FC<ModalProps> = ({
   theme,
   card,
-  size,
+  outerStyle,
   onCloseCard,
 }) => {
-  
   const [internalTheme, setInternalTheme] = useState<Iterable>(
     iterableBuilder(0, "", "")
   );
   const [internalCardId, setInternalCardId] = useState(0);
   const [editableContent, setEditableContent] = useState("");
   const [editableTitle, setEditableTitle] = useState("");
+  const [openAddImageForm, setOpenAddImageForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [token] = useToken();
 
@@ -95,36 +96,20 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
     setInternalCardId(0);
   };
 
+  const onPressAddImage = () => {
+    setOpenAddImageForm(true);
+  };
+
   return (
     <Card
       bordered={false}
       style={{
-        alignSelf: "end",
-        justifyContent: "end",
-        width: size === undefined ? "680px" : size.width,
-        height: size === undefined ? "500px" : size.height + 60,
-        padding: "5px",
-        // marginTop: "15px",
-        margin: "10px",
-        marginTop:"2px",  
-        marginLeft: "20px",
-        // marginBottom: "80px",
-        alignItems: "center",
+        marginLeft: outerStyle === undefined ? "0px" : outerStyle.marginLeft,
+        width: outerStyle === undefined ? 750 : outerStyle.width,
+        height: outerStyle === undefined ? 500 : outerStyle.height + 60,
         boxShadow: "-0 0 8px rgba(0, 0, 0, 2)",
       }}
     >
-      <div
-        style={{
-          alignSelf: "end",
-          justifyContent: "end",
-          marginBottom: "5px",
-          alignItems: "center",
-          textOverflow: "ellipsis", 
-          overflow: "hidden",
-        }}
-      >
-        {internalTheme.getTitle()}
-      </div>
       <Input
         placeholder={"add step title"}
         value={editableTitle}
@@ -134,10 +119,7 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
       <Content
         onClick={onContentClick}
         style={{
-          width: size === undefined ? "622px" : size.width - 60,
-          height: size === undefined ? "370px" : size.height - 120,
           marginTop: "10px",
-          marginBottom: "10px",
         }}
       >
         {editMode ? (
@@ -152,8 +134,8 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
               padding: "0px",
               border: "1px solid #E5E4E2",
               borderRadius: "5px",
-              height: size === undefined ? "350px" : size.height - 120,
-              width: size === undefined ? "622px" : size.width - 60,
+              height: outerStyle === undefined ? 350 : outerStyle.height - 120,
+              width: outerStyle === undefined ? 700 : outerStyle.width - 60,
               resize: "none",
               fontFamily: "Merriweather",
             }}
@@ -161,7 +143,7 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
         ) : (
           <div
             style={{
-              height: size === undefined ? "350px" : size.height - 120,
+              height: outerStyle === undefined ? 350 : outerStyle.height - 120,
               border: "1px solid #E5E4E2",
               padding: "5px",
               paddingLeft: "10px",
@@ -175,6 +157,8 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
             <ReactMarkdown>{editableContent}</ReactMarkdown>
           </div>
         )}
+
+        {openAddImageForm && <ImageUploadForm themeId={theme.getId()}/>}
       </Content>
       <Footer style={{ height: "32px", padding: "0px", marginTop: "10px" }}>
         <Button
@@ -189,6 +173,9 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
         >
           Edit
         </Button>
+        <Button style={{ marginRight: "5px" }} onClick={onPressAddImage}>
+          Add image
+        </Button>
         <Button style={{ marginRight: "5px" }} onClick={onPressCancel}>
           Cancel
         </Button>
@@ -199,5 +186,4 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
     </Card>
   );
 };
-
 export default CardMarkDownUpdated;

@@ -1,5 +1,5 @@
 import { Col, Collapse, Layout, Row, Space, Tooltip } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { fetchAllCardsByUserId } from "../../service/cardService";
 import Iterable from "../../types/Iterable";
 import ThemesList from "./components/ThemesList";
@@ -8,6 +8,7 @@ import { iterableBuilder } from "../../types/IterableClass";
 import CardMarkDownUpdated from "./components/CardMarkDownUpdated";
 import { PlusSquareFilled } from "@ant-design/icons";
 import AddCardModel from "./components/AddCardModel";
+import AddThemeModel from "./components/AddThemeModel";
 const { Panel } = Collapse;
 
 const fetchItems = function (pageNo: number) {
@@ -20,6 +21,10 @@ export default function ViewCards() {
   const [reloadCardList, setReloadCardList] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    setCard(iterableBuilder(0, "", ""));
+  }, [theme]);
 
   const getPanelTitle = function () {
     if (theme !== undefined && theme.getId() > 0) {
@@ -56,11 +61,22 @@ export default function ViewCards() {
         <Col span={10}>
           <Collapse style={{ ...defaultStyle }}>
             <Panel key="1" header="Goals">
-              <ThemesList
-                onItemSelected={(item: Iterable) => {
-                  setTheme(item);
-                }}
-              />
+              <Space direction="vertical">
+                <>
+                  <AddThemeModel
+                    openModal={isModalOpen}
+                    closeModalCallback={closeModal}
+                  />
+                  <Tooltip title="add a goal" trigger="hover">
+                    <PlusSquareFilled onClick={openModal} />
+                  </Tooltip>
+                </>
+                <ThemesList
+                  onItemSelected={(item: Iterable) => {
+                    setTheme(item);
+                  }}
+                />
+              </Space>
             </Panel>
             <Panel key="2" header={getPanelTitle()}>
               <Space direction="vertical">
@@ -99,7 +115,8 @@ export default function ViewCards() {
               }}
               theme={theme}
               card={card}
-              size={{
+              outerStyle={{
+                marginLeft:"20px",
                 height: 500,
                 width: 570,
               }}

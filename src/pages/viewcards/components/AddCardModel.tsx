@@ -32,8 +32,8 @@ const AddCardModel: React.FC<AddCardModelProps> = ({
 
   return (
     <Modal
-      width={"900px"}
-      style={{ top: "50%", transform: "translateY(-50%)" }}
+      width={800}
+      style={{}}
       open={isModalOpen}
       footer={null}
       closable={false}
@@ -42,10 +42,15 @@ const AddCardModel: React.FC<AddCardModelProps> = ({
         onCloseCard={onCloseModal}
         theme={internalTheme}
         card={card}
-        size={undefined}
+        outerStyle={undefined}
       />
     </Modal>
   );
 };
 
 export default AddCardModel;
+
+const defaultStyle ={
+  top: "50%", 
+  transform: "translateY(-50%)"
+}

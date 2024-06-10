@@ -1,13 +1,9 @@
-import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";
-import globaleStyles from "../../../assets/css/globalStyles";
 import ListInfiniteFormatableUpdated from "../../../elements/ListInfiniteFormatableUpdated";
 import axios from "axios";
 import CONFIG from "../../../Config";
 import { useUser } from "../../../hooks/useUser";
-import { PlusSquareFilled } from "@ant-design/icons";
-import { Collapse, Space, Tooltip } from "antd";
-import AddThemeModel from "./AddThemeModel";
+import { Collapse } from "antd";
 import { useToken } from "../../../hooks/useToken";
 import { iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
@@ -20,26 +16,19 @@ interface ThemesListProps {
 
 const ThemesList: React.FC<ThemesListProps> = ({ onItemSelected }) => {
   const [page, setPage] = useState(0);
-  const [reload, setReload] = useState(true);
+  const [reload, setReload] = useState(false);
   const [list, setList] = useState<any[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Iterable>(
     iterableBuilder(0,"","")
   );
-  const [paneValue, setPaneValue] = useState<Iterable>(
-    iterableBuilder(0,"choose a goal","")
-  );
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useUser();
   const [token] = useToken();
 
 
   useEffect(() => {
     onItemSelected(selectedItem);
-    if(selectedItem!==undefined && selectedItem.getId()>0){
-      setPaneValue(selectedItem);
-    }
 
   }, [selectedItem]);
 
@@ -49,7 +38,7 @@ const ThemesList: React.FC<ThemesListProps> = ({ onItemSelected }) => {
       pageNo: pageNo,
       pageSize: 10,
       sortBy: "id",
-      direction: "asc",
+      direction: "desc",
     };
 
     return axios
@@ -76,22 +65,9 @@ const ThemesList: React.FC<ThemesListProps> = ({ onItemSelected }) => {
     setReload(false);
   }, [items, hasMore, loading]);
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setReload(true);
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
 
   return (
-    <div>
-      <AddThemeModel
-          openModal={isModalOpen}
-          closeModalCallback={closeModal}
-        />
-      <Space direction="horizontal"> 
+    <>
       <ListInfiniteFormatableUpdated
         items={list}
         page={page}
@@ -115,27 +91,8 @@ const ThemesList: React.FC<ThemesListProps> = ({ onItemSelected }) => {
         }}
         listSize={{ maxWidth: "400px", maxHeight: "100px" }}
       />
-      <Space direction="vertical">
-      
-        <Tooltip title="add a new theme" trigger="hover">
-          <PlusSquareFilled onClick={openModal} />
-        </Tooltip>
-      </Space>
-      </Space>
-    </div>
+    </>
   );
 };
-
-const style = {
-  siderLeft: {
-    backgroundColor: "#e8f6fa",
-    padding: "10px 7px",
-    marginRight: "7px",
-    marginLeft: "0px",
-    marginBottom: "0px",
-    boxShadow: "-0 0 5px rgba(0, 0, 0, 0.5)",
-    borderRadius: 2,
-  }
-}
 
 export default ThemesList;

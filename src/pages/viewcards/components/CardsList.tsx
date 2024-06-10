@@ -1,15 +1,11 @@
-import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";
-import globaleStyles from "../../../assets/css/globalStyles";
 import ListInfiniteFormatableUpdated from "../../../elements/ListInfiniteFormatableUpdated";
 import axios from "axios";
 import CONFIG from "../../../Config";
-import { PlusSquareFilled } from "@ant-design/icons";
-import { Space, Tooltip } from "antd";
+import { Space } from "antd";
 import { useToken } from "../../../hooks/useToken";
 import { iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
-import AddCardModel from "./AddCardModel";
 import { useLoadUpdated } from "../../../hooks/useLoadUpdated";
 
 interface CardsListProps {
@@ -60,7 +56,7 @@ const CardsList: React.FC<CardsListProps> = ({
       .then((response) => {
         let mappedContent: Iterable[] = [];
         response.data.content.forEach((e: any) => {
-          mappedContent.push(iterableBuilder(e.id, e.title, e.description));
+          mappedContent.push(iterableBuilder(e.id, e.title, e.content));
         });
         response.data.content = mappedContent;
         return response.data;
