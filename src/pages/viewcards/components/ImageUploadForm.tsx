@@ -53,8 +53,7 @@ const ImageUploadForm: React.FC<ImageUploadFormProps> = ({ themeId }) => {
   };
 
   return (
-    <div>
-      <p>Upload Image:</p>
+    <div style={{marginTop:"20px"}}>
       <form onSubmit={handleSubmit}>
         <input type="file" accept="image/*" onChange={handleImageChange} />
         {preview && (
@@ -67,8 +66,9 @@ const ImageUploadForm: React.FC<ImageUploadFormProps> = ({ themeId }) => {
           </div>
         )}
         <button type="submit">Upload Image</button>
+        <button style ={{marginLeft:"3px"}} onClick={()=>console.log("clicked")}>Copy image link </button>
       </form>
-      <p>Image urls</p>
+      <p style={{ fontFamily: "Merriweather", fontSize:"10px"}}></p>
     </div>
   );
 };

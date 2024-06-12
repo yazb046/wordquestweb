@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import Iterable from "../types/Iterable";
+import Iterable from "../../../types/Iterable";
 import { LoadingOutlined } from "@ant-design/icons";
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
   page: number;
   onItemSelect: any;
   onPageChange: any;
+  onListOrderChange: any;
   listItemStyles:any|null;
   listSize:{maxWidth: string, maxHeight:string};
 }
@@ -20,6 +21,7 @@ const ListInfiniteFormatableUpdated: React.FC<Props> = ({
   page,
   onItemSelect,
   onPageChange,
+  onListOrderChange,
   listItemStyles,
   listSize,
 }) => {
@@ -72,6 +74,7 @@ const ListInfiniteFormatableUpdated: React.FC<Props> = ({
 
   const handleDragEnd = () => {
     setDraggedItemId(null);
+    onListOrderChange(list);
   };
 
   const handleDragOver = (

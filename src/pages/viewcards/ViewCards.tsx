@@ -2,32 +2,46 @@ import { Col, Collapse, Layout, Row, Space, Tooltip } from "antd";
 import { useState, useEffect } from "react";
 import { fetchAllCardsByUserId } from "../../service/cardService";
 import Iterable from "../../types/Iterable";
-import ThemesList from "./components/ThemesList";
-import CardsList from "./components/CardsList";
+import GoalsList from "./components/GoalsList";
+import CardsList from "./components/StepsList";
 import { iterableBuilder } from "../../types/IterableClass";
 import CardMarkDownUpdated from "./components/CardMarkDownUpdated";
 import { PlusSquareFilled } from "@ant-design/icons";
-import AddCardModel from "./components/AddCardModel";
 import AddThemeModel from "./components/AddThemeModel";
+import axios from "axios";
+import Config from "../../Config";
+import { useToken } from "../../hooks/useToken";
+import ImageUploadForm from "./components/ImageUploadForm";
 const { Panel } = Collapse;
 
-const fetchItems = function (pageNo: number) {
-  return fetchAllCardsByUserId(1, pageNo, 10, "id", "asc");
-};
 
 export default function ViewCards() {
-  const [theme, setTheme] = useState<Iterable>(iterableBuilder(0, "", ""));
-  const [card, setCard] = useState<Iterable>(iterableBuilder(0, "", ""));
+  const [theme, setTheme] = useState<Iterable | null>(null);
+  const [card, setCard] = useState<Iterable | null>(null);
   const [reloadCardList, setReloadCardList] = useState(false);
-
+  const [reloadGoalsList, setReloadGoalsList] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [token] = useToken();
+  const [blockedThemeChange, setBlockedThemeChange] = useState(false);
+
 
   useEffect(() => {
-    setCard(iterableBuilder(0, "", ""));
+    if (card != null) {
+      setCard(null);
+    }
   }, [theme]);
 
+  const onSaveCard = (item: Iterable) => {
+    let path = `api/cards/${theme?.getId()}`;
+    axios.post(Config.BACK_SERVER_DOMAIN + path, item, {
+      headers: {
+        Authorization: token ? `${token}` : null,
+      },
+    });
+  };
+
   const getPanelTitle = function () {
-    if (theme !== undefined && theme.getId() > 0) {
+    if (theme != null) {
       let themeTitle = theme.getTitle();
 
       let title = "Steps to: ";
@@ -43,13 +57,18 @@ export default function ViewCards() {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setReloadCardList(true);
+    setReloadGoalsList(true);
   };
 
   const openModal = () => {
     setIsModalOpen(true);
-    setReloadCardList(false);
+    setReloadGoalsList(false);
   };
+
+  const createNewCard = () => {
+      setReloadCardList(false);
+      setCard(iterableBuilder(0, "", ""));
+   };
 
   return (
     <Layout
@@ -71,57 +90,63 @@ export default function ViewCards() {
                     <PlusSquareFilled onClick={openModal} />
                   </Tooltip>
                 </>
-                <ThemesList
+                <GoalsList
+                  reloadList={reloadGoalsList}
                   onItemSelected={(item: Iterable) => {
-                    setTheme(item);
+                    if(!blockedThemeChange) {
+                      setTheme(item);}
+                      else {
+                        alert("save & close step being edited before slecting another goal ");
+                      }
                   }}
                 />
               </Space>
             </Panel>
             <Panel key="2" header={getPanelTitle()}>
               <Space direction="vertical">
-                {theme !== undefined && theme.getId() != 0 && (
+                {theme == null ? (
+                  <p>set a goal first</p>
+                ) : (
                   <>
                     <Tooltip title="add a new card" trigger="hover">
-                      <PlusSquareFilled onClick={openModal} />
+                      <PlusSquareFilled onClick={createNewCard} />
                     </Tooltip>
-                    <AddCardModel
-                      openModal={isModalOpen}
-                      onCloseModal={closeModal}
+                    <CardsList
+                      onItemSelected={(item: Iterable) => {
+                        setCard(item);
+                      }}
+                      reloadList={reloadCardList}
                       theme={theme}
-                      card={iterableBuilder(0, "", "")}
                     />
                   </>
                 )}
-
-                <CardsList
-                  onItemSelected={(item: Iterable) => {
-                    setReloadCardList(false);
-                    setCard(item);
-                  }}
-                  reloadList={reloadCardList}
-                  theme={theme}
-                />
               </Space>
             </Panel>
           </Collapse>
         </Col>
         <Col span={14}>
-          {card !== undefined && card.getId() !== 0 && (
-            <CardMarkDownUpdated
-              onCloseCard={() => {
-                setReloadCardList(true);
-                setCard(iterableBuilder(0, "", ""));
-              }}
-              theme={theme}
-              card={card}
-              outerStyle={{
-                marginLeft:"20px",
-                height: 500,
-                width: 570,
-              }}
-            />
-          )}
+          {card != null ? 
+            <>
+              <CardMarkDownUpdated
+                onBlock={()=>setBlockedThemeChange(true)}
+                onSaveCard={(item:Iterable)=>{
+                  onSaveCard(item);
+                }}
+                onCloseCard={() => {
+                  setBlockedThemeChange(false);
+                  setReloadCardList(true);
+                  setCard(null);
+                }}
+                card={card}
+                outerStyle={{
+                  marginLeft: "15px",
+                  height: 400,
+                  width: 580,
+                }}
+              />
+              <ImageUploadForm themeId={theme?.getId()} />
+            </>
+          :<></>}
         </Col>
       </Row>
     </Layout>

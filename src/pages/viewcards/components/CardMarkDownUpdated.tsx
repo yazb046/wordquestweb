@@ -5,69 +5,68 @@ import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
-import axios from "axios";
-import Config from "../../../Config";
 import { useToken } from "../../../hooks/useToken";
-import globaleStyles from "../../../assets/css/globalStyles";
 import ImageUploadForm from "./ImageUploadForm";
 
 interface ModalProps {
-  theme: Iterable;
-  card: Iterable;
+  card: Iterable | null;
   outerStyle: any;
   onCloseCard: () => void;
+  onSaveCard: (cardToSave: Iterable) => void;
+  onBlock:any;
 }
 
 const CardMarkDownUpdated: React.FC<ModalProps> = ({
-  theme,
   card,
   outerStyle,
   onCloseCard,
+  onSaveCard,
+  onBlock,
 }) => {
-  const [internalTheme, setInternalTheme] = useState<Iterable>(
-    iterableBuilder(0, "", "")
-  );
-  const [internalCardId, setInternalCardId] = useState(0);
+  const [editableId, setEditableId] = useState(0);
   const [editableContent, setEditableContent] = useState("");
   const [editableTitle, setEditableTitle] = useState("");
+
+  const [wipContent, setWipContent] = useState("");
+  const [wipTitle, setWipTitle] = useState("");
+
   const [openAddImageForm, setOpenAddImageForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [token] = useToken();
 
   useEffect(() => {
-    if (theme !== undefined && theme.getId() !== 0) {
-      setInternalTheme(theme);
-    }
-  }, [theme]);
-
-  useEffect(() => {
-    if (card !== undefined && card.getId() !== 0) {
-      setInternalCardId(card.getId());
+    if (
+      card != null &&
+      wipContent === editableContent &&
+      wipTitle === editableTitle
+    ) {
+      setEditableId(card.getId());
       setEditableContent(card.getContent());
       setEditableTitle(card.getTitle());
+      setWipContent(card.getContent());
+      setWipTitle(card.getTitle());
+    } else {
+      alert("Save and Close current step first");
     }
   }, [card]);
 
-  const onChange = (
+  useEffect(() => {
+    if (
+      wipContent != editableContent ||
+      wipTitle != editableTitle
+    ) {
+      onBlock();
+    }
+  }, [wipContent, wipTitle]);
+
+  const onContentChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     let editedContent = e.target.value;
-    setEditableContent(editedContent);
+    setWipContent(editedContent);
   };
 
   const onContentClick = () => {
     setEditMode(true);
-  };
-
-  const saveCard = () => {
-    let card = iterableBuilder(internalCardId, editableTitle, editableContent);
-    let path = `api/cards/${internalTheme.getId()}`;
-
-    axios.post(Config.BACK_SERVER_DOMAIN + path, card, {
-      headers: {
-        Authorization: token ? `${token}` : null,
-      },
-    });
   };
 
   const handleKeyDown = (event: any) => {
@@ -76,8 +75,8 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
     }
   };
 
-  const handleTitleChange = (event: any) => {
-    setEditableTitle(event.target.value);
+  const onTitleChange = (event: any) => {
+    setWipTitle(event.target.value);
   };
 
   const onPressCancel = () => {
@@ -85,15 +84,22 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
   };
 
   const onPressOk = () => {
-    saveCard();
+    let cardTosave = iterableBuilder(
+      editableId,
+      wipTitle,
+      wipContent
+    );
+    onSaveCard(cardTosave);
     close();
   };
 
   const close = () => {
     onCloseCard();
+    setEditableId(0);
     setEditableTitle("");
     setEditableContent("");
-    setInternalCardId(0);
+    setWipContent("");
+    setWipTitle("");
   };
 
   const onPressAddImage = () => {
@@ -112,8 +118,8 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
     >
       <Input
         placeholder={"add step title"}
-        value={editableTitle}
-        onChange={handleTitleChange}
+        value={wipTitle}
+        onChange={onTitleChange}
       />
 
       <Content
@@ -127,14 +133,14 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
             onKeyDown={handleKeyDown}
             showCount
             maxLength={1000}
-            onChange={onChange}
+            onChange={onContentChange}
             placeholder="add step description"
-            value={editableContent}
+            value={wipContent}
             style={{
               padding: "0px",
-              border: "1px solid #E5E4E2",
+              border: "1px solid #0096FF",
               borderRadius: "5px",
-              height: outerStyle === undefined ? 350 : outerStyle.height - 120,
+              height: outerStyle === undefined ? 400 : outerStyle.height - 120,
               width: outerStyle === undefined ? 700 : outerStyle.width - 60,
               resize: "none",
               fontFamily: "Merriweather",
@@ -143,7 +149,7 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
         ) : (
           <div
             style={{
-              height: outerStyle === undefined ? 350 : outerStyle.height - 120,
+              height: outerStyle === undefined ? 400 : outerStyle.height - 120,
               border: "1px solid #E5E4E2",
               padding: "5px",
               paddingLeft: "10px",
@@ -154,13 +160,11 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
               // whiteSpace: "pre-line",
             }}
           >
-            <ReactMarkdown>{editableContent}</ReactMarkdown>
+            <ReactMarkdown>{wipContent}</ReactMarkdown>
           </div>
         )}
-
-        {openAddImageForm && <ImageUploadForm themeId={theme.getId()}/>}
       </Content>
-      <Footer style={{ height: "32px", padding: "0px", marginTop: "10px" }}>
+      <Footer style={{ height: "35px", padding: "0px", marginTop: "5px" }}>
         <Button
           style={{ marginRight: "5px" }}
           onClick={() => setEditMode(false)}

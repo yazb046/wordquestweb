@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ListInfiniteFormatableUpdated from "../../../elements/ListInfiniteFormatableUpdated";
 import axios from "axios";
 import CONFIG from "../../../Config";
 import { useUser } from "../../../hooks/useUser";
@@ -8,15 +7,22 @@ import { useToken } from "../../../hooks/useToken";
 import { iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
 import {useLoadUpdated} from "../../../hooks/useLoadUpdated";
+import ListInfiniteFormatableSimple from "./ListInfiniteFormatableSimple";
 const { Panel } = Collapse;
 
-interface ThemesListProps {
+interface GoalsListProps {
   onItemSelected: any;
+  reloadList:boolean;
 }
 
-const ThemesList: React.FC<ThemesListProps> = ({ onItemSelected }) => {
+
+const GoalsList: React.FC<GoalsListProps> = ({
+  onItemSelected,
+  reloadList,
+}) => {
+
   const [page, setPage] = useState(0);
-  const [reload, setReload] = useState(false);
+  const [reload, setReload] = useState(true);
   const [list, setList] = useState<any[]>([]);
   const [hasMoreItems, setHasMoreItems] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,8 +35,11 @@ const ThemesList: React.FC<ThemesListProps> = ({ onItemSelected }) => {
 
   useEffect(() => {
     onItemSelected(selectedItem);
+    if(reloadList){
+      setReload(true);
+    }
 
-  }, [selectedItem]);
+  }, [selectedItem, reloadList]);
 
   const fetchItemsFunction = function (pageNo: number) {
     let path = `api/cards/theme/${user.userid}`;
@@ -68,7 +77,7 @@ const ThemesList: React.FC<ThemesListProps> = ({ onItemSelected }) => {
 
   return (
     <>
-      <ListInfiniteFormatableUpdated
+      <ListInfiniteFormatableSimple
         items={list}
         page={page}
         hasMore={hasMoreItems}
@@ -89,10 +98,10 @@ const ThemesList: React.FC<ThemesListProps> = ({ onItemSelected }) => {
           fontFamily: "Merriweather",
           border: "1px solid #D3D3D3",
         }}
-        listSize={{ maxWidth: "400px", maxHeight: "100px" }}
+        listSize={{ maxWidth: "400px", maxHeight: "165px" }}
       />
     </>
   );
 };
 
-export default ThemesList;
+export default GoalsList;
