@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ListInfiniteFormatableUpdated from "./ListInfiniteFormatableUpdated";
+import ListInfiniteFormatableUpdated from "../elements/ListInfiniteFormatableUpdated";
 import axios from "axios";
 import CONFIG from "../../../Config";
 import { useToken } from "../../../hooks/useToken";
@@ -10,44 +10,37 @@ import { useLoadUpdated } from "../../../hooks/useLoadUpdated";
 interface CardsListProps {
   onItemSelected: any;
   theme: Iterable | null;
-  reloadList: boolean;
+  forceListReload: boolean;
+  onListReloaded:any;
 }
 
 const CardsList: React.FC<CardsListProps> = ({
   theme,
   onItemSelected,
-  reloadList,
+  forceListReload,
+  onListReloaded,
 }) => {
-  const [page, setPage] = useState(0);
-  const [reload, setReload] = useState(false);
-  const [list, setList] = useState<any[]>([]);
-  const [hasMoreItems, setHasMoreItems] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Iterable|null>(null);
-  
-  const [themeId, setThemeId] = useState(0);
-  const [token] = useToken();
-
-  useEffect(() => {
-    onItemSelected(selectedItem);
-
-    if (reloadList) {
-      setReload(true);
-    }
-  }, [selectedItem, reloadList]);
+  const [_page, setPage] = useState(0);
+  const [_toReloadList, setToReloadList] = useState(false);
+  const [_list, setList] = useState<any[]>([]);
+  const [_hasMoreItems, setHasMoreItems] = useState(false);
+  const [_isLoading, setIsLoading] = useState(false);
+  const [_selectedItem, setSelectedItem] = useState<Iterable|null>(null);  
+  const [_themeId, setThemeId] = useState(0);
+  const [_token] = useToken();
 
   const fetchItemsFunction = function (pageNo: number) {
-    let path = `api/cards/${themeId}`;
-    let params = {
-      pageNo: pageNo,
-      pageSize: 10,
-      sortBy: "id",
-      direction: "desc",
-    };
+  let path = `api/cards/${_themeId}`;
+  let params = {
+    pageNo: pageNo,
+    pageSize: 10,
+    sortBy: "id",
+    direction: "desc",
+  };
 
     return axios
       .get(CONFIG.BACK_SERVER_DOMAIN + path, {
-        headers: { Authorization: token ? `${token}` : null },
+        headers: { Authorization: _token ? `${_token}` : null },
         params: params,
       })
       .then((response) => {
@@ -59,38 +52,50 @@ const CardsList: React.FC<CardsListProps> = ({
         return response.data;
       });
   };
+
+  useEffect(() => {
+    onItemSelected(_selectedItem);
+  }, [_selectedItem]);
+
+  useEffect(() => {
+    if (forceListReload) {
+      setToReloadList(true);
+    }
+  }, [forceListReload]);
+
   const { items, hasMore, loading } = useLoadUpdated(
     fetchItemsFunction,
-    page,
-    reload
+    _page,
+    _toReloadList
   );
 
   useEffect(() => {
     setList(items);
     setHasMoreItems(hasMore);
     setIsLoading(loading);
-    setReload(false);
+    setToReloadList(false);
+    onListReloaded();
   }, [items, hasMore, loading]);
 
   useEffect(() => {
     if (
       theme != null &&
-      theme.getId() !== 0 &&
-      themeId !== theme.getId()
+      theme.getId() != _themeId 
     ) {
       setThemeId(theme.getId());
       setPage(0);
-      setReload(true);
+      setToReloadList(true);
     }
   }, [theme]);
+
 
   return (
     <>
       <ListInfiniteFormatableUpdated
-        items={list}
-        page={page}
-        hasMore={hasMoreItems}
-        loading={isLoading}
+        items={_list}
+        page={_page}
+        hasMore={_hasMoreItems}
+        loading={_isLoading}
         onPageChange={(pageNo: number) => {
           setPage(pageNo);
         }}

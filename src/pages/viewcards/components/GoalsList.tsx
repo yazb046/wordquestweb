@@ -7,18 +7,20 @@ import { useToken } from "../../../hooks/useToken";
 import { iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
 import {useLoadUpdated} from "../../../hooks/useLoadUpdated";
-import ListInfiniteFormatableSimple from "./ListInfiniteFormatableSimple";
+import ListInfiniteFormatableSimple from "../elements/ListInfiniteFormatableSimple";
 const { Panel } = Collapse;
 
-interface GoalsListProps {
+interface Props {
   onItemSelected: any;
   reloadList:boolean;
+  onListReloaded:any;
 }
 
 
-const GoalsList: React.FC<GoalsListProps> = ({
+const GoalsList: React.FC<Props> = ({
   onItemSelected,
   reloadList,
+  onListReloaded,
 }) => {
 
   const [page, setPage] = useState(0);
@@ -72,6 +74,7 @@ const GoalsList: React.FC<GoalsListProps> = ({
     setHasMoreItems(hasMore);
     setIsLoading(loading);
     setReload(false);
+    onListReloaded();
   }, [items, hasMore, loading]);
 
 

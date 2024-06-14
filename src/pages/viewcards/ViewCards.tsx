@@ -5,44 +5,44 @@ import Iterable from "../../types/Iterable";
 import GoalsList from "./components/GoalsList";
 import CardsList from "./components/StepsList";
 import { iterableBuilder } from "../../types/IterableClass";
-import CardMarkDownUpdated from "./components/CardMarkDownUpdated";
+import CardMarkDownUpdated from "./elements/CardMarkDownUpdated";
 import { PlusSquareFilled } from "@ant-design/icons";
 import AddThemeModel from "./components/AddThemeModel";
 import axios from "axios";
 import Config from "../../Config";
 import { useToken } from "../../hooks/useToken";
-import ImageUploadForm from "./components/ImageUploadForm";
+import ImageUploadForm from "./elements/ImageUploadForm";
 const { Panel } = Collapse;
 
 
 export default function ViewCards() {
-  const [theme, setTheme] = useState<Iterable | null>(null);
-  const [card, setCard] = useState<Iterable | null>(null);
-  const [reloadCardList, setReloadCardList] = useState(false);
-  const [reloadGoalsList, setReloadGoalsList] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [token] = useToken();
-  const [blockedThemeChange, setBlockedThemeChange] = useState(false);
+  const [_theme, setTheme] = useState<Iterable | null>(null);
+  const [_card, setCard] = useState<Iterable | null>(null);
+  const [_reloadCardList, setReloadCardList] = useState(false);
+  const [_reloadGoalsList, setReloadGoalsList] = useState(false);
+  const [_isModalOpen, setIsModalOpen] = useState(false);
+  const [_token] = useToken();
+  const [_blockedThemeChange, setBlockedThemeChange] = useState(false);
 
 
   useEffect(() => {
-    if (card != null) {
+    if (_card != null) {
       setCard(null);
     }
-  }, [theme]);
+  }, [_theme]);
 
   const onSaveCard = (item: Iterable) => {
-    let path = `api/cards/${theme?.getId()}`;
+    let path = `api/cards/${_theme?.getId()}`;
     axios.post(Config.BACK_SERVER_DOMAIN + path, item, {
       headers: {
-        Authorization: token ? `${token}` : null,
+        Authorization: _token ? `${_token}` : null,
       },
     });
   };
 
   const getPanelTitle = function () {
-    if (theme != null) {
-      let themeTitle = theme.getTitle();
+    if (_theme != null) {
+      let themeTitle = _theme.getTitle();
 
       let title = "Steps to: ";
       if (themeTitle.length > 20) {
@@ -66,7 +66,6 @@ export default function ViewCards() {
   };
 
   const createNewCard = () => {
-      setReloadCardList(false);
       setCard(iterableBuilder(0, "", ""));
    };
 
@@ -83,7 +82,7 @@ export default function ViewCards() {
               <Space direction="vertical">
                 <>
                   <AddThemeModel
-                    openModal={isModalOpen}
+                    openModal={_isModalOpen}
                     closeModalCallback={closeModal}
                   />
                   <Tooltip title="add a goal" trigger="hover">
@@ -91,9 +90,10 @@ export default function ViewCards() {
                   </Tooltip>
                 </>
                 <GoalsList
-                  reloadList={reloadGoalsList}
+                  onListReloaded={() => setReloadGoalsList(false)}
+                  reloadList={_reloadGoalsList}
                   onItemSelected={(item: Iterable) => {
-                    if(!blockedThemeChange) {
+                    if(!_blockedThemeChange) {
                       setTheme(item);}
                       else {
                         alert("save & close step being edited before slecting another goal ");
@@ -104,7 +104,7 @@ export default function ViewCards() {
             </Panel>
             <Panel key="2" header={getPanelTitle()}>
               <Space direction="vertical">
-                {theme == null ? (
+                {_theme == null ? (
                   <p>set a goal first</p>
                 ) : (
                   <>
@@ -115,8 +115,9 @@ export default function ViewCards() {
                       onItemSelected={(item: Iterable) => {
                         setCard(item);
                       }}
-                      reloadList={reloadCardList}
-                      theme={theme}
+                      forceListReload={_reloadCardList}
+                      theme={_theme}
+                      onListReloaded={() => setReloadCardList(false)}
                     />
                   </>
                 )}
@@ -125,26 +126,26 @@ export default function ViewCards() {
           </Collapse>
         </Col>
         <Col span={14}>
-          {card != null ? 
+          {_card != null ? 
             <>
               <CardMarkDownUpdated
                 onBlock={()=>setBlockedThemeChange(true)}
                 onSaveCard={(item:Iterable)=>{
                   onSaveCard(item);
+                  setReloadCardList(true);
                 }}
                 onCloseCard={() => {
                   setBlockedThemeChange(false);
-                  setReloadCardList(true);
                   setCard(null);
                 }}
-                card={card}
+                card={_card}
                 outerStyle={{
                   marginLeft: "15px",
                   height: 400,
                   width: 580,
                 }}
               />
-              <ImageUploadForm themeId={theme?.getId()} />
+              <ImageUploadForm themeId={_theme?.getId()} />
             </>
           :<></>}
         </Col>
