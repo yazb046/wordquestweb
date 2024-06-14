@@ -13,7 +13,7 @@ interface ModalProps {
   outerStyle: any;
   onCloseCard: () => void;
   onSaveCard: (cardToSave: Iterable) => void;
-  onBlock:any;
+  onBlock: any;
 }
 
 const CardMarkDownUpdated: React.FC<ModalProps> = ({
@@ -50,10 +50,7 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
   }, [card]);
 
   useEffect(() => {
-    if (
-      wipContent != editableContent ||
-      wipTitle != editableTitle
-    ) {
+    if (wipContent != editableContent || wipTitle != editableTitle) {
       onBlock();
     }
   }, [wipContent, wipTitle]);
@@ -84,11 +81,7 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
   };
 
   const onPressOk = () => {
-    let cardTosave = iterableBuilder(
-      editableId,
-      wipTitle,
-      wipContent
-    );
+    let cardTosave = iterableBuilder(editableId, wipTitle, wipContent);
     onSaveCard(cardTosave);
     close();
   };
@@ -129,23 +122,27 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
         }}
       >
         {editMode ? (
-          <TextArea
-            onKeyDown={handleKeyDown}
-            showCount
-            maxLength={1000}
-            onChange={onContentChange}
-            placeholder="add step description"
-            value={wipContent}
-            style={{
-              padding: "0px",
-              border: "1px solid #0096FF",
-              borderRadius: "5px",
-              height: outerStyle === undefined ? 400 : outerStyle.height - 120,
-              width: outerStyle === undefined ? 700 : outerStyle.width - 60,
-              resize: "none",
-              fontFamily: "Merriweather",
-            }}
-          />
+          <>
+            <TextArea
+              onKeyDown={handleKeyDown}
+              showCount
+              maxLength={1000}
+              onChange={onContentChange}
+              placeholder="add step description"
+              value={wipContent}
+              style={{
+                padding: "0px",
+                border: "1px solid #0096FF",
+                borderRadius: "5px",
+                height:
+                  outerStyle === undefined ? 400 : outerStyle.height - 120,
+                width: outerStyle === undefined ? 700 : outerStyle.width - 60,
+                resize: "none",
+                fontFamily: "Merriweather",
+                overflow: "auto",
+              }}
+            />
+          </>
         ) : (
           <div
             style={{
@@ -157,6 +154,7 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
               borderRadius: "5px",
               fontFamily: "Merriweather",
               wordWrap: "break-word",
+              overflow: "auto",
               // whiteSpace: "pre-line",
             }}
           >
