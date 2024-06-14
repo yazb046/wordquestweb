@@ -23,28 +23,31 @@ const GoalsList: React.FC<Props> = ({
   onListReloaded,
 }) => {
 
-  const [page, setPage] = useState(0);
-  const [reload, setReload] = useState(true);
-  const [list, setList] = useState<any[]>([]);
-  const [hasMoreItems, setHasMoreItems] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Iterable>(
+  const [_page, setPage] = useState(0);
+  const [_reload, setReload] = useState(true);
+  const [_list, setList] = useState<any[]>([]);
+  const [_hasMoreItems, setHasMoreItems] = useState(false);
+  const [_isLoading, setIsLoading] = useState(false);
+  const [_selectedItem, setSelectedItem] = useState<Iterable>(
     iterableBuilder(0,"","")
   );
-  const user = useUser();
-  const [token] = useToken();
+  const _user = useUser();
+  const [_token] = useToken();
 
 
   useEffect(() => {
-    onItemSelected(selectedItem);
+    onItemSelected(_selectedItem);
+
+  }, [_selectedItem]);
+
+  useEffect(() => {
     if(reloadList){
       setReload(true);
     }
-
-  }, [selectedItem, reloadList]);
+  }, [reloadList]);
 
   const fetchItemsFunction = function (pageNo: number) {
-    let path = `api/cards/theme/${user.userid}`;
+    let path = `api/cards/theme/${_user.userid}`;
     let params = {
       pageNo: pageNo,
       pageSize: 10,
@@ -54,7 +57,7 @@ const GoalsList: React.FC<Props> = ({
 
     return axios
       .get(CONFIG.BACK_SERVER_DOMAIN + path, {
-        headers: { Authorization: token ? `${token}` : null },
+        headers: { Authorization: _token ? `${_token}` : null },
         params: params,
       })
       .then((response) => {
@@ -67,7 +70,7 @@ const GoalsList: React.FC<Props> = ({
       });
   };
 
-  const { items, hasMore, loading } = useLoadUpdated(fetchItemsFunction, page, reload);
+  const { items, hasMore, loading } = useLoadUpdated(fetchItemsFunction, _page, _reload);
 
   useEffect(() => {
     setList(items);
@@ -81,10 +84,10 @@ const GoalsList: React.FC<Props> = ({
   return (
     <>
       <ListInfiniteFormatableSimple
-        items={list}
-        page={page}
-        hasMore={hasMoreItems}
-        loading={isLoading}
+        items={_list}
+        page={_page}
+        hasMore={_hasMoreItems}
+        loading={_isLoading}
         onPageChange={(pageNo: number) => {
           setPage(pageNo);
         }}

@@ -13,11 +13,7 @@ export const useLoadUpdated = ( dataFetchFunction: (pageNumber: number) => Promi
     }
    }, [reload]);
 
-  useEffect(() => {
-    if(!_toReload) return;
-    if(pageNo == 0){
-      setItems([]);
-    }
+  const loadData = () => {
     setLoading(true);
     setError(false);
     dataFetchFunction(pageNo)
@@ -37,7 +33,19 @@ export const useLoadUpdated = ( dataFetchFunction: (pageNumber: number) => Promi
         setError(true);
       })
       .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    if(!_toReload) return;
+    loadData();
     setToReload(false);  
+  }, [_toReload]);
+
+  useEffect(() => {
+    if(pageNo == 0){
+      setItems([]);
+    }
+    loadData(); 
   }, [pageNo, _toReload]);
 
   return {"items":_items, "hasMore":_hasMore, "loading":_loading};
