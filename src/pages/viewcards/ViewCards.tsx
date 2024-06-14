@@ -96,7 +96,7 @@ export default function ViewCards() {
                     if(!_blockedThemeChange) {
                       setTheme(item);}
                       else {
-                        alert("save & close step being edited before slecting another goal ");
+                        alert("save & close step being edited before selecting another goal ");
                       }
                   }}
                 />

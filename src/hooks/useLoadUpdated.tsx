@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
 export const useLoadUpdated = ( dataFetchFunction: (pageNumber: number) => Promise<any>, pageNo:number, reload:boolean) => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
-  const [items, setItems] = useState<any[]>([])
-  const [toReload, setToReload] = useState(false);
+  const [_loading, setLoading] = useState(false);
+  const [_error, setError] = useState(false);
+  const [_hasMore, setHasMore] = useState(false);
+  const [_items, setItems] = useState<any[]>([])
+  const [_toReload, setToReload] = useState(false);
 
   useEffect(() => {
     if(reload){
@@ -14,6 +14,7 @@ export const useLoadUpdated = ( dataFetchFunction: (pageNumber: number) => Promi
    }, [reload]);
 
   useEffect(() => {
+    if(!_toReload) return;
     if(pageNo == 0){
       setItems([]);
     }
@@ -37,7 +38,7 @@ export const useLoadUpdated = ( dataFetchFunction: (pageNumber: number) => Promi
       })
       .finally(() => setLoading(false));
     setToReload(false);  
-  }, [pageNo, toReload]);
+  }, [pageNo, _toReload]);
 
-  return {"items":items, "hasMore":hasMore, "loading":loading};
+  return {"items":_items, "hasMore":_hasMore, "loading":_loading};
 };
