@@ -31,28 +31,47 @@ const LoginPage: React.FC = () =>  {
   };
 
   return (
-    <div>
-      <h1>Log In</h1>
-      {errorMessage && <div>{errorMessage}</div>}
-      <input
-        value={emailValue}
-        onChange={(e) => setEmailValue(e.target.value)}
-        placeholder="user@mailbox.xyz"
-      />
-      <input
-        value={passwordValue}
-        type="password"
-        onChange={(e) => setPasswordValue(e.target.value)}
-        placeholder="password"
-      />
-      <hr/>
-      <button disabled={!emailValue || !passwordValue} onClick={onLogInClicked}>
-        Log In
-      </button>
-      <button onClick={onForgotPasswordClicked}>Forgot passowrd?</button>
-      <button onClick={onSignUpClicked}>Sign Up</button>
-    </div>
-  );
+		<div className='login'>
+			<div className='login-container'>
+				<h1 className='login-title'>Log In</h1>
+				{errorMessage && <div>{errorMessage}</div>}
+				<input
+					value={emailValue}
+					onChange={(e) => setEmailValue(e.target.value)}
+					placeholder='user@mailbox.xyz'
+					className='emailInput'
+				/>
+				<input
+					value={passwordValue}
+					type='password'
+					onChange={(e) => setPasswordValue(e.target.value)}
+					placeholder='password'
+					className='passwordInput'
+				/>
+				<hr style={{ marginBottom: '20px' }} />
+				<div className='authorizationButtons'>
+					<button 
+          disabled={!emailValue || !passwordValue} 
+          onClick={onLogInClicked}
+          className="loginButton"
+          >
+						Log In
+					</button>
+					<button 
+          onClick={onForgotPasswordClicked}
+          className="forgotPasswordButton"
+          >
+            Forgot password?
+          </button>
+					<button 
+          onClick={onSignUpClicked}
+          className="signUpButton">
+            Sign Up
+            </button>
+				</div>
+			</div>
+		</div>
+	);
 }
 
 export default LoginPage;

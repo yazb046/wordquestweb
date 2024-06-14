@@ -31,27 +31,32 @@ const SignUpPage: React.FC = () => {
 
 
   return (
-    <div>
-      <h1>Sign Up</h1>
+    <div className="signin">
+      <div className="signin-container">
+      <h1 className="login-title">Sign Up</h1>
       {errorMessage && <div>{errorMessage}</div>}
       <input
         value={emailValue}
         onChange={(e) => setEmailValue(e.target.value)}
         placeholder="user@mailbox.xyz"
+        className="emailInput"
       />
       <input
         value={passwordValue}
         type="password"
         onChange={(e) => setPasswordValue(e.target.value)}
         placeholder="password"
+        className="passwordInput"
       />
       <input
         value={confirmPasswordValue}
         type="password"
         onChange={(e) => setConfirmPasswordValue(e.target.value)}
         placeholder="password"
+        className="passwordInput"
       />
-      <hr/>
+      <hr style={{ marginBottom: "20px" }}/>
+      <div className='authorizationButtons'>
       <button
         disabled={
           !emailValue ||
@@ -59,10 +64,15 @@ const SignUpPage: React.FC = () => {
           passwordValue !== confirmPasswordValue
         }
         onClick={onSignUpClicked}
+        className="loginButton"
       >
         Sign up
       </button>
-      <button onClick={onLogInClicked}>Back to Log in</button>
+      <button onClick={onLogInClicked} className="loginButton">Back to Log in</button>
+      </div>
+    
+      </div>
+     
     </div>
   );
 };
