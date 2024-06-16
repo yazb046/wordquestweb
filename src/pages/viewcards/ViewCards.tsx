@@ -6,14 +6,13 @@ import GoalsList from "./components/GoalsList";
 import CardsList from "./components/StepsList";
 import { iterableBuilder } from "../../types/IterableClass";
 import CardMarkDownUpdated from "./elements/CardMarkDownUpdated";
-import { PlusSquareFilled } from "@ant-design/icons";
+import { PlusSquareFilled, SaveFilled } from "@ant-design/icons";
 import AddThemeModel from "./components/AddThemeModel";
 import axios from "axios";
 import Config from "../../Config";
 import { useToken } from "../../hooks/useToken";
 import ImageUploadForm from "./elements/ImageUploadForm";
 const { Panel } = Collapse;
-
 
 export default function ViewCards() {
   const [_theme, setTheme] = useState<Iterable | null>(null);
@@ -23,7 +22,6 @@ export default function ViewCards() {
   const [_isModalOpen, setIsModalOpen] = useState(false);
   const [_token] = useToken();
   const [_blockedThemeChange, setBlockedThemeChange] = useState(false);
-
 
   useEffect(() => {
     if (_card != null) {
@@ -39,6 +37,7 @@ export default function ViewCards() {
       },
     });
   };
+
 
   const getPanelTitle = function () {
     if (_theme != null) {
@@ -66,8 +65,8 @@ export default function ViewCards() {
   };
 
   const createNewCard = () => {
-      setCard(iterableBuilder(0, "", ""));
-   };
+    setCard(iterableBuilder(0, "", ""));
+  };
 
   return (
     <Layout
@@ -93,11 +92,13 @@ export default function ViewCards() {
                   onListReloaded={() => setReloadGoalsList(false)}
                   reloadList={_reloadGoalsList}
                   onItemSelected={(item: Iterable) => {
-                    if(!_blockedThemeChange) {
-                      setTheme(item);}
-                      else {
-                        alert("save & close step being edited before selecting another goal ");
-                      }
+                    if (!_blockedThemeChange) {
+                      setTheme(item);
+                    } else {
+                      alert(
+                        "save & close step being edited before selecting another goal "
+                      );
+                    }
                   }}
                 />
               </Space>
@@ -108,9 +109,11 @@ export default function ViewCards() {
                   <p>set a goal first</p>
                 ) : (
                   <>
-                    <Tooltip title="add a new card" trigger="hover">
-                      <PlusSquareFilled onClick={createNewCard} />
-                    </Tooltip>
+                    <Space direction="horizontal">
+                      <Tooltip title="add a new card" trigger="hover">
+                        <PlusSquareFilled onClick={createNewCard} />
+                      </Tooltip>
+                    </Space>
                     <CardsList
                       onItemSelected={(item: Iterable) => {
                         setCard(item);
@@ -126,11 +129,11 @@ export default function ViewCards() {
           </Collapse>
         </Col>
         <Col span={14}>
-          {_card != null ? 
+          {_card != null ? (
             <>
               <CardMarkDownUpdated
-                onBlock={()=>setBlockedThemeChange(true)}
-                onSaveCard={(item:Iterable)=>{
+                onBlock={() => setBlockedThemeChange(true)}
+                onSaveCard={(item: Iterable) => {
                   onSaveCard(item);
                   setReloadCardList(true);
                 }}
@@ -147,7 +150,9 @@ export default function ViewCards() {
               />
               <ImageUploadForm themeId={_theme?.getId()} />
             </>
-          :<></>}
+          ) : (
+            <></>
+          )}
         </Col>
       </Row>
     </Layout>

@@ -7,12 +7,6 @@ export const useLoadUpdated = ( dataFetchFunction: (pageNumber: number) => Promi
   const [_items, setItems] = useState<any[]>([])
   const [_toReload, setToReload] = useState(false);
 
-  useEffect(() => {
-    if(reload){
-      setToReload(true);
-    }
-   }, [reload]);
-
   const loadData = () => {
     setLoading(true);
     setError(false);
@@ -36,7 +30,14 @@ export const useLoadUpdated = ( dataFetchFunction: (pageNumber: number) => Promi
   }
 
   useEffect(() => {
+    if(reload){
+      setToReload(true);
+    }
+   }, [reload]);
+
+  useEffect(() => {
     if(!_toReload) return;
+    setItems([]);
     loadData();
     setToReload(false);  
   }, [_toReload]);
@@ -46,7 +47,7 @@ export const useLoadUpdated = ( dataFetchFunction: (pageNumber: number) => Promi
       setItems([]);
     }
     loadData(); 
-  }, [pageNo, _toReload]);
+  }, [pageNo]);
 
   return {"items":_items, "hasMore":_hasMore, "loading":_loading};
 };

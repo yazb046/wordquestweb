@@ -25,27 +25,27 @@ const ListInfiniteFormatableUpdated: React.FC<Props> = ({
   listItemStyles,
   listSize,
 }) => {
-  const observer = useRef<IntersectionObserver>();
-  const [error, setError] = useState(false);
-  const[list, setList] = useState<Iterable[]>([]);
-  const [selectedItem, setSelectedItem] = useState<Iterable>();
-  const [draggedItemId, setDraggedItemId] = useState<number | null>(null);
+  const _observer = useRef<IntersectionObserver>();
+  const [_error, setError] = useState(false);
+  const[_items, setItems] = useState<Iterable[]>([]);
+  const [_selectedItem, setSelectedItem] = useState<Iterable>();
+  const [_draggedItemId, setDraggedItemId] = useState<number | null>(null);
 
 
   useEffect(()=>{
-    setList(items);
+    setItems(items);
   },[items])
 
   const lastListElementRef = useCallback(
     (node: any) => {
       if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
+      if (_observer.current) _observer.current.disconnect();
+      _observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
           onPageChange(page + 1);
         }
       });
-      if (node) observer.current.observe(node);
+      if (node) _observer.current.observe(node);
     },
     [loading, hasMore]
   );
@@ -55,13 +55,12 @@ const ListInfiniteFormatableUpdated: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    onItemSelect(selectedItem);
-  }, [selectedItem]);
+    onItemSelect(_selectedItem);
+  }, [_selectedItem]);
 
 
   const handleClick = (item: Iterable) => {
     setSelectedItem(item);
-    // onItemSelect(item);
   };
 
   const handleDragStart = (
@@ -74,7 +73,7 @@ const ListInfiniteFormatableUpdated: React.FC<Props> = ({
 
   const handleDragEnd = () => {
     setDraggedItemId(null);
-    onListOrderChange(list);
+    onListOrderChange(_items);
   };
 
   const handleDragOver = (
@@ -82,25 +81,25 @@ const ListInfiniteFormatableUpdated: React.FC<Props> = ({
     index: number
   ) => {
     e.preventDefault();
-    if (draggedItemId !== null) {
+    if (_draggedItemId !== null) {
       const targetIndex = index;
-      const itemsCopy = [...list];
+      const itemsCopy = [..._items];
       const draggedItemIndex = itemsCopy.findIndex(
-        (item) => item.getId() === draggedItemId
+        (item) => item.getId() === _draggedItemId
       );
       const draggedItem = itemsCopy[draggedItemIndex];
       itemsCopy.splice(draggedItemIndex, 1);
       itemsCopy.splice(targetIndex, 0, draggedItem);
-      setList(itemsCopy);
+      setItems(itemsCopy);
     }
   };
 
   return (
     <>
         <div style={{ overflow: "auto", ...listSize }}>
-          {list.map((item, index) => {
-            const isLastItem = list.length > 0 && index === list.length - 1;
-            const isSelected = selectedItem?.getId() === item.getId();
+          {_items.map((item, index) => {
+            const isLastItem = _items.length > 0 && index === _items.length - 1;
+            const isSelected = _selectedItem?.getId() === item.getId();
 
             const itemDefaultStyle = {
               cursor: "grab",
@@ -130,8 +129,10 @@ const ListInfiniteFormatableUpdated: React.FC<Props> = ({
               </div>
             );
           })}
+
+          
           {loading && <LoadingOutlined style={{ fontSize: 24 }} spin />}
-          {error && <div>Error loading items</div>}
+          {_error && <div>Error loading items</div>}
           {!loading && hasMore && (
             <div ref={lastListElementRef}>Loading more...</div>
           )}
