@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, RouteProps, Navigate, Outlet} from "react-router-dom";
-import LoginPage from "../pages/LoginPage";
+import LoginPage from "../pages/security/LoginPage";
 import { useUser } from "../hooks/useUser";
 
 

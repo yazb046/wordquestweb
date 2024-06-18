@@ -5,15 +5,13 @@ import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
-import { useToken } from "../../../hooks/useToken";
-import ImageUploadForm from "./ImageUploadForm";
 
 interface ModalProps {
   card: Iterable | null;
   outerStyle: any;
   onCloseCard: () => void;
   onSaveCard: (cardToSave: Iterable) => void;
-  onBlock: any;
+  onEditing: () => void;
 }
 
 const CardMarkDownUpdated: React.FC<ModalProps> = ({
@@ -21,7 +19,7 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
   outerStyle,
   onCloseCard,
   onSaveCard,
-  onBlock,
+  onEditing,
 }) => {
   const [editableId, setEditableId] = useState(0);
   const [editableContent, setEditableContent] = useState("");
@@ -51,7 +49,7 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
 
   useEffect(() => {
     if (wipContent != editableContent || wipTitle != editableTitle) {
-      onBlock();
+      onEditing();
     }
   }, [wipContent, wipTitle]);
 
@@ -81,7 +79,7 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
   };
 
   const onPressOk = () => {
-    let cardTosave = iterableBuilder(editableId, wipTitle, wipContent);
+    let cardTosave = iterableBuilder(editableId, wipTitle, wipContent, null);
     onSaveCard(cardTosave);
     close();
   };

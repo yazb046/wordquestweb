@@ -1,9 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToken } from "../hooks/useToken";
+import { useToken } from "../../hooks/useToken";
 import axios from "axios";
-import { useUser } from "../hooks/useUser";
+import { useUser } from "../../hooks/useUser";
 
 const LoginPage: React.FC = () =>  {
   const [emailValue, setEmailValue] = useState("");

@@ -1,8 +1,8 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import Iterable from "../types/Iterable";
+import Iterable from "../../../types/Iterable";
 import { Divider, Tag, Flex, Input, Space, Button} from "antd";
 const { Search } = Input;
-import { fetchWordsByLetters } from "../service/wordService";
+import { fetchWordsByLetters } from "../../../service/wordService";
 import { LoadingOutlined } from "@ant-design/icons";
 
 interface ListInfiniteProps {
@@ -68,6 +68,7 @@ const ListInfinite: React.FC<ListInfiniteProps> = ({
     setError(false);
     fetchFunction(pageNumber, aLangLevel)
       .then((response: any) => {
+        if (response === undefined) return;
         if (langLevel !== aLangLevel) {
           setItems([]);
           setLangLevel(aLangLevel);

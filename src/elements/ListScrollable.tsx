@@ -54,16 +54,19 @@ const ListScrollable: React.FC<Props> = ({
       setLoading(true);
       loadListDataHandler(page, contextWord).then(
         (response: any) => {
-          setList((prevList) => [...prevList, ...response.content]);
-          setList((prevList) => {
-            const uniqueItems = prevList.filter(
-              (obj, index, self) =>
-                index === self.findIndex((t) => t.getId() === obj.getId())
-            );
-            return uniqueItems;
-          });
-          setResultSize(response.totalElements);
-          setHasMore(!response.last);
+          if(response  != undefined){
+            setList((prevList) => [...prevList, ...response.content]);
+            setList((prevList) => {
+              const uniqueItems = prevList.filter(
+                (obj, index, self) =>
+                  index === self.findIndex((t) => t.getId() === obj.getId())
+              );
+              return uniqueItems;
+            });
+            setResultSize(response.totalElements);
+            setHasMore(!response.last);
+          }
+ 
         }
       );
     } catch (error) {

@@ -4,11 +4,17 @@ export default class IterableClass implements Iterable {
         public id: number,
         public title: string,
         public content: string,
+        public details:any
       ) {
         this.id = id;
         this.title = title;
         this.content = content;
+        this.details = details;
       }
+      getDetails() : any{
+        return this.details;
+      }
+
 
       getTitle(): string {
         return this.title;
@@ -33,9 +39,13 @@ export default class IterableClass implements Iterable {
       setContent(content: string): void {
         this.content = content;
       }
+
+      setDetails(details: any): void{
+        this.details = details;
+      }
     
   }
 
-  export const iterableBuilder = (id: number, title: string, content:string) => {
-    return new IterableClass(id, title, content);
+  export const iterableBuilder = (id: number, title: string, content:string, details:any) => {
+    return new IterableClass(id, title, content, details);
   };

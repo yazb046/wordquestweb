@@ -2,26 +2,28 @@ import { Col, Collapse, Layout, Row, Space, Tooltip } from "antd";
 import { useState, useEffect } from "react";
 import { fetchAllCardsByUserId } from "../../service/cardService";
 import Iterable from "../../types/Iterable";
-import GoalsList from "./components/GoalsList";
-import CardsList from "./components/StepsList";
+import GoalsList from "./goals/GoalsList";
+import CardsList from "./steps/StepsList";
 import { iterableBuilder } from "../../types/IterableClass";
-import CardMarkDownUpdated from "./elements/CardMarkDownUpdated";
+import CardMarkDownUpdated from "./card/CardMarkDownUpdated";
 import { PlusSquareFilled, SaveFilled } from "@ant-design/icons";
-import AddThemeModel from "./components/AddThemeModel";
+import AddThemeModel from "./goals/AddThemeModel";
 import axios from "axios";
 import Config from "../../Config";
 import { useToken } from "../../hooks/useToken";
-import ImageUploadForm from "./elements/ImageUploadForm";
+import ImageUploadForm from "./card/ImageUploadForm";
+import CardMarkDownUpdatedGermn from "./card/CardMarkDownUpdatedGermn";
 const { Panel } = Collapse;
 
 export default function ViewCards() {
   const [_theme, setTheme] = useState<Iterable | null>(null);
   const [_card, setCard] = useState<Iterable | null>(null);
-  const [_reloadCardList, setReloadCardList] = useState(false);
-  const [_reloadGoalsList, setReloadGoalsList] = useState(false);
+  const [_reloadCards, setReloadCards] = useState(false);
+  const [_reloadGoals, setReloadGoals] = useState(false);
   const [_isModalOpen, setIsModalOpen] = useState(false);
   const [_token] = useToken();
-  const [_blockedThemeChange, setBlockedThemeChange] = useState(false);
+  const [_blockThemeChange, setBlockThemeChange] = useState(false);
+  const [_themeType, setThemeType] = useState("");
 
   useEffect(() => {
     if (_card != null) {
@@ -56,16 +58,16 @@ export default function ViewCards() {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setReloadGoalsList(true);
+    setReloadGoals(true);
   };
 
   const openModal = () => {
     setIsModalOpen(true);
-    setReloadGoalsList(false);
+    setReloadGoals(false);
   };
 
   const createNewCard = () => {
-    setCard(iterableBuilder(0, "", ""));
+    setCard(iterableBuilder(0, "", "", ""));
   };
 
   return (
@@ -89,11 +91,12 @@ export default function ViewCards() {
                   </Tooltip>
                 </>
                 <GoalsList
-                  onListReloaded={() => setReloadGoalsList(false)}
-                  reloadList={_reloadGoalsList}
-                  onItemSelected={(item: Iterable) => {
-                    if (!_blockedThemeChange) {
+                  onListReloaded={() => setReloadGoals(false)}
+                  reloadList={_reloadGoals}
+                  onItemSelected={(item: Iterable| null) => {
+                    if (!_blockThemeChange) {
                       setTheme(item);
+                      setThemeType(item?.getDetails().type);
                     } else {
                       alert(
                         "save & close step being edited before selecting another goal "
@@ -118,9 +121,9 @@ export default function ViewCards() {
                       onItemSelected={(item: Iterable) => {
                         setCard(item);
                       }}
-                      forceListReload={_reloadCardList}
+                      forceListReload={_reloadCards}
                       theme={_theme}
-                      onListReloaded={() => setReloadCardList(false)}
+                      onListReloaded={() => setReloadCards(false)}
                     />
                   </>
                 )}
@@ -129,16 +132,16 @@ export default function ViewCards() {
           </Collapse>
         </Col>
         <Col span={14}>
-          {_card != null ? (
+          {_card != null && (_themeType ==="" || _themeType ==="Basic") && (
             <>
               <CardMarkDownUpdated
-                onBlock={() => setBlockedThemeChange(true)}
+                onEditing={() => setBlockThemeChange(true)}
                 onSaveCard={(item: Iterable) => {
                   onSaveCard(item);
-                  setReloadCardList(true);
+                  setReloadCards(true);
                 }}
                 onCloseCard={() => {
-                  setBlockedThemeChange(false);
+                  setBlockThemeChange(false);
                   setCard(null);
                 }}
                 card={_card}
@@ -150,8 +153,28 @@ export default function ViewCards() {
               />
               <ImageUploadForm themeId={_theme?.getId()} />
             </>
-          ) : (
-            <></>
+          )}
+          {_card != null && _themeType === "Learn a language" && (
+
+            <>
+            <CardMarkDownUpdatedGermn
+              onEditing={() => setBlockThemeChange(true)}
+              onSaveCard={(item: Iterable) => {
+                onSaveCard(item);
+                setReloadCards(true);
+              }}
+              onCloseCard={() => {
+                setBlockThemeChange(false);
+                setCard(null);
+              }}
+              card={_card}
+              outerStyle={{
+                marginLeft: "15px",
+                height: 400,
+                width: 580,
+              }}
+            />
+            </>
           )}
         </Col>
       </Row>
