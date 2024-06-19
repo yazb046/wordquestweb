@@ -14,10 +14,10 @@ import ListInfiniteFormatableSimple from "../goals/ListInfiniteFormatableSimple"
 import E_ListSimple from "../elements/E_ListSimple";
 
 interface CallbackFunction {
-  setter: (item: Iterable) => void;
+  onItemSelected: (item: Iterable) => void;
 }
 
-const MyWordList: React.FC<CallbackFunction> = ({ setter }) => {
+const MyWordList: React.FC<CallbackFunction> = ({ onItemSelected }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [doReload, setDoReload] = useState(false);
   const [_token] = useToken();
@@ -62,11 +62,10 @@ const MyWordList: React.FC<CallbackFunction> = ({ setter }) => {
       <DictionaryModal openModal={isModalOpen} callback={closeModal} />
       <E_ListSimple
         params={_params}
-        onItemSelected={(item:any) => console.log(item)}
+        onItemSelected={onItemSelected}
         reloadList={doReload}
         onListReloaded={()=>setDoReload(false)}
         requestUrl={"api/words/searchBy"}
-        responseItemBuilder={iterableBuilder}
       />
     </div>
   );

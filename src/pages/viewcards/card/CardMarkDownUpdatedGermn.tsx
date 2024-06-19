@@ -1,15 +1,20 @@
-import { Button, Card, DrawerProps, Input, RadioChangeEvent, Space, Tooltip } from "antd";
+import { Button, Card, Input, Layout, Space, Tooltip, theme } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { Content, Footer } from "antd/es/layout/layout";
+import { Content, Footer, Header } from "antd/es/layout/layout";
 import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { iterableBuilder } from "../../../types/IterableClass";
+import { Empty_Iterable, iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
-import { PlusSquareFilled } from "@ant-design/icons";
-import MyWordList from "./MyWordList";
-import { Drawer } from "antd";
+import {
+  FileAddFilled,
+  PictureFilled,
+  PlusSquareFilled,
+} from "@ant-design/icons";
+import C_DrawerWord from "./C_DrawerWord";
+import C_DrawerImage from "./C_DrawerImage";
 
 interface ModalProps {
+  themeId: number | null;
   card: Iterable | null;
   outerStyle: any;
   onCloseCard: () => void;
@@ -18,12 +23,15 @@ interface ModalProps {
 }
 
 const CardMarkDownUpdatedGermn: React.FC<ModalProps> = ({
+  themeId,
   card,
   outerStyle,
   onCloseCard,
   onSaveCard,
   onEditing,
 }) => {
+  const [openDrawerWord, setDrawerWordOpen] = useState(false);
+  const [openDrawerImage, setDrawerImageOpen] = useState(false);
   const [editableId, setEditableId] = useState(0);
   const [editableContent, setEditableContent] = useState("");
   const [editableTitle, setEditableTitle] = useState("");
@@ -35,13 +43,11 @@ const CardMarkDownUpdatedGermn: React.FC<ModalProps> = ({
   const [editMode, setEditMode] = useState(false);
 
   const [addWordActive, setAddWordActive] = useState(false);
-  
-  const [activeWord, setActiveWord] = useState<Iterable>(
-    iterableBuilder(0, "", "", null)
-  );
+
+  const [activeWord, setActiveWord] = useState<Iterable>(Empty_Iterable);
 
   const activeWordChangeListener = (word: Iterable) => {
-    setWipTitle(word.getTitle());
+    setActiveWord(word);
   };
 
   useEffect(() => {
@@ -104,50 +110,35 @@ const CardMarkDownUpdatedGermn: React.FC<ModalProps> = ({
     setEditableContent("");
     setWipContent("");
     setWipTitle("");
+    setActiveWord(Empty_Iterable);
   };
 
   const onPressAddImage = () => {
     setOpenAddImageForm(true);
   };
 
-  const onAddAWord = () => {
-    setAddWordActive(true);
-  };
-
-  const [open, setOpen] = useState(false);
-  const [placement, setPlacement] = useState<DrawerProps['placement']>('right');
-
-  const showDrawer = () => {
-    setOpen(true);
-  };
-
-
-  const onClose = () => {
-    setOpen(false);
-  };
-
   return (
     <>
-      
-        <Drawer
-          title="My words to learn"
-          placement={placement}
-          width={500}
-          onClose={onClose}
-          open={open}
-          extra={
-            <Space>
-              <Button onClick={onClose}>Cancel</Button>
-              <Button type="primary" onClick={onClose}>
-                OK
-              </Button>
-            </Space>
-          }
-        >
-          <MyWordList setter={activeWordChangeListener} />
-        </Drawer>
-      
-
+      <C_DrawerWord
+        openDrawer={openDrawerWord}
+        onSaveDrawer={(word: Iterable, context: Iterable) => {
+          setWipTitle(word.getTitle());
+          setWipContent(context.getTitle());
+        }}
+        onCloseDrawer={() => {
+          setDrawerWordOpen(false);
+        }}
+      />
+      <C_DrawerImage
+        themeId={themeId ? themeId : 0}
+        openDrawer={openDrawerImage}
+        onCloseDrawer={() => {
+          setDrawerImageOpen(false);
+        }}
+        onSaveDrawer={function (urlId: String): void {
+          setWipContent(wipContent + ` ![Image](http://localhost:8080/api/images/${urlId})`);
+        }}
+      />
       <Card
         bordered={false}
         style={{
@@ -157,88 +148,107 @@ const CardMarkDownUpdatedGermn: React.FC<ModalProps> = ({
           boxShadow: "-0 0 8px rgba(0, 0, 0, 2)",
         }}
       >
-        <Space direction="horizontal">
+        <Space direction="horizontal" style={{ padding: "0px" }}>
           <Input
             placeholder={"a word to learn"}
             value={wipTitle}
             onChange={onTitleChange}
           />
           <Tooltip title="add a word" trigger="hover">
-            <PlusSquareFilled onClick={showDrawer} />
+            <PlusSquareFilled onClick={() => setDrawerWordOpen(true)} />
           </Tooltip>
         </Space>
 
-        <Content
-          onClick={onContentClick}
-          style={{
-            marginTop: "10px",
-          }}
+        <Layout
+          style={{ backgroundColor: "white", padding: "0px", margin: "0px" }}
         >
-          {editMode ? (
-            <>
-              <TextArea
-                onKeyDown={handleKeyDown}
-                showCount
-                maxLength={1000}
-                onChange={onContentChange}
-                placeholder="add step description"
-                value={wipContent}
-                style={{
-                  padding: "0px",
-                  border: "1px solid #0096FF",
-                  borderRadius: "5px",
-                  height:
-                    outerStyle === undefined ? 400 : outerStyle.height - 120,
-                  width: outerStyle === undefined ? 700 : outerStyle.width - 60,
-                  resize: "none",
-                  fontFamily: "Merriweather",
-                  overflow: "auto",
-                }}
-              />
-            </>
-          ) : (
+          <Header
+            style={{ backgroundColor: "white", padding: "0px", margin: "0px" }}
+          >
             <div
               style={{
-                height:
-                  outerStyle === undefined ? 400 : outerStyle.height - 120,
-                border: "1px solid #E5E4E2",
-                padding: "5px",
-                paddingLeft: "10px",
-                paddingRight: "10px",
-                borderRadius: "5px",
-                fontFamily: "Merriweather",
-                wordWrap: "break-word",
-                overflow: "auto",
-                // whiteSpace: "pre-line",
+                display: "flex",
+                justifyContent: "flex-end",
+                width: "100%",
               }}
             >
-              <ReactMarkdown>{wipContent}</ReactMarkdown>
+              <Space direction="horizontal">
+                <Tooltip title="add an image" trigger="hover">
+                  <PictureFilled onClick={() => setDrawerImageOpen(true)} />
+                </Tooltip>
+              </Space>
             </div>
-          )}
-        </Content>
-        <Footer style={{ height: "35px", padding: "0px", marginTop: "5px" }}>
-          <Button
-            style={{ marginRight: "5px" }}
-            onClick={() => setEditMode(false)}
+          </Header>
+          <Content
+            onClick={onContentClick}
+            style={{
+              marginTop: "0px",
+            }}
           >
-            View
-          </Button>
-          <Button
-            style={{ marginRight: "5px" }}
-            onClick={() => setEditMode(true)}
-          >
-            Edit
-          </Button>
-          <Button style={{ marginRight: "5px" }} onClick={onPressAddImage}>
-            Add image
-          </Button>
-          <Button style={{ marginRight: "5px" }} onClick={onPressCancel}>
-            Cancel
-          </Button>
-          <Button style={{ marginRight: "5px" }} onClick={onPressOk}>
-            Ok
-          </Button>
-        </Footer>
+            {editMode ? (
+              <>
+                <TextArea
+                  onKeyDown={handleKeyDown}
+                  showCount
+                  maxLength={1000}
+                  onChange={onContentChange}
+                  placeholder="add step description"
+                  value={wipContent}
+                  style={{
+                    padding: "0px",
+                    border: "1px solid #0096FF",
+                    borderRadius: "5px",
+                    height:
+                      outerStyle === undefined ? 400 : outerStyle.height - 120,
+                    width:
+                      outerStyle === undefined ? 700 : outerStyle.width - 60,
+                    resize: "none",
+                    fontFamily: "Merriweather",
+                    overflow: "auto",
+                  }}
+                />
+              </>
+            ) : (
+              <div
+                style={{
+                  height:
+                    outerStyle === undefined ? 400 : outerStyle.height - 120,
+                  border: "1px solid #E5E4E2",
+                  padding: "5px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
+                  borderRadius: "5px",
+                  fontFamily: "Merriweather",
+                  wordWrap: "break-word",
+                  overflow: "auto",
+                  // whiteSpace: "pre-line",
+                }}
+              >
+                <ReactMarkdown>{wipContent}</ReactMarkdown>
+              </div>
+            )}
+          </Content>
+          <Footer style={{ height: "35px", padding: "0px", marginTop: "5px" }}>
+            <Button
+              style={{ marginRight: "5px" }}
+              onClick={() => setEditMode(false)}
+            >
+              View
+            </Button>
+            <Button
+              style={{ marginRight: "5px" }}
+              onClick={() => setEditMode(true)}
+            >
+              Edit
+            </Button>
+            <Button style={{ marginRight: "5px" }} onClick={onPressCancel}>
+              Cancel
+            </Button>
+            <Button style={{ marginRight: "5px" }} onClick={onPressOk}>
+              Ok
+            </Button>
+          </Footer>
+        </Layout>
       </Card>
     </>
   );

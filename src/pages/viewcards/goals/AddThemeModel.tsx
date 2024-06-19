@@ -19,23 +19,23 @@ const AddThemeModel: React.FC<AddThemeModelProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState<string>("");
   const user = useUser();
-  const [token, setToken] = useToken();
-  const [addOn, setAddOn]= useState("");
+  const [token] = useToken();
+  const [_themeType, setThemeType]= useState("");
   const [_token] = useToken();
   const [_options, setOptions] = useState<SelectProps['options']>([]);
   const [size, setSize] = useState<SizeType>('middle');
 
 
   useEffect(() => {
-    fetchAddOns();
+    fetchThemeTypes();
   }, []);
 
   useEffect(() => {
     setIsModalOpen(openModal);
   }, [openModal]);
 
-  const fetchAddOns = function () {
-    let path = `api/cards/theme/addOns`;
+  const fetchThemeTypes = function () {
+    let path = `api/cards/themeTypes`;
     return axios
       .get(CONFIG.BACK_SERVER_DOMAIN + path, {
         headers: { Authorization: _token ? `${_token}` : null },
@@ -58,7 +58,7 @@ const AddThemeModel: React.FC<AddThemeModelProps> = ({
     let path = `api/cards/theme/${user.userid}`;
     const body = {
       title: inputValue,
-      addOn: addOn,
+      themeTypeId: _themeType,
       description: "",
     };
 
@@ -96,8 +96,8 @@ const AddThemeModel: React.FC<AddThemeModelProps> = ({
     setInputValue(event.target.value);
   };
 
-  const handleAddOnChange = (value: string) => {
-    setAddOn(value);
+  const handleAThemeTypeChange = (value: string) => {
+    setThemeType(value);
   };
 
   return (
@@ -120,8 +120,8 @@ const AddThemeModel: React.FC<AddThemeModelProps> = ({
       />
       <Select
           size={size}
-          placeholder="Add-On"
-          onChange={handleAddOnChange}
+          placeholder="Type"
+          onChange={handleAThemeTypeChange}
           style={{ width: 200 }}
           options={_options}
         />

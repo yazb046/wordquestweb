@@ -4,13 +4,18 @@ import Config from "../../../Config";
 import { useToken } from "../../../hooks/useToken";
 
 interface ImageUploadFormProps {
-  themeId: any;
+  themeId: number;
+  onImageUpload:(urlId:string)=>void;
 }
 
-const ImageUploadForm: React.FC<ImageUploadFormProps> = ({ themeId }) => {
+const ImageUploadForm: React.FC<ImageUploadFormProps> = ({ 
+  themeId, 
+  onImageUpload,
+}) => {
   const [selectedImage, setSelectedImage] = useState<any>();
   const [preview, setPreview] = useState<any>();
   const [token] = useToken();
+ 
 
   const handleImageChange = (event: any) => {
     const file = event.target.files[0];
@@ -43,10 +48,9 @@ const ImageUploadForm: React.FC<ImageUploadFormProps> = ({ themeId }) => {
           Authorization: token ? `${token}` : null,
         },
       })
-      .then((response) => response)
-      .then((data) => {
-        console.log("Success:", data);
-      })
+      .then((response) => 
+        onImageUpload(response.data)
+    )
       .catch((error) => {
         console.error("Error:", error);
       });
@@ -66,7 +70,6 @@ const ImageUploadForm: React.FC<ImageUploadFormProps> = ({ themeId }) => {
           </div>
         )}
         <button type="submit">Upload Image</button>
-        <button style ={{marginLeft:"3px"}} onClick={()=>console.log("clicked")}>Copy image link </button>
       </form>
       <p style={{ fontFamily: "Merriweather", fontSize:"10px"}}></p>
     </div>

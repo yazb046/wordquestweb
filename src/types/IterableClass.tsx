@@ -49,3 +49,5 @@ export default class IterableClass implements Iterable {
   export const iterableBuilder = (id: number, title: string, content:string, details:any) => {
     return new IterableClass(id, title, content, details);
   };
+
+  export const Empty_Iterable = iterableBuilder(0, "", "", null);

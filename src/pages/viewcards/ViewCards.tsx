@@ -132,7 +132,7 @@ export default function ViewCards() {
           </Collapse>
         </Col>
         <Col span={14}>
-          {_card != null && (_themeType ==="" || _themeType ==="Basic") && (
+          {_card != null && (_themeType ==="" || _themeType ==="Markdown") && (
             <>
               <CardMarkDownUpdated
                 onEditing={() => setBlockThemeChange(true)}
@@ -154,10 +154,11 @@ export default function ViewCards() {
               <ImageUploadForm themeId={_theme?.getId()} />
             </>
           )}
-          {_card != null && _themeType === "Learn a language" && (
+          {_card != null && _themeType === "Learn Language" && (
 
             <>
             <CardMarkDownUpdatedGermn
+              themeId={_theme?.getId()}
               onEditing={() => setBlockThemeChange(true)}
               onSaveCard={(item: Iterable) => {
                 onSaveCard(item);
