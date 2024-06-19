@@ -1,12 +1,11 @@
-import { Button, Card, Input, Layout, Space, Tooltip, theme } from "antd";
+import { Button, Card, Input, Layout, Space, Tooltip } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { Empty_Iterable, iterableBuilder } from "../../../types/IterableClass";
+import { iterableBuilder } from "../../../types/IterableClass";
 import Iterable from "../../../types/Iterable";
 import {
-  FileAddFilled,
   PictureFilled,
   PlusSquareFilled,
 } from "@ant-design/icons";
@@ -14,7 +13,7 @@ import C_DrawerWord from "./C_DrawerWord";
 import C_DrawerImage from "./C_DrawerImage";
 
 interface ModalProps {
-  themeId: number | null;
+  themeId: number;
   card: Iterable | null;
   outerStyle: any;
   onCloseCard: () => void;
@@ -22,7 +21,7 @@ interface ModalProps {
   onEditing: () => void;
 }
 
-const CardMarkDownUpdatedGermn: React.FC<ModalProps> = ({
+const CardMarkDownLangLearn: React.FC<ModalProps> = ({
   themeId,
   card,
   outerStyle,
@@ -35,20 +34,10 @@ const CardMarkDownUpdatedGermn: React.FC<ModalProps> = ({
   const [editableId, setEditableId] = useState(0);
   const [editableContent, setEditableContent] = useState("");
   const [editableTitle, setEditableTitle] = useState("");
-
   const [wipContent, setWipContent] = useState("");
   const [wipTitle, setWipTitle] = useState("");
-
-  const [openAddImageForm, setOpenAddImageForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
-  const [addWordActive, setAddWordActive] = useState(false);
-
-  const [activeWord, setActiveWord] = useState<Iterable>(Empty_Iterable);
-
-  const activeWordChangeListener = (word: Iterable) => {
-    setActiveWord(word);
-  };
 
   useEffect(() => {
     if (
@@ -110,12 +99,8 @@ const CardMarkDownUpdatedGermn: React.FC<ModalProps> = ({
     setEditableContent("");
     setWipContent("");
     setWipTitle("");
-    setActiveWord(Empty_Iterable);
   };
 
-  const onPressAddImage = () => {
-    setOpenAddImageForm(true);
-  };
 
   return (
     <>
@@ -253,4 +238,4 @@ const CardMarkDownUpdatedGermn: React.FC<ModalProps> = ({
     </>
   );
 };
-export default CardMarkDownUpdatedGermn;
+export default CardMarkDownLangLearn;

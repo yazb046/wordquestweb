@@ -1,7 +1,6 @@
 import { Layout, Tabs } from "antd";
 import { StrictMode } from "react";
-import CreateCard from "./CreateCard";
-import ViewCards from "./viewcards/ViewCards";
+import SetSteps from "./setSteps/SetSteps";
 import globaleStyles from "../assets/css/globalStyles";
 import { useUser } from "../hooks/useUser";
 const { Footer, Header } = Layout;
@@ -53,15 +52,10 @@ export default function Container() {
           }}
           tabBarGutter={20}
           items={[
-            // {
-            //   label: "create card",
-            //   key: "1",
-            //   children: <CreateCard />,
-            // },
             {
-              label: "view cards",
+              label: "set steps",
               key: "2",
-              children: <ViewCards />,
+              children: <SetSteps />,
             },
           ]}
         ></Tabs>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout, } from "antd";
 import AppContext from "../components/AppContext";
-import AppWordList from "./viewcards/card/MyWordList";
+import AppWordList from "./setSteps/card/MyWordList";
 import { useState } from "react";
 const { Sider } = Layout;
 import { wordBuilder } from "../types/WordType";
