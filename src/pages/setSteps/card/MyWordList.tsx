@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Tooltip } from "antd";
 import Iterable from "../../../types/Iterable";
-import { wordBuilder } from "../../../types/WordType";
+import { wordBuilder } from "../../../trash/WordType";
 import ListScrollable from "../../../elements/ListScrollable";
 import { PlusSquareFilled } from "@ant-design/icons";
 import DictionaryModal from "./DictionaryModal";

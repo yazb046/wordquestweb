@@ -1,4 +1,4 @@
-import CardType, { cardBuilder, cardBuilderExtended } from "../types/CardType";
+import CardType, { cardBuilder, cardBuilderExtended } from "../components/CardType";
 import Iterable from "../types/Iterable";
 import {
   abstractGetWithRequestParams,

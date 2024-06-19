@@ -1,4 +1,4 @@
-import Iterable from "./Iterable";
+import Iterable from "../types/Iterable";
 interface WordType extends Iterable {
   id: number;
   title: string;

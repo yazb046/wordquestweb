@@ -1,5 +1,5 @@
-import Word from "../types/WordType";
-import { wordBuilder } from "../types/WordType";
+import Word from "../components/WordType";
+import { wordBuilder } from "../components/WordType";
 import { abstractGetWithRequestParams, abstractPost } from "./abstractService";
 import Iterable from "../types/Iterable";
 

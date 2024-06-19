@@ -1,8 +1,8 @@
-import Word, { wordBuilder } from "../types/WordType";
+import Word, { wordBuilder } from "./WordType";
 import ListScrollable from "../elements/ListScrollable";
 import { fetchUserWordRelatedContext } from "../service/textService";
 import Iterable from "../types/Iterable";
-import { textBuilder } from "../types/TextType";
+import { textBuilder } from "./TextType";
 import { Content } from "antd/es/layout/layout";
 import { CloseOutlined } from "@ant-design/icons";
 import { Row, Col } from "antd";

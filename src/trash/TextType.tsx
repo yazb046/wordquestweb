@@ -1,4 +1,4 @@
-import Iterable from "./Iterable";
+import Iterable from "../types/Iterable";
 interface TextType extends Iterable {
     id: number,
     text: string,

@@ -1,4 +1,4 @@
-import Iterable from "./Iterable";
+import Iterable from "../types/Iterable";
 interface CardType extends Iterable {
   id: number;
   title: string;

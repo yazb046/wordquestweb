@@ -1,10 +1,10 @@
 import React from "react";
 import { Layout, } from "antd";
-import AppContext from "../components/AppContext";
-import AppWordList from "./setSteps/card/MyWordList";
+import AppContext from "./AppContext";
+import AppWordList from "../pages/setSteps/card/MyWordList";
 import { useState } from "react";
 const { Sider } = Layout;
-import { wordBuilder } from "../types/WordType";
+import { wordBuilder } from "./WordType";
 import Iterable from "../types/Iterable";
 import globaleStyles from "../assets/css/globalStyles";
 
