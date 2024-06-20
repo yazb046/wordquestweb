@@ -1,21 +1,19 @@
 import { Col, Collapse, Layout, Row, Space, Tooltip } from "antd";
 import { useState, useEffect } from "react";
-import { fetchAllCardsByUserId } from "../../service/cardService";
 import Iterable from "../../types/Iterable";
 import GoalsList from "./goals/GoalsList";
 import CardsList from "./steps/StepsList";
 import { iterableBuilder } from "../../types/IterableClass";
-import CardMarkDownUpdated from "./card/CardMarkDownUpdated";
-import { PlusSquareFilled, SaveFilled } from "@ant-design/icons";
+import CardMarkDownBasic from "./card/CardMarkDownBasic";
+import { PlusSquareFilled } from "@ant-design/icons";
 import AddThemeModel from "./goals/AddThemeModel";
 import axios from "axios";
 import Config from "../../Config";
 import { useToken } from "../../hooks/useToken";
-import ImageUploadForm from "./card/ImageUploadForm";
-import CardMarkDownUpdatedGermn from "./card/CardMarkDownUpdatedGermn";
+import CardMarkDownLangLearn from "./card/CardMarkDownLangLearn";
 const { Panel } = Collapse;
 
-export default function ViewCards() {
+export default function SetSteps() {
   const [_theme, setTheme] = useState<Iterable | null>(null);
   const [_card, setCard] = useState<Iterable | null>(null);
   const [_reloadCards, setReloadCards] = useState(false);
@@ -132,9 +130,9 @@ export default function ViewCards() {
           </Collapse>
         </Col>
         <Col span={14}>
-          {_card != null && (_themeType ==="" || _themeType ==="Basic") && (
+          {_card != null && (_themeType ==="" || _themeType ==="Markdown") && (
             <>
-              <CardMarkDownUpdated
+              <CardMarkDownBasic
                 onEditing={() => setBlockThemeChange(true)}
                 onSaveCard={(item: Iterable) => {
                   onSaveCard(item);
@@ -151,13 +149,13 @@ export default function ViewCards() {
                   width: 580,
                 }}
               />
-              <ImageUploadForm themeId={_theme?.getId()} />
             </>
           )}
-          {_card != null && _themeType === "Learn a language" && (
+          {_card != null && _themeType === "Learn Language" && (
 
             <>
-            <CardMarkDownUpdatedGermn
+            <CardMarkDownLangLearn
+              themeId={_theme?.getId()}
               onEditing={() => setBlockThemeChange(true)}
               onSaveCard={(item: Iterable) => {
                 onSaveCard(item);

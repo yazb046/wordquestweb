@@ -14,7 +14,7 @@ interface ModalProps {
   onEditing: () => void;
 }
 
-const CardMarkDownUpdated: React.FC<ModalProps> = ({
+const CardMarkDownBasic: React.FC<ModalProps> = ({
   card,
   outerStyle,
   onCloseCard,
@@ -24,11 +24,8 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
   const [editableId, setEditableId] = useState(0);
   const [editableContent, setEditableContent] = useState("");
   const [editableTitle, setEditableTitle] = useState("");
-
   const [wipContent, setWipContent] = useState("");
   const [wipTitle, setWipTitle] = useState("");
-
-  const [openAddImageForm, setOpenAddImageForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
@@ -93,9 +90,6 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
     setWipTitle("");
   };
 
-  const onPressAddImage = () => {
-    setOpenAddImageForm(true);
-  };
 
   return (
     <Card
@@ -173,9 +167,6 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
         >
           Edit
         </Button>
-        <Button style={{ marginRight: "5px" }} onClick={onPressAddImage}>
-          Add image
-        </Button>
         <Button style={{ marginRight: "5px" }} onClick={onPressCancel}>
           Cancel
         </Button>
@@ -186,4 +177,4 @@ const CardMarkDownUpdated: React.FC<ModalProps> = ({
     </Card>
   );
 };
-export default CardMarkDownUpdated;
+export default CardMarkDownBasic;

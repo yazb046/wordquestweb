@@ -2,7 +2,7 @@ import { Card, Space, Button, Row, Col, Layout } from "antd";
 import CardContent from "../elements/CardContent";
 import Iterable from "../types/Iterable";
 import { CloseOutlined } from "@ant-design/icons";
-import { wordBuilder } from "../types/WordType";
+import { wordBuilder } from "./WordType";
 import { useEffect, useState } from "react";
 
 interface Props {

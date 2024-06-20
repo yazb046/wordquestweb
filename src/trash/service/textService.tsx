@@ -1,6 +1,6 @@
 import { abstractGet, abstractPost} from "./abstractService";
-import Word from "../types/WordType";
-import TextType, { textBuilder } from "../types/TextType";
+import Word from "../components/WordType";
+import TextType, { textBuilder } from "../components/TextType";
 
 export const fetchUserWordRelatedContext = (
   userId: number,

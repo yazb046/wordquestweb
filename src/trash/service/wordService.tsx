@@ -1,7 +1,6 @@
-import Word from "../types/WordType";
-import { wordBuilder } from "../types/WordType";
+import WordType, { wordBuilder } from "../WordType";
 import { abstractGetWithRequestParams, abstractPost } from "./abstractService";
-import Iterable from "../types/Iterable";
+
 
 
 export const fetchWordsByLangLevel = (
@@ -47,7 +46,7 @@ export const fetchWordsWithParams = (
 
 export const fetchAndMap = async (path: string, params:any): Promise<any> => {
   const response = await abstractGetWithRequestParams(path,params);
-  let mappedContent: Word[] = [];
+  let mappedContent: WordType[] = [];
   response.data.content.forEach((e: any) => {
     mappedContent.push(wordBuilder(e.id, e.word, e.word)); 
   });

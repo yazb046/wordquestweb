@@ -2,8 +2,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import Iterable from "../../../types/Iterable";
 import { Divider, Tag, Flex, Input, Space, Button} from "antd";
 const { Search } = Input;
-import { fetchWordsByLetters } from "../../../service/wordService";
 import { LoadingOutlined } from "@ant-design/icons";
+import { fetchWordsByLetters } from "../../../trash/service/wordService";
 
 interface ListInfiniteProps {
   fetchFunction: (pageNumber: number, langLevel: string) => Promise<any>;
