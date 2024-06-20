@@ -28,9 +28,10 @@ export default function Container() {
         }}
       >
         <Header style={globaleStyles.header}>
-          WORD JUNGLE
-          {user && <button onClick={onLogOutClicked}>Log Out</button>}
+          WORD JUNGLE 
           {user && <div>{user.username}</div>}
+          {user && <button className="logOut"  onClick={onLogOutClicked}><span>Log Out</span></button>}
+          
         </Header>
 
         <Tabs
