@@ -31,6 +31,9 @@ const globaleStyles = {
         fontWeight: "bold",
       },
       header: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         background: "#8ebed1",
         fontFamily: "Keania One",
         fontSize: "24px",

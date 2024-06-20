@@ -172,3 +172,64 @@ body {
   }
 }
 
+.logOut{
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 1px;
+  outline: none;
+  border-radius: 10px;
+  border: 1px solid  #165994;
+  height: 46px;
+  line-height: 0;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  color: #fff;
+  background-color: #3a80db;
+  position: relative;
+  overflow: hidden;
+  vertical-align:middle;
+  cursor: pointer;
+  user-select: none;
+	appearance: none;
+	touch-action: manipulation;
+   span{
+     display: block;
+     box-sizing: border-box;
+     padding: 0 25px;
+     height: 42px;
+     border: 1px solid #165994;
+     border-radius: 10px;  
+     font-size: 18px;
+     font-weight: bolder;
+     line-height: 42px;
+     color: black;
+     background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 100%), #3f8ed4;
+     text-align: center; 
+   }
+   
+  
+}
+
+.logOut:focus-visible{
+  box-shadow: 0 0 0 3px lightskyblue;
+}
+.logOut:hover span {
+  background-color: #165994
+}
+.logOut:active {
+  transform: scale(.97);
+}
+
+/* font-size: medium;
+  font-family: Open Sans, Arial;
+  font-weight:bolder;
+  padding: 10px 10px;
+  box-shadow: 0 5px 15px 0 rgb(112, 160, 245);
+  transition: 0.5s;
+  border: none;
+  border-radius: 10px;
+  color: black;
+  background: #4885f0;
+  touch-action: manipulation;
+  cursor: pointer; */
