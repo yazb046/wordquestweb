@@ -1,0 +1,16 @@
+FROM node@sha256:2558f19e787cb0baed81a8068adf7509023b43dedce24ed606f8a01522b21313
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and install dependencies
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Copy the rest of the application
+COPY  . .
+
+EXPOSE 5173
+
+# Start the app in development mode
+CMD ["npm", "run", "devContainer"]
