@@ -133,5 +133,5 @@ const ListInfinite: React.FC<Props> = ({
 export default ListInfinite;
 
 const styles = {
-  listSize: { maxWidth: "400px", maxHeight: "100vh" },
+  listSize: { maxWidth: "400px", maxHeight: "75vh" },
 };

@@ -54,7 +54,7 @@ const GoalsList: React.FC<Props> = ({}) => {
           return "";
         }}
       >
-        <StepsList goal={goal} onItemSelected={undefined} />
+        {/* <StepsList goal={goal} onItemSelected={undefined} /> */}
       </ListInfinite>
     </>
   );
