@@ -9,43 +9,40 @@ interface Props {
   page: number;
   onItemSelect: any;
   onPageChange: any;
-  onListOrderChange: any;
   listItemStyles:any|null;
   listSize:{maxWidth: string, maxHeight:string};
 }
 
-const E_ListInfiniteOrdered: React.FC<Props> = ({
+const E_ListInfiniteBasic: React.FC<Props> = ({
   items,
   loading,
   hasMore,
   page,
   onItemSelect,
   onPageChange,
-  onListOrderChange,
   listItemStyles,
   listSize,
 }) => {
-  const _observer = useRef<IntersectionObserver>();
-  const [_error, setError] = useState(false);
-  const[_items, setItems] = useState<Iterable[]>([]);
-  const [_selectedItem, setSelectedItem] = useState<Iterable>();
-  const [_draggedItemId, setDraggedItemId] = useState<number | null>(null);
+  const observer = useRef<IntersectionObserver>();
+  const [error, setError] = useState(false);
+  const[list, setList] = useState<Iterable[]>([]);
+  const [selectedItem, setSelectedItem] = useState<Iterable>();
 
 
   useEffect(()=>{
-    setItems(items);
+    setList(items);
   },[items])
 
   const lastListElementRef = useCallback(
     (node: any) => {
       if (loading) return;
-      if (_observer.current) _observer.current.disconnect();
-      _observer.current = new IntersectionObserver((entries) => {
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
           onPageChange(page + 1);
         }
       });
-      if (node) _observer.current.observe(node);
+      if (node) observer.current.observe(node);
     },
     [loading, hasMore]
   );
@@ -55,51 +52,22 @@ const E_ListInfiniteOrdered: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    onItemSelect(_selectedItem);
-  }, [_selectedItem]);
+    onItemSelect(selectedItem);
+  }, [selectedItem]);
 
 
   const handleClick = (item: Iterable) => {
     setSelectedItem(item);
+    // onItemSelect(item);
   };
 
-  const handleDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    itemId: number
-  ) => {
-    e.dataTransfer.setData("text/plain", itemId.toString());
-    setDraggedItemId(itemId);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedItemId(null);
-    onListOrderChange(_items);
-  };
-
-  const handleDragOver = (
-    e: React.DragEvent<HTMLDivElement>,
-    index: number
-  ) => {
-    e.preventDefault();
-    if (_draggedItemId !== null) {
-      const targetIndex = index;
-      const itemsCopy = [..._items];
-      const draggedItemIndex = itemsCopy.findIndex(
-        (item) => item.getId() === _draggedItemId
-      );
-      const draggedItem = itemsCopy[draggedItemIndex];
-      itemsCopy.splice(draggedItemIndex, 1);
-      itemsCopy.splice(targetIndex, 0, draggedItem);
-      setItems(itemsCopy);
-    }
-  };
 
   return (
     <>
         <div style={{ overflow: "auto", ...listSize }}>
-          {_items.map((item, index) => {
-            const isLastItem = _items.length > 0 && index === _items.length - 1;
-            const isSelected = _selectedItem?.getId() === item.getId();
+          {list.map((item, index) => {
+            const isLastItem = list.length > 0 && index === list.length - 1;
+            const isSelected = selectedItem?.getId() === item.getId();
 
             const itemDefaultStyle = {
               cursor: "grab",
@@ -116,10 +84,6 @@ const E_ListInfiniteOrdered: React.FC<Props> = ({
                 key={item.getId()}
                 onClick={() => handleClick(item)}
                 onDoubleClick={() => handleDoubleClick(item)}
-                onDragStart={(e) => handleDragStart(e, item.getId())}
-                onDragEnd={handleDragEnd}
-                onDragOver={(e) => handleDragOver(e, index)}
-                draggable
                 style={
                   isLastItem ? { ...itemDefaultStyle, ...listItemStyles, cursor: "default" } 
                   : {...itemDefaultStyle, ...listItemStyles}
@@ -129,10 +93,8 @@ const E_ListInfiniteOrdered: React.FC<Props> = ({
               </div>
             );
           })}
-
-          
           {loading && <LoadingOutlined style={{ fontSize: 24 }} spin />}
-          {_error && <div>Error loading items</div>}
+          {error && <div>Error loading items</div>}
           {!loading && hasMore && (
             <div ref={lastListElementRef}>Loading more...</div>
           )}
@@ -141,4 +103,4 @@ const E_ListInfiniteOrdered: React.FC<Props> = ({
     </>
   );
 };
-export default E_ListInfiniteOrdered;
+export default E_ListInfiniteBasic;

@@ -1,44 +1,57 @@
 import React, { useEffect, useState } from "react";
-import E_ListInfiniteOrdered from "./E_ListInfiniteOrdered";
-import axios from "axios";
-import { useLoadUpdated } from "../hooks/useLoadUpdated";
 import { iterableBuilder } from "../types/IterableClass";
 import Iterable from "../types/Iterable";
-import CONFIG from "../Config";
+import axios from "axios";
+import { useLoadUpdated } from "../hooks/useLoadUpdated";
 import { useToken } from "../hooks/useToken";
+import E_ListInfiniteBasic from "./E_ListInfiniteBasic";
+import CONFIG from "../../Config";
 
 interface Props {
-  themeId: number;
-  reloadList: boolean;
-  params: (pageNo: number) => any;
-  requestUrl: string;
-  onListReloaded: any;
   onItemSelected: any;
-  onListOrderChange: any;
+  reloadList: boolean;
+  onListReloaded: any;
+  requestUrl: string;
+  params: (pageNo: number) => any | null;
 }
 
-const E_ListOrdered: React.FC<Props> = ({
-  themeId,
-  reloadList,
-  params,
-  requestUrl,
-  onListReloaded,
+const E_ListSimple: React.FC<Props> = ({
   onItemSelected,
-  onListOrderChange,
+  reloadList,
+  onListReloaded,
+  requestUrl,
+  params,
 }) => {
   const [_page, setPage] = useState(0);
-  const [_toReloadList, setToReloadList] = useState(false);
-  const [_list, setList] = useState<Iterable[]>([]);
+  const [_reload, setReload] = useState(true);
+  const [_list, setList] = useState<any[]>([]);
   const [_hasMoreItems, setHasMoreItems] = useState(false);
   const [_isLoading, setIsLoading] = useState(false);
-  const [_selectedItem, setSelectedItem] = useState<Iterable | null>(null);
-  const [_themeId, setThemeId] = useState(0);
+  const [_selectedItem, setSelectedItem] = useState<Iterable | null>();
   const [_token] = useToken();
 
+  useEffect(() => {
+    onItemSelected(_selectedItem);
+  }, [_selectedItem]);
+
+  useEffect(() => {
+    if (reloadList) {
+      setReload(true);
+    }
+  }, [reloadList]);
+
   const fetchItemsFunction = function (pageNo: number) {
-    return axios.get(CONFIG.BACK_SERVER_DOMAIN + requestUrl, {
+    let _params = {
+      pageNo: pageNo,
+      pageSize: 10,
+      sortBy: "id",
+      direction: "asc",
+    };
+
+    return axios
+      .get(CONFIG.BACK_SERVER_DOMAIN + requestUrl, {
         headers: { Authorization: _token ? `${_token}` : null },
-        params: params(pageNo),
+        params: params == null ? _params : params(pageNo),
       })
       .then((response) => {
         let mappedContent: Iterable[] = [];
@@ -52,43 +65,22 @@ const E_ListOrdered: React.FC<Props> = ({
       });
   };
 
-  useEffect(() => {
-    onItemSelected(_selectedItem);
-  }, [_selectedItem]);
-
-  useEffect(() => {
-    if (reloadList) {
-      setToReloadList(true);
-    }
-  }, [reloadList]);
-
   const { items, hasMore, loading } = useLoadUpdated(
     fetchItemsFunction,
     _page,
-    _toReloadList
+    _reload
   );
 
   useEffect(() => {
-    setList([]);
     setList(items);
-    console.log("items set to " + items.length);
     setHasMoreItems(hasMore);
     setIsLoading(loading);
-    setToReloadList(false);
+    setReload(false);
     onListReloaded();
   }, [items, hasMore, loading]);
-      
-  useEffect(() => {
-    if (themeId != null && themeId != _themeId) {
-      setThemeId(themeId);
-      setPage(0);
-      setList([]);
-      setToReloadList(true);
-    }     
-  }, [themeId]);
 
   return (
-    <E_ListInfiniteOrdered
+    <E_ListInfiniteBasic
       items={_list}
       page={_page}
       hasMore={_hasMoreItems}
@@ -99,19 +91,23 @@ const E_ListOrdered: React.FC<Props> = ({
       onItemSelect={(item: any) => {
         setSelectedItem(item);
       }}
-      onListOrderChange={onListOrderChange}
       listItemStyles={{
         height: "30px",
-        width: "385px",
+        width: "390px",
         fontSize: "14px",
-        padding: "3px",
-        paddingLeft: "7px",
-        borderRadius: "2px",
+        border: "0px",
+        borderTop: "1px solid #D3D3D3",
+        // borderBottom: "1px solid #D3D3D3",
+        cursor: "pointer",
+        borderRadius: "3px",
+        paddingTop: "5px",
+        paddingLeft: "10px",
         fontFamily: "Merriweather",
-        border: "1px solid #D3D3D3",
+        fontWeight: "bold",
       }}
-      listSize={{ maxWidth: "400px", maxHeight: "190px" }}/>
+      listSize={{ maxWidth: "400px", maxHeight: "165px" }}
+    />
   );
 };
 
-export default E_ListOrdered;
+export default E_ListSimple;

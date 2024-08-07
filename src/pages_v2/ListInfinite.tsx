@@ -5,24 +5,26 @@ import axios from "axios";
 import { useLoadUpdated } from "../hooks/useLoadUpdated";
 import { useToken } from "../hooks/useToken";
 import CONFIG from "../Config";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Collapse } from "antd";
+import { LoadingOutlined, PlusSquareFilled } from "@ant-design/icons";
+import { Collapse, Tooltip } from "antd";
+import StepsList from "./StepsList";
 const { Panel } = Collapse;
 
 interface Props {
   onItemSelected: any;
   requestUrl: string;
   requestParams: (pageNo: number) => any | null;
-  listItemDisplayTemplate: (item: Iterable | null) => string;
-  children?: React.ReactNode;
+  renderItem?: (
+    item: any,
+    onItemSelected: (item: any) => void
+  ) => React.ReactNode;
 }
 
 const ListInfinite: React.FC<Props> = ({
   onItemSelected,
   requestUrl,
   requestParams,
-  listItemDisplayTemplate,
-  children,
+  renderItem,
 }) => {
   const [_page, setPage] = useState(0);
   const [_reload, setReload] = useState(true);
@@ -31,6 +33,7 @@ const ListInfinite: React.FC<Props> = ({
   const [_isLoading, setIsLoading] = useState(false);
   const [_selectedItem, setSelectedItem] = useState<Iterable | null>();
   const [_token] = useToken();
+  const [_currentStep, setCurrentStep] = useState<Iterable | null>();
 
   useEffect(() => {
     onItemSelected(_selectedItem);
@@ -101,6 +104,10 @@ const ListInfinite: React.FC<Props> = ({
     setSelectedItem(item);
   };
 
+  const addNewStep = () => {
+    setCurrentStep(iterableBuilder(0, "", "", ""));
+  };
+
   return (
     <>
       <div style={{ overflow: "auto", ...styles.listSize }}>
@@ -114,9 +121,9 @@ const ListInfinite: React.FC<Props> = ({
               onClick={() => handleClick(item)}
               onDoubleClick={() => handleDoubleClick(item)}
             >
-              <Collapse>
-                <Panel header={item.getTitle()} key={item.getId()}></Panel>
-              </Collapse>
+              {renderItem ? (renderItem(item, onItemSelected))
+              :
+              (item.getTitle())}
             </div>
           );
         })}
