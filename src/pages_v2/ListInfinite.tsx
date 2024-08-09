@@ -15,8 +15,7 @@ interface Props {
   requestUrl: string;
   requestParams: (pageNo: number) => any | null;
   renderItem?: (
-    item: any,
-    onItemSelected: (item: any) => void
+    item: any
   ) => React.ReactNode;
 }
 
@@ -31,13 +30,8 @@ const ListInfinite: React.FC<Props> = ({
   const [_list, setList] = useState<any[]>([]);
   const [_hasMoreItems, setHasMoreItems] = useState(false);
   const [_isLoading, setIsLoading] = useState(false);
-  const [_selectedItem, setSelectedItem] = useState<Iterable | null>();
   const [_token] = useToken();
   const [_currentStep, setCurrentStep] = useState<Iterable | null>();
-
-  useEffect(() => {
-    onItemSelected(_selectedItem);
-  }, [_selectedItem]);
 
   const fetchItemsFunction = function (pageNo: number) {
     let _params = {
@@ -97,15 +91,11 @@ const ListInfinite: React.FC<Props> = ({
   );
 
   const handleDoubleClick = (item: Iterable) => {
-    console.log();
+    console.log("doubleClick");
   };
 
   const handleClick = (item: Iterable) => {
-    setSelectedItem(item);
-  };
-
-  const addNewStep = () => {
-    setCurrentStep(iterableBuilder(0, "", "", ""));
+    console.log("oneClick");
   };
 
   return (
@@ -113,15 +103,13 @@ const ListInfinite: React.FC<Props> = ({
       <div style={{ overflow: "auto", ...styles.listSize }}>
         {items.map((item, index) => {
           const isLastItem = items.length > 0 && index === items.length - 1;
-          const isSelected = selectedItem?.getId() === item.getId();
           return (
             <div
               ref={isLastItem ? lastListElementRef : undefined}
               key={item.getId()}
-              onClick={() => handleClick(item)}
-              onDoubleClick={() => handleDoubleClick(item)}
-            >
-              {renderItem ? (renderItem(item, onItemSelected))
+            > 
+            <div>{item.getId()}</div>
+              {renderItem ? (renderItem(item))
               :
               (item.getTitle())}
             </div>

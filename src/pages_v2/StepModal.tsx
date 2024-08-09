@@ -24,6 +24,7 @@ const StepModal: React.FC<Props> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [_token] = useToken();
+
   useEffect(() => {
     setIsModalOpen(openModal);
   }, [openModal]);
@@ -53,6 +54,7 @@ const StepModal: React.FC<Props> = ({
       open={isModalOpen}
       footer={null}
     >
+      <div>goalId={goalId}</div>
       {(goalType === "" || goalType === "Markdown") && (
         <>
           <CardMarkDownBasic

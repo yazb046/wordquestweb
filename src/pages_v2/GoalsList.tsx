@@ -6,9 +6,10 @@ import Iterable from "./types/Iterable";
 import AddGoalModal from "./AddGoalModal";
 import { Empty_Iterable } from "./types/IterableClass";
 import { PlusSquareFilled } from "@ant-design/icons";
-const { Panel } = Collapse;
+
 import StepsList from "./StepsList";
 import StepModal from "./StepModal";
+import GoalListItem from "./types/GoalListItem";
 
 interface Props {}
 
@@ -35,54 +36,19 @@ const GoalsList: React.FC<Props> = ({}) => {
     setGoal(item);
   }
 
-  const [modalStepOpen, setModalStepOpen] = useState(false);
-
-  const renderItem = (
-    item: Iterable,
-    onItemSelected: (item: Iterable) => void
-  ) => (
-    <div>
-      {/* //fix the bug related to step not attached to the goal properly when it is created */}
-      {item != null && (
-        <StepModal
-          goalType={""}
-          goalId={item.getId()}
-          step={Empty_Iterable}
-          openModal={modalStepOpen}
-          closeModalCallback={function (): void {
-            setReloadList(true);
-            setModalStepOpen(false);
-          }}
-        />
-      )}
-
-      <Collapse>
-        <Panel
-          key={item.getId()}
-          header={
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span style={{ flex: 1 }}>{item.getTitle()}</span>
-              <Tooltip title="Add a step" trigger="hover">
-                <PlusSquareFilled
-                  style={{ fontSize: "16px", cursor: "pointer" }}
-                  onClick={(e) => {
-                    e.stopPropagation(); // blocks the panel to collapse when button is clicked
-                    setModalStepOpen(true);
-                  }}
-                />
-              </Tooltip>
-            </div>
-          }
-        >
-          <StepsList
-            goalId={item.getId()}
-            onItemSelected={onItemSelected}
-            onListOrderChange={() => console.log()}
-          />
-        </Panel>
-      </Collapse>
-    </div>
+  const [modalStepStates, setModalStepStates] = useState<Map<number, boolean>>(
+    new Map()
   );
+
+  useEffect(() => {}, [modalStepStates]);
+
+  const handleModalVisibility = (itemId: number, open: boolean) => {
+    const newState = modalStepStates;
+    newState.set(itemId, open);
+    setModalStepStates(newState);
+  };
+
+  const renderItem = (item: Iterable) => <GoalListItem item={item} />;
 
   return (
     <>
@@ -95,7 +61,7 @@ const GoalsList: React.FC<Props> = ({}) => {
 
       <ListInfinite
         key={reloadList ? "reload" : "no-reload"}
-        onItemSelected={onSelectedGoal}
+        onItemSelected={() => console.log()}
         requestUrl={`api/goals/${_user.userid}`}
         requestParams={(pageNo: number) => {
           return {
@@ -110,18 +76,5 @@ const GoalsList: React.FC<Props> = ({}) => {
     </>
   );
 };
-
-// const saveOrder = () => {
-//   let path = `api/cards/order/${_themeId}`;
-//   axios.post(Config.BACK_SERVER_DOMAIN + path, _itemsIdsOrder, {
-//     headers: {
-//       Authorization: _token ? `${_token}` : null,
-//     },
-//   });
-// };
-
-// const onListSave = () => {
-//   saveOrder();
-// };
 
 export default GoalsList;
