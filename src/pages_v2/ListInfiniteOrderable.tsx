@@ -14,7 +14,7 @@ interface Props {
   onListOrderChange: any;
 }
 
-const E_ListOrdered: React.FC<Props> = ({
+const ListInfiniteOrderable: React.FC<Props> = ({
   requestParams,
   requestUrl,
   onItemSelected,
@@ -124,15 +124,9 @@ const E_ListOrdered: React.FC<Props> = ({
           {_list.map((item, index) => {
             const isLastItem = _list.length > 0 && index === _list.length - 1;
             const isSelected = _selectedItem?.getId() === item.getId();
-            const itemDefaultStyle = {
-              cursor: "grab",
+            const selectionStyle = {
               backgroundColor: isSelected ? "#FBF3C5" : "white",
-              border:"1px solid #000001",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
             };
-
             return (
               <div
                 ref={isLastItem ? lastListElementRef : undefined}
@@ -144,16 +138,14 @@ const E_ListOrdered: React.FC<Props> = ({
                 onDragOver={(e) => handleDragOver(e, index)}
                 draggable
                 style={
-                  isLastItem ? { ...itemDefaultStyle, ...styles.listItemStyles, cursor: "default" } 
-                  : {...itemDefaultStyle, ...styles.listItemStyles}
+                  isLastItem ? {...styles.listItemStyles, ...selectionStyle, } 
+                  : {...styles.listItemStyles}
                 }
               >
                 {item.getTitle()}
               </div>
             );
           })}
-
-          
           {loading && <LoadingOutlined style={{ fontSize: 24 }} spin />}
           {_error && <div>Error loading items</div>}
           {!loading && hasMore && (
@@ -165,13 +157,17 @@ const E_ListOrdered: React.FC<Props> = ({
   );
 };
 
-export default E_ListOrdered;
+export default ListInfiniteOrderable;
 
 const styles = {
   listSize: { maxWidth: "400px", maxHeight: "190px" },
   listItemStyles : {
+    cursor: "grab",          
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
     height: "30px",
-    width: "385px",
+    width: "35px",
     fontSize: "14px",
     padding: "3px",
     paddingLeft: "7px",

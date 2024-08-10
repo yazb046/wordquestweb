@@ -54,7 +54,6 @@ const StepModal: React.FC<Props> = ({
       open={isModalOpen}
       footer={null}
     >
-      <div>goalId={goalId}</div>
       {(goalType === "" || goalType === "Markdown") && (
         <>
           <CardMarkDownBasic

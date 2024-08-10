@@ -13,7 +13,6 @@ const StepsList: React.FC<Props> = ({
   onItemSelected,
   onListOrderChange,
 }) => {
-  const _user = useUser();
 
   const _params = (pageNo: number) => {
     return {

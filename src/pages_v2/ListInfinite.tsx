@@ -5,13 +5,11 @@ import axios from "axios";
 import { useLoadUpdated } from "../hooks/useLoadUpdated";
 import { useToken } from "../hooks/useToken";
 import CONFIG from "../Config";
-import { LoadingOutlined, PlusSquareFilled } from "@ant-design/icons";
-import { Collapse, Tooltip } from "antd";
-import StepsList from "./StepsList";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Collapse } from "antd";
 const { Panel } = Collapse;
 
 interface Props {
-  onItemSelected: any;
   requestUrl: string;
   requestParams: (pageNo: number) => any | null;
   renderItem?: (
@@ -20,7 +18,6 @@ interface Props {
 }
 
 const ListInfinite: React.FC<Props> = ({
-  onItemSelected,
   requestUrl,
   requestParams,
   renderItem,
@@ -31,7 +28,6 @@ const ListInfinite: React.FC<Props> = ({
   const [_hasMoreItems, setHasMoreItems] = useState(false);
   const [_isLoading, setIsLoading] = useState(false);
   const [_token] = useToken();
-  const [_currentStep, setCurrentStep] = useState<Iterable | null>();
 
   const fetchItemsFunction = function (pageNo: number) {
     let _params = {
@@ -74,7 +70,6 @@ const ListInfinite: React.FC<Props> = ({
   // --
   const observer = useRef<IntersectionObserver>();
   const [error, setError] = useState(false);
-  const [selectedItem, set_SelectedItem] = useState<Iterable>();
 
   const lastListElementRef = useCallback(
     (node: any) => {
@@ -108,7 +103,6 @@ const ListInfinite: React.FC<Props> = ({
               ref={isLastItem ? lastListElementRef : undefined}
               key={item.getId()}
             > 
-            <div>{item.getId()}</div>
               {renderItem ? (renderItem(item))
               :
               (item.getTitle())}

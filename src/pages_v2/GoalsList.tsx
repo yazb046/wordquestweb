@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
 import { useUser } from "./hooks/useUser";
 import ListInfinite from "./ListInfinite";
-import { Button, Collapse, Space, Tooltip } from "antd";
+import { Button, Space } from "antd";
 import Iterable from "./types/Iterable";
 import AddGoalModal from "./AddGoalModal";
 import { Empty_Iterable } from "./types/IterableClass";
-import { PlusSquareFilled } from "@ant-design/icons";
 
-import StepsList from "./StepsList";
-import StepModal from "./StepModal";
-import GoalListItem from "./types/GoalListItem";
+import GoalListItem from "./GoalListItem";
 
 interface Props {}
 
 const GoalsList: React.FC<Props> = ({}) => {
   const _user = useUser();
-  const [_goal, setGoal] = useState<Iterable>(Empty_Iterable);
   const [modalOpen, setModalOpen] = useState(false);
   const [reloadList, setReloadList] = useState(false);
 
@@ -32,23 +28,11 @@ const GoalsList: React.FC<Props> = ({}) => {
     setModalOpen(true);
   }
 
-  function onSelectedGoal(item: Iterable): void {
-    setGoal(item);
-  }
-
-  const [modalStepStates, setModalStepStates] = useState<Map<number, boolean>>(
-    new Map()
+  const renderItem = (item: Iterable) => (
+    <GoalListItem
+      item={item}
+    />
   );
-
-  useEffect(() => {}, [modalStepStates]);
-
-  const handleModalVisibility = (itemId: number, open: boolean) => {
-    const newState = modalStepStates;
-    newState.set(itemId, open);
-    setModalStepStates(newState);
-  };
-
-  const renderItem = (item: Iterable) => <GoalListItem item={item} />;
 
   return (
     <>
