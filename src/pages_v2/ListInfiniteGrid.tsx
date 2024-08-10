@@ -6,7 +6,7 @@ import { useLoadUpdated } from "../hooks/useLoadUpdated";
 import { useToken } from "../hooks/useToken";
 import CONFIG from "../Config";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Collapse } from "antd";
+import { Col, Collapse, Row } from "antd";
 const { Panel } = Collapse;
 
 interface Props {
@@ -96,11 +96,11 @@ const ListInfinite: React.FC<Props> = ({
   return (
     <>
       <div style={{ overflow: "auto", ...styles.listSize }}>
-    
+      <Row gutter={16}>
         {items.map((item, index) => {
           const isLastItem = items.length > 0 && index === items.length - 1;
           return (
-
+            <Col span={8} key={index}>
             <div
               ref={isLastItem ? lastListElementRef : undefined}
               key={item.getId()}
@@ -109,7 +109,7 @@ const ListInfinite: React.FC<Props> = ({
               :
               (item.getTitle())}
             </div>
-
+          </Col>
             
           );
         })}
@@ -118,6 +118,7 @@ const ListInfinite: React.FC<Props> = ({
         {!loading && hasMore && (
           <div ref={lastListElementRef}>Loading more...</div>
         )}
+        </Row>
       </div>
     </>
   );
@@ -126,5 +127,5 @@ const ListInfinite: React.FC<Props> = ({
 export default ListInfinite;
 
 const styles = {
-  listSize: { maxWidth: "400px", maxHeight: "75vh" },
+  listSize: { maxWidth: "1200px", maxHeight: "80vh" },
 };

@@ -10,15 +10,13 @@ import { LoadingOutlined } from "@ant-design/icons";
 interface Props {
   requestParams: (pageNo: number) => any;
   requestUrl: string;
-  onItemSelected: any;
-  onListOrderChange: any;
+  renderItem?: (item: any) => React.ReactNode;
 }
 
 const ListInfiniteOrderable: React.FC<Props> = ({
   requestParams,
   requestUrl,
-  onItemSelected,
-  onListOrderChange,
+  renderItem,
 }) => {
   const [_page, setPage] = useState(0);
   const [_list, setList] = useState<Iterable[]>([]);
@@ -28,7 +26,8 @@ const ListInfiniteOrderable: React.FC<Props> = ({
   const [_token] = useToken();
 
   const fetchItemsFunction = function (pageNo: number) {
-    return axios.get(CONFIG.BACK_SERVER_DOMAIN + requestUrl, {
+    return axios
+      .get(CONFIG.BACK_SERVER_DOMAIN + requestUrl, {
         headers: { Authorization: _token ? `${_token}` : null },
         params: requestParams(pageNo),
       })
@@ -44,10 +43,7 @@ const ListInfiniteOrderable: React.FC<Props> = ({
       });
   };
 
-  const { items, hasMore, loading } = useLoadUpdated(
-    fetchItemsFunction,
-    _page,
-  );
+  const { items, hasMore, loading } = useLoadUpdated(fetchItemsFunction, _page);
 
   useEffect(() => {
     setList(items);
@@ -55,8 +51,6 @@ const ListInfiniteOrderable: React.FC<Props> = ({
     setIsLoading(loading);
   }, [items, hasMore, loading]);
 
-
-      
   // --
   const _observer = useRef<IntersectionObserver>();
   const [_error, setError] = useState(false);
@@ -68,7 +62,7 @@ const ListInfiniteOrderable: React.FC<Props> = ({
       if (_observer.current) _observer.current.disconnect();
       _observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          setPage(_page + 1)
+          setPage(_page + 1);
         }
       });
       if (node) _observer.current.observe(node);
@@ -79,7 +73,6 @@ const ListInfiniteOrderable: React.FC<Props> = ({
   const handleDoubleClick = (item: Iterable) => {
     console.log();
   };
-
 
   const handleClick = (item: Iterable) => {
     setSelectedItem(item);
@@ -96,7 +89,7 @@ const ListInfiniteOrderable: React.FC<Props> = ({
 
   const handleDragEnd = () => {
     setDraggedItemId(null);
-      // implement save list to server
+    // implement save list to server
     onListOrderChange(_list);
   };
 
@@ -120,39 +113,39 @@ const ListInfiniteOrderable: React.FC<Props> = ({
 
   return (
     <>
-        <div style={{ overflow: "auto", ...styles.listSize }}>
-          {_list.map((item, index) => {
-            const isLastItem = _list.length > 0 && index === _list.length - 1;
-            const isSelected = _selectedItem?.getId() === item.getId();
-            const selectionStyle = {
-              backgroundColor: isSelected ? "#FBF3C5" : "white",
-            };
-            return (
-              <div
-                ref={isLastItem ? lastListElementRef : undefined}
-                key={item.getId()}
-                onClick={() => handleClick(item)}
-                onDoubleClick={() => handleDoubleClick(item)}
-                onDragStart={(e) => handleDragStart(e, item.getId())}
-                onDragEnd={handleDragEnd}
-                onDragOver={(e) => handleDragOver(e, index)}
-                draggable
-                style={
-                  isLastItem ? {...styles.listItemStyles, ...selectionStyle, } 
-                  : {...styles.listItemStyles}
-                }
-              >
-                {item.getTitle()}
-              </div>
-            );
-          })}
-          {loading && <LoadingOutlined style={{ fontSize: 24 }} spin />}
-          {_error && <div>Error loading items</div>}
-          {!loading && hasMore && (
-            <div ref={lastListElementRef}>Loading more...</div>
-          )}
-        </div>
-   
+      <div style={{ overflow: "auto", ...styles.listSize }}>
+        {_list.map((item, index) => {
+          const isLastItem = _list.length > 0 && index === _list.length - 1;
+          const isSelected = _selectedItem?.getId() === item.getId();
+          const selectionStyle = {
+            backgroundColor: isSelected ? "#FBF3C5" : "white",
+          };
+          return (
+            <div
+              ref={isLastItem ? lastListElementRef : undefined}
+              key={item.getId()}
+              onClick={() => handleClick(item)}
+              onDoubleClick={() => handleDoubleClick(item)}
+              onDragStart={(e) => handleDragStart(e, item.getId())}
+              onDragEnd={handleDragEnd}
+              onDragOver={(e) => handleDragOver(e, index)}
+              draggable
+              style={
+                isLastItem
+                  ? { ...styles.listItemStyles, ...selectionStyle }
+                  : { ...styles.listItemStyles }
+              }
+            >
+              {renderItem ? renderItem(item) : item.getTitle()}
+            </div>
+          );
+        })}
+        {loading && <LoadingOutlined style={{ fontSize: 24 }} spin />}
+        {_error && <div>Error loading items</div>}
+        {!loading && hasMore && (
+          <div ref={lastListElementRef}>Loading more...</div>
+        )}
+      </div>
     </>
   );
 };
@@ -160,14 +153,12 @@ const ListInfiniteOrderable: React.FC<Props> = ({
 export default ListInfiniteOrderable;
 
 const styles = {
-  listSize: { maxWidth: "400px", maxHeight: "190px" },
-  listItemStyles : {
-    cursor: "grab",          
+  listSize: { maxWidth: "300px", maxHeight: "190px" },
+  listItemStyles: {
+    cursor: "grab",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    height: "30px",
-    width: "35px",
     fontSize: "14px",
     padding: "3px",
     paddingLeft: "7px",
@@ -175,5 +166,4 @@ const styles = {
     fontFamily: "Merriweather",
     border: "1px solid #D3D3D3",
   },
-
-}
+};

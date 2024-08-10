@@ -1,9 +1,11 @@
-import { PlusSquareFilled } from "@ant-design/icons";
+import { PlusSquareFilled, ProfileFilled } from "@ant-design/icons";
 import { Collapse, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import StepModal from "./StepModal";
 import StepsList from "./StepsList";
 import { Empty_Iterable } from "./types/IterableClass";
+import { useGoalId } from "./hooks/useGoalId";
+import Iterable from "./types/Iterable";
 const { Panel } = Collapse;
 
 interface Props {
@@ -13,6 +15,14 @@ interface Props {
 const GoalListItem: React.FC<Props> = ({ item }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [reloadList, setReloadList] = useState(false);
+  const [goalId, setGoalId] = useGoalId();
+  const [_goalId, setLocalGoalId] = useState(0);
+  
+  useEffect(() => {
+    // implement redux to store Global variables
+    setGoalId(_goalId)
+    console.log("new goal id" + goalId);
+  }, [_goalId]);
 
   useEffect(() => {
     if (reloadList) setReloadList(false);
@@ -22,6 +32,12 @@ const GoalListItem: React.FC<Props> = ({ item }) => {
     e.stopPropagation(); // blocks the panel to collapse when button is clicked
     console.log("Add button clicked for " + e);
     setModalOpen(true);
+  }
+
+  const onClickViewSteps = (e:any, itemId:number) =>{
+    e.stopPropagation(); // blocks the panel to collapse when button is clicked
+    console.log("view steps is clicked for " + itemId);
+    setLocalGoalId(itemId);
   }
 
   return (
@@ -48,6 +64,12 @@ const GoalListItem: React.FC<Props> = ({ item }) => {
                 <PlusSquareFilled
                   style={{ fontSize: "16px", cursor: "pointer" }}
                   onClick={onClickAddStep}
+                />
+              </Tooltip>
+              <Tooltip title="View steps" trigger="hover">
+                <ProfileFilled
+                  style={{ fontSize: "16px", cursor: "pointer" }}
+                  onClick={(e) => onClickViewSteps(e,item.getId())}
                 />
               </Tooltip>
             </div>

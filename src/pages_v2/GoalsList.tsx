@@ -4,7 +4,6 @@ import ListInfinite from "./ListInfinite";
 import { Button, Space } from "antd";
 import Iterable from "./types/Iterable";
 import AddGoalModal from "./AddGoalModal";
-import { Empty_Iterable } from "./types/IterableClass";
 
 import GoalListItem from "./GoalListItem";
 
@@ -21,7 +20,7 @@ const GoalsList: React.FC<Props> = ({}) => {
 
   function closeModal(): void {
     setModalOpen(false);
-    setReloadList(true);
+    setReloadList(!reloadList);
   }
 
   function openModal(): void {
@@ -45,7 +44,6 @@ const GoalsList: React.FC<Props> = ({}) => {
 
       <ListInfinite
         key={reloadList ? "reload" : "no-reload"}
-        onItemSelected={() => console.log()}
         requestUrl={`api/goals/${_user.userid}`}
         requestParams={(pageNo: number) => {
           return {
