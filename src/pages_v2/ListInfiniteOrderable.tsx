@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState, CSSProperties } from "react";
 import axios from "axios";
 import { useLoadUpdated } from "./hooks/useLoadUpdated";
 import { iterableBuilder } from "../types/IterableClass";
 import Iterable from "../types/Iterable";
 import CONFIG from "../Config";
 import { useToken } from "../hooks/useToken";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, DeleteOutlined } from "@ant-design/icons";
 
 interface Props {
   requestParams: (pageNo: number) => any;
@@ -55,9 +55,6 @@ const E_ListOrdered: React.FC<Props> = ({
     setIsLoading(loading);
   }, [items, hasMore, loading]);
 
-
-      
-  // --
   const _observer = useRef<IntersectionObserver>();
   const [_error, setError] = useState(false);
   const [_draggedItemId, setDraggedItemId] = useState<number | null>(null);
@@ -80,7 +77,6 @@ const E_ListOrdered: React.FC<Props> = ({
     console.log();
   };
 
-
   const handleClick = (item: Iterable) => {
     setSelectedItem(item);
     onItemSelected(_selectedItem);
@@ -96,7 +92,7 @@ const E_ListOrdered: React.FC<Props> = ({
 
   const handleDragEnd = () => {
     setDraggedItemId(null);
-      // implement save list to server
+    // implement save list to server
     onListOrderChange(_list);
   };
 
@@ -118,49 +114,64 @@ const E_ListOrdered: React.FC<Props> = ({
     }
   };
 
+  const handleDelete = (itemId: number) => {
+    setList((prevList) => prevList.filter(item => item.getId() !== itemId));
+  };
+
   return (
     <>
-        <div style={{ overflow: "auto", ...styles.listSize }}>
-          {_list.map((item, index) => {
-            const isLastItem = _list.length > 0 && index === _list.length - 1;
-            const isSelected = _selectedItem?.getId() === item.getId();
-            const itemDefaultStyle = {
-              cursor: "grab",
-              backgroundColor: isSelected ? "#FBF3C5" : "white",
-              border:"1px solid #000001",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            };
+      <div style={{ overflow: "auto", ...styles.listSize }}>
+        {_list.map((item, index) => {
+          const isLastItem = _list.length > 0 && index === _list.length - 1;
+          const isSelected = _selectedItem?.getId() === item.getId();
+          const itemDefaultStyle = {
+            cursor: "pointer",
+            backgroundColor: isSelected ? "#FBF3C5" : "white",
+            border:"1px solid #000001",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          };
 
-            return (
-              <div
-                ref={isLastItem ? lastListElementRef : undefined}
-                key={item.getId()}
-                onClick={() => handleClick(item)}
-                onDoubleClick={() => handleDoubleClick(item)}
-                onDragStart={(e) => handleDragStart(e, item.getId())}
-                onDragEnd={handleDragEnd}
-                onDragOver={(e) => handleDragOver(e, index)}
-                draggable
-                style={
-                  isLastItem ? { ...itemDefaultStyle, ...styles.listItemStyles, cursor: "default" } 
-                  : {...itemDefaultStyle, ...styles.listItemStyles}
-                }
+          return (
+            <div
+              ref={isLastItem ? lastListElementRef : undefined}
+              key={item.getId()}
+              onClick={() => handleClick(item)}
+              onDoubleClick={() => handleDoubleClick(item)}
+              onDragStart={(e) => handleDragStart(e, item.getId())}
+              onDragEnd={handleDragEnd}
+              onDragOver={(e) => handleDragOver(e, index)}
+              draggable
+              style={
+                isLastItem ? { ...itemDefaultStyle, ...styles.listItemStyles, cursor: "default" } 
+                : {...itemDefaultStyle, ...styles.listItemStyles}
+              }
+            >
+              <span>{item.getTitle()}</span>
+              <button onClick={() => handleDelete(item.getId())} 
+              style={{
+                ...styles.deleteButton,
+                ...({
+                  ':hover': styles.deleteButtonHover,
+                  ':active': styles.deleteButtonActive
+                } as CSSProperties)
+              }}
               >
-                {item.getTitle()}
-              </div>
-            );
-          })}
-
-          
-          {loading && <LoadingOutlined style={{ fontSize: 24 }} spin />}
-          {_error && <div>Error loading items</div>}
-          {!loading && hasMore && (
-            <div ref={lastListElementRef}>Loading more...</div>
-          )}
-        </div>
-   
+                <DeleteOutlined />
+              </button>
+            </div>
+          );
+        })}
+        {loading && <LoadingOutlined style={{ fontSize: 24 }} spin />}
+        {_error && <div>Error loading items</div>}
+        {!loading && hasMore && (
+          <div ref={lastListElementRef}>Loading more...</div>
+        )}
+      </div>
     </>
   );
 };
@@ -169,15 +180,29 @@ export default E_ListOrdered;
 
 const styles = {
   listSize: { maxWidth: "400px", maxHeight: "190px" },
-  listItemStyles : {
+  listItemStyles: {
     height: "30px",
-    width: "385px",
+    width: "360px",
     fontSize: "14px",
     padding: "3px",
     paddingLeft: "7px",
     borderRadius: "2px",
     fontFamily: "Merriweather",
     border: "1px solid #D3D3D3",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-
-}
+  deleteButton: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    color: '#ff4d4f',
+  },
+  deleteButtonHover: {
+    color: '#d9363e', // Более темный оттенок при наведении
+  },
+  deleteButtonActive: {
+    color: '#a8071a', // Еще более темный оттенок при нажатии
+  },
+};

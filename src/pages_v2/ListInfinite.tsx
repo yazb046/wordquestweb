@@ -102,6 +102,7 @@ const ListInfinite: React.FC<Props> = ({
 
   const handleClick = (item: Iterable) => {
     setSelectedItem(item);
+    console.log(item.getId());
   };
 
   const addNewStep = () => {
@@ -140,5 +141,5 @@ const ListInfinite: React.FC<Props> = ({
 export default ListInfinite;
 
 const styles = {
-  listSize: { maxWidth: "400px", maxHeight: "75vh" },
+  listSize: { maxWidth: "420px", maxHeight: "75vh" },
 };

@@ -6,17 +6,17 @@ import Iterable from "./types/Iterable";
 import AddGoalModal from "./AddGoalModal";
 import { Empty_Iterable } from "./types/IterableClass";
 import { PlusSquareFilled } from "@ant-design/icons";
-const { Panel } = Collapse;
 import StepsList from "./StepsList";
 import StepModal from "./StepModal";
 
-interface Props {}
+const { Panel } = Collapse;
 
-const GoalsList: React.FC<Props> = ({}) => {
+const GoalsList: React.FC = () => {
   const _user = useUser();
-  const [_goal, setGoal] = useState<Iterable>(Empty_Iterable);
+  const [selectedGoal, setSelectedGoal] = useState<Iterable | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [reloadList, setReloadList] = useState(false);
+  const [modalStepOpen, setModalStepOpen] = useState(false);
 
   useEffect(() => {
     if (reloadList) setReloadList(false);
@@ -31,25 +31,19 @@ const GoalsList: React.FC<Props> = ({}) => {
     setModalOpen(true);
   }
 
-  function onSelectedGoal(item: Iterable): void {
-    setGoal(item);
-  }
+  const handleGoalSelection = (item: Iterable) => {
+    setSelectedGoal(item);
+  };
 
-  const [modalStepOpen, setModalStepOpen] = useState(false);
-
-  const renderItem = (
-    item: Iterable,
-    onItemSelected: (item: Iterable) => void
-  ) => (
+  const renderItem = (item: Iterable) => (
     <div>
-      {/* //fix the bug related to step not attached to the goal properly when it is created */}
-      {item != null && (
+      {item != null && selectedGoal?.getId() === item.getId() && (
         <StepModal
           goalType={""}
           goalId={item.getId()}
           step={Empty_Iterable}
           openModal={modalStepOpen}
-          closeModalCallback={function (): void {
+          closeModalCallback={() => {
             setReloadList(true);
             setModalStepOpen(false);
           }}
@@ -65,8 +59,7 @@ const GoalsList: React.FC<Props> = ({}) => {
               <Tooltip title="Add a step" trigger="hover">
                 <PlusSquareFilled
                   style={{ fontSize: "16px", cursor: "pointer" }}
-                  onClick={(e) => {
-                    e.stopPropagation(); // blocks the panel to collapse when button is clicked
+                  onClick={() => {
                     setModalStepOpen(true);
                   }}
                 />
@@ -76,8 +69,9 @@ const GoalsList: React.FC<Props> = ({}) => {
         >
           <StepsList
             goalId={item.getId()}
-            onItemSelected={onItemSelected}
+            onItemSelected={handleGoalSelection}
             onListOrderChange={() => console.log()}
+            
           />
         </Panel>
       </Collapse>
@@ -95,33 +89,18 @@ const GoalsList: React.FC<Props> = ({}) => {
 
       <ListInfinite
         key={reloadList ? "reload" : "no-reload"}
-        onItemSelected={onSelectedGoal}
+        onItemSelected={handleGoalSelection}
         requestUrl={`api/goals/${_user.userid}`}
-        requestParams={(pageNo: number) => {
-          return {
-            pageNo: pageNo,
-            pageSize: 10,
-            sortBy: "id",
-            direction: "desc",
-          };
-        }}
+        requestParams={(pageNo: number) => ({
+          pageNo: pageNo,
+          pageSize: 10,
+          sortBy: "id",
+          direction: "desc",
+        })}
         renderItem={renderItem}
-      ></ListInfinite>
+      />
     </>
   );
 };
-
-// const saveOrder = () => {
-//   let path = `api/cards/order/${_themeId}`;
-//   axios.post(Config.BACK_SERVER_DOMAIN + path, _itemsIdsOrder, {
-//     headers: {
-//       Authorization: _token ? `${_token}` : null,
-//     },
-//   });
-// };
-
-// const onListSave = () => {
-//   saveOrder();
-// };
 
 export default GoalsList;
