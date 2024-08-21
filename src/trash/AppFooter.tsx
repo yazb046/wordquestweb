@@ -7,7 +7,7 @@ import { Layout } from 'antd'
 const footerStyle: React.CSSProperties = {
     textAlign: 'center',
     color: '#fff',
-    backgroundColor: '#FFF8D3',
+    backgroundColor: 'red',
     flex: 1,
     marginRight: 48,
     width: '100%',
@@ -15,7 +15,7 @@ const footerStyle: React.CSSProperties = {
   };
 
 const AppFooter: React.FC = () => {
-    return(<Layout.Content style={footerStyle}>Footer</Layout.Content>)   
+    return(<Layout.Content className='footer-ant' style={footerStyle}>Footer</Layout.Content>)   
   }
   
   export default AppFooter

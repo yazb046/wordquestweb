@@ -1,6 +1,6 @@
 import Word, { wordBuilder } from "./WordType";
-import ListScrollable from "../elements/ListScrollable";
-import { fetchUserWordRelatedContext } from "../service/textService";
+// import ListScrollable from "../elements/ListScrollable";
+// import { fetchUserWordRelatedContext } from "../service/textService";
 import Iterable from "../types/Iterable";
 import { textBuilder } from "./TextType";
 import { Content } from "antd/es/layout/layout";

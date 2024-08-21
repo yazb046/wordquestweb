@@ -36,6 +36,7 @@ const CreateCard: React.FC = () => {
           backgroundColor: "rgba(255, 255, 255, 0)",
           marginTop: "0px",
           marginBottom:'0px',
+          background:'red'
         }}
       >
         <AppContext word={activeWord} contextCleanlistener={cleanActiveWord} />

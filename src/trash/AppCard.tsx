@@ -1,5 +1,5 @@
 import { Card, Space, Button, Row, Col, Layout } from "antd";
-import CardContent from "../elements/CardContent";
+// import CardContent from "../elements/CardContent";
 import Iterable from "../types/Iterable";
 import { CloseOutlined } from "@ant-design/icons";
 import { wordBuilder } from "./WordType";
@@ -39,6 +39,7 @@ const AppCard: React.FC<Props> = ({ word, context, cardCloseListener }) => {
             marginRight: "5px",
             fontFamily: "Merriweather",
             boxShadow: "-0 0 8px rgba(0, 0, 0, 2)",
+           
           }}
         >
           <Row style={{ paddingTop: "0px",}}>
@@ -49,6 +50,7 @@ const AppCard: React.FC<Props> = ({ word, context, cardCloseListener }) => {
                     fontSize: "20px",
                     fontFamily: "Merriweather",
                     fontWeight: "bold",
+                    
                   }}
                 >
                   {activeWord.getContent()}
@@ -76,6 +78,7 @@ const styles = {
     paddingTop: "0px",
     paddingLeft: "0px",
     margin: "0px",
+    background:'red'
   },
 };
 

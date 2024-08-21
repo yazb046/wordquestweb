@@ -24,6 +24,7 @@ const StepModal: React.FC<Props> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [_token] = useToken();
+
   useEffect(() => {
     setIsModalOpen(openModal);
   }, [openModal]);

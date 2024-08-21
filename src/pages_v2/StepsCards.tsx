@@ -1,6 +1,10 @@
 import Iterable from "./types/Iterable";
 import ListInfiniteOrderable from "./ListInfiniteOrderable";
 import { useUser } from "./hooks/useUser";
+import ListInfinite from "./ListInfinite";
+import StepCardMini from "./StepCardMini";
+import { Col } from "antd";
+import ListInfiniteGrid from "./ListInfiniteGrid";
 
 interface Props {
   goalId: number | undefined;
@@ -13,7 +17,6 @@ const StepsList: React.FC<Props> = ({
   onItemSelected,
   onListOrderChange,
 }) => {
-
   const _params = (pageNo: number) => {
     return {
       pageNo: pageNo,
@@ -22,11 +25,16 @@ const StepsList: React.FC<Props> = ({
     };
   };
 
+  const renderItem = (item: Iterable) => (
+      <StepCardMini item={item} />
+  );
+
   return (
     <>
-      <ListInfiniteOrderable
+      <ListInfiniteGrid
         requestParams={_params}
         requestUrl={`api/steps`}
+        renderItem={renderItem}
       />
     </>
   );
