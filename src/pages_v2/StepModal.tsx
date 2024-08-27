@@ -1,11 +1,12 @@
-import { Modal } from "antd";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { CloseOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+import { useToken } from "./hooks/useToken";
+import Iterable from "./types/Iterable";
+import Config from "../Config";
 import CardMarkDownBasic from "./CardMarkDownBasic";
 import CardMarkDownLangLearn from "./CardMarkDownLangLearn";
-import Iterable from "./types/Iterable";
-import axios from "axios";
-import Config from "../Config";
-import { useToken } from "./hooks/useToken";
 
 interface Props {
   goalType: string;
@@ -47,54 +48,96 @@ const StepModal: React.FC<Props> = ({
     });
   };
 
+  
+
   return (
-    <Modal
-      width={"670px"}
-      style={{ top: "50%", transform: "translateY(-50%)" }}
-      open={isModalOpen}
-      footer={null}
-    >
-      {(goalType === "" || goalType === "Markdown") && (
-        <>
-          <CardMarkDownBasic
-            onEditing={() => console.log()}
-            onSaveCard={(item: Iterable) => {
-              handleOk(item);
-              onSaveStep(item);
+    <>
+      {isModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              width: "670px",
+              backgroundColor: "white",
+              borderRadius: "8px",
+              padding: "20px",
+              position: "relative",
+              color: "green",
             }}
-            onCloseCard={() => {
-              handleClose();
-            }}
-            card={step}
-            outerStyle={{
-              marginLeft: "15px",
-              height: 400,
-              width: 580,
-            }}
-          />
-        </>
+          >
+            <Button
+              icon={<CloseOutlined />}
+              onClick={handleClose}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                background: "none",
+                fontSize: "16px",
+                cursor: "pointer",
+                
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "red";
+                e.currentTarget.style.color = "red";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "";
+                e.currentTarget.style.color = "";
+              }}
+            />
+            {(goalType === "" || goalType === "Markdown") && (
+              <CardMarkDownBasic
+                onEditing={() => console.log()}
+                onSaveCard={(item: Iterable) => {
+                  handleOk(item);
+                  onSaveStep(item);
+                }}
+                onCloseCard={() => {
+                  handleClose();
+                }}
+                card={step}
+                outerStyle={{
+                  marginLeft: "15px",
+                  height: 400,
+                  width: 580,
+                }}
+              />
+            )}
+            {goalType === "Learn Language" && (
+              <CardMarkDownLangLearn
+                themeId={goalId}
+                onEditing={() => console.log()}
+                onSaveCard={(item: Iterable) => {
+                  console.log();
+                }}
+                onCloseCard={() => {
+                  console.log();
+                }}
+                card={step}
+                outerStyle={{
+                  marginLeft: "15px",
+                  height: 400,
+                  width: 580,
+                }}
+              />
+            )}
+          </div>
+        </div>
       )}
-      {goalType === "Learn Language" && (
-        <>
-          <CardMarkDownLangLearn
-            themeId={goalId}
-            onEditing={() => console.log()}
-            onSaveCard={(item: Iterable) => {
-              console.log();
-            }}
-            onCloseCard={() => {
-              console.log();
-            }}
-            card={step}
-            outerStyle={{
-              marginLeft: "15px",
-              height: 400,
-              width: 580,
-            }}
-          />
-        </>
-      )}
-    </Modal>
+    </>
   );
 };
 

@@ -1,9 +1,7 @@
 import { Layout } from 'antd';
 import { Footer, Header } from 'antd/es/layout/layout';
 import { useResizable } from 'react-resizable-layout';
-
 import GoalsList from './GoalsList';
-
 import StepsView from './StepsView';
 
 export default function MainPage() {

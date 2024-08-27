@@ -1,10 +1,12 @@
+import React, { useEffect, useState } from "react";
+import { useGoalId } from "./hooks/useGoalId";
 import { PlusSquareFilled, ProfileFilled } from "@ant-design/icons";
 import { Collapse, Tooltip } from "antd";
-import React, { useEffect, useState } from "react";
+
 import StepModal from "./StepModal";
 import StepsList from "./StepsList";
 import { Empty_Iterable } from "./types/IterableClass";
-import { useGoalId } from "./hooks/useGoalId";
+
 import Iterable from "./types/Iterable";
 const { Panel } = Collapse;
 

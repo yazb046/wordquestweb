@@ -1,14 +1,11 @@
-import { Button, Card, Input, Layout, Space, Tooltip } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import { Content, Footer, Header } from "antd/es/layout/layout";
 import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import { Button, Card, Input, Layout, Space, Tooltip } from "antd";
+import {PictureFilled, PlusSquareFilled,} from "@ant-design/icons";
+import { Content, Footer, Header } from "antd/es/layout/layout";
+import TextArea from "antd/es/input/TextArea";
 import { iterableBuilder } from "../types/IterableClass";
 import Iterable from "../types/Iterable";
-import {
-  PictureFilled,
-  PlusSquareFilled,
-} from "@ant-design/icons";
 import C_DrawerWord from "./C_DrawerWord";
 import C_DrawerImage from "./C_DrawerImage";
 
