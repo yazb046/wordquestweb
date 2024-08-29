@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useUser } from "./hooks/useUser";
-import ListInfinite from "./ListInfinite";
 import { Button, Space } from "antd";
 import Iterable from "./types/Iterable";
-import AddGoalModal from "./AddGoalModal";
 
+import AddGoalModal from "./AddGoalModal";
+import ListInfinite from "./ListInfinite";
 import GoalListItem from "./GoalListItem";
 
 interface Props {}

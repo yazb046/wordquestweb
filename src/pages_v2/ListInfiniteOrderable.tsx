@@ -155,7 +155,7 @@ export default ListInfiniteOrderable;
 const styles = {
   listSize: { maxWidth: "300px", maxHeight: "190px" },
   listItemStyles: {
-    cursor: "grab",
+    cursor: "pointer",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",

@@ -1,8 +1,8 @@
+import React, { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import { Button, Card, Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Content, Footer } from "antd/es/layout/layout";
-import React, { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
 import { iterableBuilder } from "../types/IterableClass";
 import Iterable from "../types/Iterable";
 
@@ -99,6 +99,7 @@ const CardMarkDownBasic: React.FC<ModalProps> = ({
         width: outerStyle === undefined ? 750 : outerStyle.width,
         height: outerStyle === undefined ? 500 : outerStyle.height + 60,
         boxShadow: "-0 0 8px rgba(0, 0, 0, 2)",
+        
       }}
     >
       <Input
