@@ -153,7 +153,7 @@ const ListInfiniteOrderable: React.FC<Props> = ({
 export default ListInfiniteOrderable;
 
 const styles = {
-  listSize: { maxWidth: "300px", maxHeight: "190px" },
+  listSize: { maxWidth: "400px", maxHeight: "190px", },
   listItemStyles: {
     cursor: "pointer",
     whiteSpace: "nowrap",

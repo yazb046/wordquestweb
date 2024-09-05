@@ -6,6 +6,7 @@ import { Content, Footer } from "antd/es/layout/layout";
 import { iterableBuilder } from "../types/IterableClass";
 import Iterable from "../types/Iterable";
 
+
 interface ModalProps {
   card: Iterable | null;
   outerStyle: any;
@@ -99,10 +100,10 @@ const CardMarkDownBasic: React.FC<ModalProps> = ({
         width: outerStyle === undefined ? 750 : outerStyle.width,
         height: outerStyle === undefined ? 500 : outerStyle.height + 60,
         boxShadow: "-0 0 8px rgba(0, 0, 0, 2)",
-        
       }}
     >
       <Input
+       title="Step Title"
         placeholder={"add step title"}
         value={wipTitle}
         onChange={onTitleChange}
@@ -117,11 +118,11 @@ const CardMarkDownBasic: React.FC<ModalProps> = ({
         {editMode ? (
           <>
             <TextArea
-              onKeyDown={handleKeyDown}
+               onKeyDown={handleKeyDown}
               showCount
               maxLength={1000}
               onChange={onContentChange}
-              placeholder="add step description"
+              placeholder={"add step description"}
               value={wipContent}
               style={{
                 padding: "0px",
@@ -157,7 +158,7 @@ const CardMarkDownBasic: React.FC<ModalProps> = ({
       </Content>
       <Footer style={{ height: "35px", padding: "0px", marginTop: "5px" }}>
         <Button
-          style={{ marginRight: "5px" }}
+          style={{ marginRight: "5px"}}
           onClick={() => setEditMode(false)}
         >
           View

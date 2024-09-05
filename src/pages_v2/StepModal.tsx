@@ -65,6 +65,7 @@ const StepModal: React.FC<Props> = ({
             justifyContent: "center",
             alignItems: "center",
             zIndex: 1000,
+
           }}
         >
           <div
@@ -77,7 +78,7 @@ const StepModal: React.FC<Props> = ({
               color: "green",
             }}
           >
-            <Button
+          <Button
               icon={<CloseOutlined />}
               onClick={handleClose}
               style={{

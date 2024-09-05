@@ -8,6 +8,7 @@ export default function MainPage() {
 	const { position, separatorProps } = useResizable({
 		axis: 'x',
 		initial: 350, // Дефолтная ширина
+		max: 400, // Максимальная ширина
 	});
 
 	return (
