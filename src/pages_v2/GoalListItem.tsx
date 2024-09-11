@@ -1,93 +1,127 @@
-import React, { useEffect, useState } from "react";
-import { useGoalId } from "./hooks/useGoalId";
-import { PlusSquareFilled, ProfileFilled } from "@ant-design/icons";
-import { Collapse, Tooltip } from "antd";
+import React, { useEffect, useState } from 'react';
+import { useGoalId } from './hooks/useGoalId';
+import { PlusOutlined, ProfileOutlined, CaretRightOutlined } from '@ant-design/icons';
+import { Tooltip, Button } from 'antd';
 
-import StepModal from "./StepModal";
-import StepsList from "./StepsList";
-import { Empty_Iterable } from "./types/IterableClass";
+import StepModal from './StepModal';
+import StepsList from './StepsList';
+import ThemeOptions from './DeleteButton';
+import { Empty_Iterable } from './types/IterableClass';
 
-import Iterable from "./types/Iterable";
-const { Panel } = Collapse;
+import Iterable from './types/Iterable';
 
 interface Props {
-  item: any;
+	item: any;
 }
 
 const GoalListItem: React.FC<Props> = ({ item }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [reloadList, setReloadList] = useState(false);
-  const [goalId, setGoalId] = useGoalId();
-  const [_goalId, setLocalGoalId] = useState(0);
-  
-  useEffect(() => {
-    // implement redux to store Global variables
-    setGoalId(_goalId)
-    console.log("new goal id" + goalId);
-  }, [_goalId]);
+	const [modalOpen, setModalOpen] = useState(false);
+	const [reloadList, setReloadList] = useState(false);
+	const [goalId, setGoalId] = useGoalId();
+	const [_goalId, setLocalGoalId] = useState(0);
+	const [isExpanded, setIsExpanded] = useState(false);
+	const [hoveredExpand, setHoveredExpand] = useState(false); // Состояние для hover на кнопке развёртывания
+	const [hoveredAdd, setHoveredAdd] = useState(false); // Состояние для hover на кнопке добавления шага
+	const [hoveredView, setHoveredView] = useState(false); // Состояние для hover на кнопке просмотра шагов
 
-  useEffect(() => {
-    if (reloadList) setReloadList(false);
-  }, [reloadList]);
+	useEffect(() => {
+		setGoalId(_goalId);
+		console.log('new goal id' + goalId);
+	}, [_goalId]);
 
-  const onClickAddStep = (e:any) =>{
-    e.stopPropagation(); // blocks the panel to collapse when button is clicked
-    console.log("Add button clicked for " + e);
-    setModalOpen(true);
-  }
+	useEffect(() => {
+		if (reloadList) setReloadList(false);
+	}, [reloadList]);
 
-  const onClickViewSteps = (e:any, itemId:number) =>{
-    e.stopPropagation(); // blocks the panel to collapse when button is clicked
-    console.log("view steps is clicked for " + itemId);
-    setLocalGoalId(itemId);
-  }
+	const onClickAddStep = (e: any) => {
+		e.stopPropagation();
+		console.log('Add button clicked for ' + e);
+		setModalOpen(true);
+	};
 
-  return (
-    <div>
-      <StepModal
-        key={item.getId()}
-        goalType={""}
-        goalId={item.getId()}
-        step={Empty_Iterable}
-        openModal={modalOpen}
-        closeModalCallback={function (): void {
-          setModalOpen(false);
-          setReloadList(!reloadList);
-        }}
-      />
+	const onClickViewSteps = (e: any, itemId: number) => {
+		e.stopPropagation();
+		console.log('view steps is clicked for ' + itemId);
+		setLocalGoalId(itemId);
+	};
 
-      <Collapse>
-        <Panel
-          key={item.getId()}
-          header={
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span style={{ flex: 1 }}>{item.getTitle()}</span>
-              <Tooltip title="Add a step" trigger="hover">
-                <PlusSquareFilled
-                  style={{ fontSize: "16px", cursor: "pointer" }}
-                  onClick={onClickAddStep}
-                />
-              </Tooltip>
-              <Tooltip title="View steps" trigger="hover">
-                <ProfileFilled
-                  style={{ fontSize: "16px", cursor: "pointer" }}
-                  onClick={(e) => onClickViewSteps(e,item.getId())}
-                />
-              </Tooltip>
-            </div>
-          }
-        >
-          <StepsList
-            key={reloadList ? "reload" : "no-reload"}
-            goalId={item.getId()}
-            onItemSelected={() => console.log()}
-            onListOrderChange={() => console.log()}
-          />
-        </Panel>
-      </Collapse>
-    </div>
-  );
+	const toggleExpand = () => {
+		setIsExpanded(!isExpanded);
+	};
+
+	return (
+		<div style={{background:'#f5f5f5', borderRadius:'5px', padding:"5px", marginBottom:"5px"}}>
+			<StepModal
+				key={item.getId()}
+				goalType={''}
+				goalId={item.getId()}
+				step={Empty_Iterable}
+				openModal={modalOpen}
+				closeModalCallback={() => {
+					setModalOpen(false);
+					setReloadList(!reloadList);
+
+				}}
+			/>
+
+			<div style={{ display: 'flex', alignItems: 'center', gap: '5px', width:"100%"}}>
+				<Button
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						fontSize: '16px',
+						cursor: 'pointer',
+						background: 'transparent',
+						border: hoveredExpand ? undefined : 'none',
+					}}
+					icon={<CaretRightOutlined rotate={isExpanded ? 90 : 0} />}
+					onClick={toggleExpand}
+					onMouseEnter={() => setHoveredExpand(true)} // Hover только для этой кнопки
+					onMouseLeave={() => setHoveredExpand(false)}
+				/>
+				<span style={{ flex: 1 }}>{item.getTitle()}</span>
+				<Tooltip title='Add a step' trigger='hover'>
+					<Button
+						style={{
+							fontSize: '16px',
+							cursor: 'pointer',
+							background: 'transparent',
+							border: hoveredAdd ? undefined : 'none',
+						}}
+						icon={<PlusOutlined />}
+						onClick={onClickAddStep}
+						onMouseEnter={() => setHoveredAdd(true)} // Hover только для этой кнопки
+						onMouseLeave={() => setHoveredAdd(false)}
+					/>
+				</Tooltip>
+				<Tooltip title='View steps' trigger='hover'>
+					<Button
+						style={{
+							fontSize: '16px',
+							cursor: 'pointer',
+							background: 'transparent',
+							border: hoveredView ? undefined : 'none',
+						}}
+						icon={<ProfileOutlined />}
+						onClick={(e) => onClickViewSteps(e, item.getId())}
+						onMouseEnter={() => setHoveredView(true)} // Hover только для этой кнопки
+						onMouseLeave={() => setHoveredView(false)}
+					/>
+				</Tooltip>
+				<ThemeOptions />
+			</div>
+
+			{isExpanded && (
+				<StepsList
+					key={reloadList ? 'reload' : 'no-reload'}
+					goalId={item.getId()}
+					onItemSelected={() => console.log()}
+					onListOrderChange={() => console.log()}
+				/>
+			)}
+		</div>
+	);
 };
 
 export default GoalListItem;
-

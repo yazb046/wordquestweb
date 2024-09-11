@@ -94,7 +94,7 @@ const ListInfinite: React.FC<Props> = ({
   };
 
   return (
-    <>
+    <div>
       <div style={{ overflow: "auto", ...styles.listSize }}>
     
         {items.map((item, index) => {
@@ -119,7 +119,7 @@ const ListInfinite: React.FC<Props> = ({
           <div ref={lastListElementRef}>Loading more...</div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

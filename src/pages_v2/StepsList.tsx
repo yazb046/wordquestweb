@@ -23,12 +23,13 @@ const StepsList: React.FC<Props> = ({
   };
 
   return (
-    <>
+    <div>
       <ListInfiniteOrderable
         requestParams={_params}
         requestUrl={`api/steps`}
+       
       />
-    </>
+    </div>
   );
 };
 
